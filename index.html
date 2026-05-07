@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despacho - Orlando Magic 2K</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;0,900&display=swap');
+
+        :root {
+            --magic-blue: #0077c0;
+            --magic-black: #000000;
+            --magic-silver: #c4ced4;
+            --neon-blue: #00d2ff;
+            --bg-color: #0b0c10;
+            --panel-bg: #1f2833;
+            --home-color: rgba(0, 119, 192, 0.15);
+            --away-color: rgba(190, 18, 18, 0.15);
+            --win-color: #00e676;
+            --loss-color: #ff1744;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1a2a3a 0%, var(--bg-color) 70%);
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        header img {
+            width: 140px;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.8));
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--magic-silver);
+            text-shadow: 0 0 10px var(--magic-blue);
+        }
+
+        /* GRID LAYOUT */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .column {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 2px var(--magic-blue);
+            border: 1px solid rgba(0, 119, 192, 0.2);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        .column::-webkit-scrollbar { width: 8px; }
+        .column::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 4px; }
+        .column::-webkit-scrollbar-thumb { background: var(--magic-blue); border-radius: 4px; }
+
+        h2 {
+            text-align: center;
+            border-bottom: 2px solid var(--magic-blue);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 10px -10px var(--neon-blue);
+        }
+
+        /* --- COLUMNA 1: PLANTILLA --- */
+        .player-row {
+            display: flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .player-row:hover {
+            background-color: rgba(0, 119, 192, 0.15);
+            transform: translateX(5px);
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        .player-photo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #333;
+            border: 2px solid var(--magic-silver);
+            margin-right: 12px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .player-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .player-info a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .player-info a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .player-details { font-size: 0.7rem; color: #aaa; margin-top: 1px; }
+        .player-ovr { font-size: 1.15rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
+
+        /* --- COLUMNA 2: CALENDARIO --- */
+        details {
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 10px 15px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--magic-blue) 0%, #004470 100%);
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: "▼"; font-size: 0.8em; color: var(--magic-silver); }
+        details[open] summary::after { content: "▲"; }
+
+        .game {
+            padding: 6px 12px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .game:hover { filter: brightness(1.2); }
+        .game.home { background-color: var(--home-color); border-left: 4px solid var(--magic-blue); }
+        .game.away { background-color: var(--away-color); border-left: 4px solid #ff1744; }
+
+        .game.played { background-color: rgba(0,0,0,0.6); opacity: 0.7; }
+        .game.played.home { border-left-color: var(--magic-blue); }
+        .game.played.away { border-left-color: #ff1744; }
+
+        .game-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-logo {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .game-teams { font-weight: 700; letter-spacing: 1px;}
+        .game-result { font-weight: 900; text-align: right; }
+        .result-w { color: var(--win-color); text-shadow: 0 0 5px var(--win-color); }
+        .result-l { color: var(--loss-color); text-shadow: 0 0 5px var(--loss-color); }
+        .result-pending { color: #666; font-size: 0.8rem; font-style: italic; }
+
+        /* Balance */
+        .balance-container {
+            margin-top: auto;
+            padding-top: 15px;
+            text-align: center;
+            position: sticky;
+            bottom: 0;
+            background: var(--panel-bg);
+            padding-bottom: 10px;
+        }
+
+        .balance-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: #000;
+            border: 2px solid var(--magic-blue);
+            box-shadow: 0 0 15px rgba(0, 119, 192, 0.4);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.3rem; 
+        }
+
+        .bal-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-w { color: var(--win-color); font-size: 1.4rem; text-shadow: 0 0 8px var(--win-color); font-weight: 900; }
+        .icon-l { color: var(--loss-color); font-size: 1.4rem; text-shadow: 0 0 8px var(--loss-color); font-weight: 900; }
+        .bal-num { color: white; }
+
+        /* --- COLUMNA 3: NOTICIAS --- */
+        .news-item {
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 2px solid var(--magic-silver);
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+        }
+        .news-date { font-size: 0.75rem; color: var(--neon-blue); margin-bottom: 5px; font-weight: 700;}
+        .news-title { font-weight: 700; margin-bottom: 8px; font-size: 1.1rem;}
+        .news-excerpt { font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://upload.wikimedia.org/wikipedia/en/1/10/Orlando_Magic_logo.svg" alt="Orlando Magic Logo">
+        <h1>Oficinas Orlando Magic</h1>
+    </header>
+
+    <div class="dashboard">
+        
+        <div class="column">
+            <h2>Plantilla</h2>
+            <div id="roster-container"></div>
+        </div>
+
+        <div class="column" style="position: relative;">
+            <h2>Calendario</h2>
+            <div id="calendar-container"></div>
+            
+            <div class="balance-container">
+                <div class="balance-box">
+                    <div class="bal-item">
+                        <span class="icon-w">V</span> <span class="bal-num"><span id="wins">0</span></span>
+                    </div>
+                    <span style="color:#444;">/</span>
+                    <div class="bal-item">
+                        <span class="icon-l">D</span> <span class="bal-num"><span id="losses">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2>Últimas Noticias</h2>
+            <div class="news-item">
+                <div class="news-date">ACTUALIDAD</div>
+                <div class="news-title">Se inauguran las oficinas</div>
+                <div class="news-excerpt">La gerencia de los Orlando Magic ha presentado hoy las nuevas instalaciones digitales para el seguimiento de la franquicia en la liga 2K.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. PLANTILLA
+        const players = [
+            { name: "De'Aaron Fox", slug: "deaaron-fox", age: 28, pos: "PG", ovr: 87, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1628368.png" },
+            { name: "Walker Kessler", slug: "walker-kessler", age: 24, pos: "C", ovr: 83, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1631117.png" },
+            { name: "Ryan Rollins", slug: "ryan-rollins", age: 23, pos: "SG", ovr: 82, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1631115.png" },
+            { name: "Andrew Wiggins", slug: "andrew-wiggins", age: 31, pos: "SF", ovr: 81, img: "https://cdn.nba.com/headshots/nba/latest/260x190/203952.png" },
+            { name: "Gui Santos", slug: "gui-santos", age: 23, pos: "PF", ovr: 80, img: "" },
+            { name: "Malik Monk", slug: "malik-monk", age: 28, pos: "SG", ovr: 80, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1628370.png" },
+            { name: "De'Anthony Melton", slug: "deanthony-melton", age: 28, pos: "SG", ovr: 79, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1629001.png" },
+            { name: "Draymond Green", slug: "draymond-green", age: 36, pos: "PF", ovr: 79, img: "https://cdn.nba.com/headshots/nba/latest/260x190/203110.png" },
+            { name: "Bradley Beal", slug: "bradley-beal", age: 32, pos: "SG", ovr: 77, img: "https://cdn.nba.com/headshots/nba/latest/260x190/203078.png" },
+            { name: "Julian Strawther", slug: "julian-strawther", age: 24, pos: "SF", ovr: 77, img: "" },
+            { name: "Mason Plumlee", slug: "mason-plumlee", age: 36, pos: "C", ovr: 76, img: "https://cdn.nba.com/headshots/nba/latest/260x190/203486.png" },
+            { name: "Trendon Watford", slug: "trendon-watford", age: 25, pos: "PF", ovr: 76, img: "https://cdn.nba.com/headshots/nba/latest/260x190/1630570.png" },
+            { name: "Rob Dillingham", slug: "rob-dillingham", age: 21, pos: "PG", ovr: 73, img: "" },
+            { name: "Thomas Sorber", slug: "thomas-sorber", age: 20, pos: "C", ovr: 71, img: "" },
+            { name: "Brooks Barnhizer", slug: "brooks-barnhizer", age: 23, pos: "SF", ovr: 69, img: "" }
+        ];
+
+        const rosterContainer = document.getElementById('roster-container');
+        players.forEach(p => {
+            rosterContainer.innerHTML += `
+                <div class="player-row">
+                    <div class="player-photo" style="background-image: url('${p.img || 'https://www.2kratings.com/wp-content/uploads/2k24-blank-headshot.png'}');"></div>
+                    <div class="player-info">
+                        <a href="https://www.2kratings.com/${p.slug}" target="_blank">${p.name}</a>
+                        <div class="player-details">${p.age} años | ${p.pos}</div>
+                    </div>
+                    <div class="player-ovr">${p.ovr}</div>
+                </div>
+            `;
+        });
+
+        // 2. CALENDARIO GENERADO POR JS
+        const getLogo = (team) => {
+            const espnTeams = {
+                'NYK': 'ny', 'GSW': 'gs', 'SAS': 'sa', 'NOP': 'no', 'UTA': 'ut', 'PHX': 'phx'
+            };
+            const t = espnTeams[team] || team.toLowerCase();
+            return `https://a.espncdn.com/i/teamlogos/nba/500/${t}.png`;
+        };
+
+        const gamesList = [
+            ['OCTUBRE', 'away', 'MIA', true, 'W', '116-97'],
+            ['OCTUBRE', 'home', 'BKN', true, 'W', '116-101'],
+            ['OCTUBRE', 'away', 'MEM', true, 'L', '111-119'],
+            ['OCTUBRE', 'home', 'IND', true, 'W', '119-115'],
+            ['OCTUBRE', 'away', 'CHI', false, '', ''],
+            
+            ['NOVIEMBRE', 'away', 'CLE', false, '', ''],
+            ['NOVIEMBRE', 'away', 'DAL', false, '', ''],
+            ['NOVIEMBRE', 'away', 'OKC', false, '', ''],
+            ['NOVIEMBRE', 'home', 'NOP', false, '', ''],
+            ['NOVIEMBRE', 'home', 'WAS', false, '', ''],
+            ['NOVIEMBRE', 'home', 'CHA', false, '', ''],
+            ['NOVIEMBRE', 'home', 'IND', false, '', ''],
+            ['NOVIEMBRE', 'home', 'PHI', false, '', ''],
+            ['NOVIEMBRE', 'away', 'PHX', false, '', ''],
+            ['NOVIEMBRE', 'away', 'LAC', false, '', ''],
+            ['NOVIEMBRE', 'away', 'LAL', false, '', ''],
+            ['NOVIEMBRE', 'home', 'DET', false, '', ''],
+            
+            ['DICIEMBRE', 'away', 'BKN', false, '', ''],
+            ['DICIEMBRE', 'away', 'NYK', false, '', ''],
+            ['DICIEMBRE', 'home', 'PHX', false, '', ''],
+            ['DICIEMBRE', 'home', 'OKC', false, '', ''],
+            ['DICIEMBRE', 'home', 'TOR', false, '', ''],
+            ['DICIEMBRE', 'away', 'BOS', false, '', ''],
+            
+            ['ENERO', 'away', 'MIN', false, '', ''],
+            ['ENERO', 'away', 'MIL', false, '', ''],
+            ['ENERO', 'home', 'BOS', false, '', ''],
+            ['ENERO', 'away', 'ATL', false, '', ''],
+            ['ENERO', 'home', 'MIA', false, '', ''],
+            
+            ['FEBRERO', 'home', 'NYK', false, '', ''],
+            ['FEBRERO', 'away', 'DET', false, '', ''],
+            ['FEBRERO', 'home', 'HOU', false, '', ''],
+            ['FEBRERO', 'home', 'CLE', false, '', ''],
+            
+            ['MARZO', 'away', 'TOR', false, '', ''],
+            ['MARZO', 'home', 'CHI', false, '', ''],
+            ['MARZO', 'away', 'WAS', false, '', ''],
+            ['MARZO', 'home', 'DAL', false, '', ''],
+            ['MARZO', 'home', 'MEM', false, '', ''],
+            
+            ['ABRIL', 'home', 'BKN', false, '', ''],
+            ['ABRIL', 'away', 'CHA', false, '', ''],
+            ['ABRIL', 'home', 'ATL', false, '', ''],
+            ['ABRIL', 'away', 'IND', false, '', ''],
+            ['ABRIL', 'away', 'MIA', false, '', '']
+        ];
+
+        const calendarContainer = document.getElementById('calendar-container');
+        let wins = 0, losses = 0;
+        let currentMonth = '';
+        let monthHTML = '';
+
+        gamesList.forEach((game, index) => {
+            const [month, type, opp, played, res, score] = game;
+            
+            if (month !== currentMonth) {
+                if (currentMonth !== '') monthHTML += `</details>`;
+                currentMonth = month;
+                const isOpen = index === 0 ? 'open' : '';
+                monthHTML += `<details ${isOpen}><summary>${month}</summary>`;
+            }
+
+            const isPlayedClass = played ? 'played' : '';
+            const typeClass = type;
+            
+            let resultHTML = `<div class="game-result result-pending">-</div>`;
+            if (played) {
+                if (res === 'W') { wins++; resultHTML = `<div class="game-result result-w">${score}</div>`; }
+                if (res === 'L') { losses++; resultHTML = `<div class="game-result result-l">${score}</div>`; }
+            }
+
+            monthHTML += `
+                <div class="game ${typeClass} ${isPlayedClass}">
+                    <div class="game-left">
+                        <img class="team-logo" src="${getLogo(opp)}" alt="${opp}">
+                        <div class="game-teams">${opp}</div>
+                    </div>
+                    ${resultHTML}
+                </div>
+            `;
+        });
+        
+        monthHTML += `</details>`;
+        calendarContainer.innerHTML = monthHTML;
+
+        // Actualizamos balance
+        document.getElementById('wins').innerText = wins;
+        document.getElementById('losses').innerText = losses;
+
+    </script>
+</body>
+</html>
