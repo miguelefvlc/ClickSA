@@ -59,18 +59,19 @@
 
         /* HEADER & ICONES FLOTANTS */
         header { position: relative; background: var(--card-bg); padding: 40px 30px; border-radius: var(--radius); text-align: center; margin-bottom: 20px; box-shadow: var(--shadow); border-top: 5px solid var(--accent); transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; }
+        
         header h1 { color: var(--primary); font-size: 3.8rem; margin: 0; font-weight: 900; letter-spacing: -0.03em; text-transform: none; display: flex; align-items: center; justify-content: center; cursor: default; }
         header h1 span { color: var(--accent); }
         header h1 i { font-size: 2.2rem; color: var(--accent); margin-left: 8px; transform: rotate(-15deg) translateY(5px); transition: transform 0.3s ease; }
         header h1:hover i { transform: rotate(0deg) translateY(0) scale(1.1); }
         header h2 { color: var(--text-muted); font-size: 1rem; margin: 5px 0 0 0; font-weight: 600; text-transform: none; letter-spacing: normal; }
 
-        .header-icon-btn { position: absolute; width: 32px; height: 32px; background: transparent; border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7; }
+        .header-icon-btn { position: absolute; width: 32px; height: 32px; background: transparent; border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7;}
         .header-icon-btn:hover { opacity: 1; transform: scale(1.1); background: var(--bg); border-color: var(--accent); }
         #btn-dark-mode { top: 15px; right: 15px; }
         #btn-import-trigger { bottom: 15px; right: 15px; }
 
-        /* ESTRUCTURA & GRIDS */
+        /* ESTRUCTURA & GRIDS ESPAIS REDUITS A LA MEITAT */
         .section-header { display: flex; align-items: center; justify-content: space-between; margin: 50px 0 20px 0; padding: 12px 15px; border-bottom: 2px solid var(--border); cursor: pointer; border-radius: 8px 8px 0 0; transition: background-color 0.2s ease; user-select: none; }
         .section-header:hover { background-color: rgba(107, 149, 150, 0.05); }
         .section-header-left { display: flex; align-items: center; gap: 15px; }
@@ -81,11 +82,13 @@
 
         .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .grid-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .grid-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1.5fr; gap: 10px; margin-bottom: 15px; }
         .grid-row-4-equal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .split-header-row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; margin-bottom: 15px; }
         .mesures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .mesures-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         
+        /* Grid Personalitzat pel Bloc 1 */
         .block1-custom-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 15px; margin-bottom: 15px; }
         .b1-repte { grid-column: 1 / 2; }
         .b1-producte { grid-column: 1 / 2; }
@@ -94,7 +97,6 @@
         .block-content { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ELEMENTS D'INTERFÍCIE */
         .card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; transition: all 0.3s ease; }
         .card-title { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
         .card-title-left { display: flex; align-items: center; gap: 10px; }
@@ -115,7 +117,7 @@
         .temporalitzacio-wrapper::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
         .temporalitzacio-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; min-width: 600px; width: 100%; }
         .month-col { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-        .month-name { background: var(--tag-bg); color: var(--text-muted); text-align: center; font-size: 0.7rem; font-weight: 800; padding: 6px 0; border-bottom: 1px solid var(--border); text-transform: uppercase; user-select: none; }
+        .month-name { background: var(--tag-bg); color: var(--text-muted); text-align: center; font-size: 0.7rem; font-weight: 800; padding: 6px 0; border-bottom: 1px solid var(--border); text-transform: uppercase; user-select: none;}
         .weeks-row { display: grid; grid-template-columns: repeat(4, 1fr); flex-grow: 1; }
         .week-box { border-right: 1px solid var(--border); min-height: 26px; cursor: pointer; transition: all 0.2s ease; background-color: var(--card-bg); }
         .week-box:last-child { border-right: none; }
@@ -123,14 +125,41 @@
         .week-box.active { background-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
 
         /* GRID PERFIL D'EIXIDA (Descriptors) */
-        .perfil-eixida-wrapper { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 10px; width: 100%; }
-        .cc-table { border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; background: var(--card-bg); flex-grow: 1; }
-        .cc-header { background: var(--tag-bg); color: var(--text-muted); font-size: 0.75rem; font-weight: 800; text-align: center; padding: 5px 8px; border-bottom: 1.5px solid var(--border); letter-spacing: 0.05em; user-select: none; }
-        .cc-body { display: flex; flex-direction: row; width: 100%; }
-        .cc-cell { flex-grow: 1; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border-right: 1px solid var(--border); color: var(--text-main); cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .perfil-wrapper-scroll { overflow-x: auto; padding-bottom: 8px; border-radius: 8px; width: 100%; }
+        .perfil-wrapper-scroll::-webkit-scrollbar { height: 6px; }
+        .perfil-wrapper-scroll::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
+        
+        .perfil-eixida-wrapper { display: flex; flex-wrap: nowrap; gap: 10px; margin-top: 5px; min-width: 700px; width: 100%; }
+        .cc-table { border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; background: var(--card-bg); flex-shrink: 0; }
+        .cc-header { background: var(--tag-bg); color: var(--text-muted); font-size: 0.75rem; font-weight: 800; text-align: center; padding: 5px 8px; border-bottom: 1.5px solid var(--border); letter-spacing: 0.05em; user-select: none;}
+        .cc-body { display: flex; flex-direction: row; }
+        .cc-cell { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border-right: 1px solid var(--border); color: var(--text-main); cursor: pointer; transition: all 0.2s ease; user-select: none; }
         .cc-cell:last-child { border-right: none; }
         .cc-cell:hover { background: var(--bg); }
-        .cc-cell.active { background: var(--accent); color: var(--card-bg); font-weight: 800; border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+        .cc-cell.active { background: var(--accent); color: var(--card-bg); font-weight: 800; border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);}
+
+        /* CUSTOM TOOLTIP (JS FLOTANT) */
+        #custom-tooltip {
+            position: absolute;
+            top: 0; left: 0;
+            background: var(--primary);
+            color: #E8EEEE;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            max-width: 280px;
+            z-index: 999999;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            line-height: 1.4;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease;
+        }
+        #custom-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
 
         /* DESPLEGABLES PERSONALITZATS */
         .custom-select-wrapper { position: relative; width: 100%; z-index: 1; }
@@ -139,13 +168,14 @@
         .custom-select-trigger:hover { border-color: var(--accent); }
         .custom-options { position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 8px; box-shadow: 0 10px 25px -3px rgba(43, 58, 59, 0.15); max-height: 250px; overflow-y: auto; display: none; margin-top: 5px; scrollbar-width: thin; z-index: 9999; }
         .custom-options.open { display: block; animation: slideDown 0.2s ease; }
-        .custom-option { padding: 12px 16px; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid var(--border); cursor: pointer; transition: background-color 0.2s ease; white-space: normal; line-height: 1.4; text-align: justify; word-break: break-word; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .custom-option { padding: 12px 16px; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid var(--border); cursor: pointer; transition: background-color 0.2s ease; white-space: normal; line-height: 1.4; text-align: justify; word-break: break-word;}
         .custom-option:focus { background-color: var(--bg); outline: none; border-left: 3px solid var(--accent); }
         .custom-option:last-child { border-bottom: none; }
         .custom-option:hover { background-color: var(--bg); }
         body.dark-mode .custom-options { border-color: var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4); }
 
-        /* COLORS CICLES */
+        /* COLORS CICLES - Més saturats i vibrants */
         .opt-ce1, .tag-ce1 { background-color: #E2D6F0 !important; color: #533E6D !important; } .opt-ce1 { border-left: 4px solid #9D85C0 !important; } .tag-ce1 { border-color: #D0BCE3 !important; border-left-color: #9D85C0 !important; } .tag-ce1 .remove-x { color: #533E6D !important; }
         .opt-ce2, .tag-ce2 { background-color: #D3EDEE !important; color: #32676A !important; } .opt-ce2 { border-left: 4px solid #78B5B9 !important; } .tag-ce2 { border-color: #B5DEDF !important; border-left-color: #78B5B9 !important; } .tag-ce2 .remove-x { color: #32676A !important; }
         .opt-ce3, .tag-ce3 { background-color: #D6E4F6 !important; color: #395079 !important; } .opt-ce3 { border-left: 4px solid #789AD1 !important; } .tag-ce3 { border-color: #B9CDE9 !important; border-left-color: #789AD1 !important; } .tag-ce3 .remove-x { color: #395079 !important; }
@@ -161,7 +191,7 @@
         .remove-x { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); cursor: pointer; color: var(--tag-icon); font-weight: 700; font-size: 0.75rem; transition: filter 0.2s, color 0.2s; padding: 4px; z-index: 5; }
         .remove-x:hover { color: var(--tag-icon-hover) !important; }
 
-        /* BOTONS SÍ/NO I NIVELLS */
+        /* BOTONS SÍ/NO */
         .toggle-group { display: flex; gap: 6px; }
         .btn-toggle { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; }
         .btn-toggle:hover { background: var(--border); color: var(--text-main); }
@@ -184,7 +214,6 @@
         .step-number:hover { background: var(--accent); color: var(--card-bg); border-color: var(--accent); }
         .step-title-input { flex-grow: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); }
         .step-body { display: flex; flex-direction: column; gap: 8px; }
-        
         .sequence-activity { position: relative; display: flex; align-items: flex-start; gap: 8px; margin-left: 36px; margin-top: 4px; border-left: 2px solid var(--border); padding: 4px 24px 4px 10px; animation: slideIn 0.2s ease-out; }
         .sequence-activity:hover { border-left-color: var(--accent); }
         .activity-bullet { color: var(--text-muted); font-size: 0.65rem; margin-top: 5px; opacity: 0.6; }
@@ -193,7 +222,6 @@
         .sequence-activity .remove-x { right: 0px; font-size: 0.75rem; color: var(--border); opacity: 0; }
         .sequence-activity:hover .remove-x { opacity: 1; }
         .sequence-activity .remove-x:hover { color: var(--tag-icon-hover) !important; }
-        
         .btn-add-activity { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; margin-left: 36px; border-radius: 6px; margin-top: 4px; align-self: flex-start; opacity: 0.8; }
         .btn-add-activity:hover { background-color: var(--bg); color: var(--accent); opacity: 1; }
         .phase-sessions { display: flex; flex-direction: column; align-items: center; border-left: 2px dashed var(--border); padding-left: 15px; }
@@ -233,13 +261,14 @@
         .criteria-dropdown { position: absolute; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 6px; box-shadow: 0 4px 12px rgba(43, 58, 59, 0.15); z-index: 1000; padding: 5px 0; min-width: 150px; max-width: 300px; font-size: 0.8rem; }
         .criteria-dropdown-item { padding: 8px 12px; cursor: pointer; color: var(--text-main); font-weight: 500; word-break: break-word; }
         .criteria-dropdown-item:hover { background: var(--bg); color: var(--accent); }
-        .criteria-dropdown-empty { padding: 8px 12px; font-style: italic; color: var(--text-muted); font-size: 0.75rem; }
+        .criteria-dropdown-empty { padding: 8px 12px; font-style: italic; color: var(--text-muted); font-size: 0.75rem;}
 
-        /* BOTÓNS D'ACCIÓ INFERIORS */
-        .bottom-actions-bar { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20px; }
+        /* BOTÓNS D'ACCIÓ INFERIORS (Flux normal, només visibles al final) */
+        .bottom-actions-bar { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20px;}
         .btn-container { display: flex; gap: 12px; }
         
         .action-btn { background: var(--card-bg); border: 1.5px solid; width: 48px; height: 48px; font-size: 1.25rem; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: var(--shadow); }
+        
         .btn-download { border-color: var(--accent); color: var(--accent); }
         .btn-download:hover { background: var(--accent); color: var(--card-bg); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(107, 149, 150, 0.25); }
         
@@ -247,20 +276,33 @@
         .btn-clear:hover { background: #C68B87; color: #FFF; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(198, 139, 135, 0.25); }
 
         /* INDICADOR GUARDAT LOCAL */
-        #inline-save-indicator { font-size: 0.75rem; color: var(--text-muted); font-style: italic; display: flex; align-items: center; gap: 6px; opacity: 0.6; transition: opacity 0.3s ease, color 0.3s ease; user-select: none; pointer-events: none; padding-bottom: 5px; }
+        #inline-save-indicator {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease, color 0.3s ease;
+            user-select: none;
+            pointer-events: none;
+            padding-bottom: 5px;
+        }
         #inline-save-indicator.saving { color: var(--accent); opacity: 1; }
 
-        /* MODALS */
+        /* MODALS (EXPORTACIÓ I CUSTOM PROMPT) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 58, 59, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
         .modal-content { background: var(--card-bg); width: 90%; max-width: 480px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); transform: translateY(20px); transition: transform 0.2s ease; overflow: hidden; }
         .modal-overlay.show .modal-content { transform: translateY(0); }
-        .modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+        .modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg);}
         .modal-header h3 { margin: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
         .close-modal { cursor: pointer; color: var(--text-muted); font-size: 1.3rem; transition: color 0.2s; }
         .close-modal:hover { color: var(--accent); }
         
         .export-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 30px 25px; }
+        
         .export-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 25px 10px; cursor: pointer; transition: all 0.2s ease; color: var(--text-main); }
         .export-btn i { font-size: 2.2rem; color: var(--accent); transition: transform 0.2s ease; }
         .export-btn span { font-size: 0.85rem; font-weight: 700; }
@@ -271,12 +313,12 @@
         @media (max-width: 768px) {
             body { padding: 15px 10px; }
             .container { padding: 0; max-width: 100%; }
-            header { padding: 30px 15px 60px 15px; margin-bottom: 20px; }
+            header { padding: 30px 15px 60px 15px; margin-bottom: 20px;}
             header h1 { font-size: 2.8rem; letter-spacing: -0.02em; }
             header h1 i { font-size: 1.8rem; }
             header h2 { font-size: 0.95rem; }
             
-            .grid-row, .grid-row-3, .grid-row-4-equal, .split-header-row, .dua-grid, .mesures-grid, .mesures-grid-4, .block1-custom-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .grid-row, .grid-row-3, .grid-row-4, .grid-row-4-equal, .grid-row-5, .split-header-row, .dua-grid, .mesures-grid, .mesures-grid-4, .block1-custom-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
             .b1-ods { grid-column: 1 / 2; grid-row: auto; }
 
             .card { padding: 18px; }
@@ -292,17 +334,20 @@
             
             .sequence-step-grid { grid-template-columns: 1fr; gap: 15px; }
             .phase-sessions { border-left: none; border-top: 1px dashed var(--border); padding-left: 0; padding-top: 15px; }
-            .sessions-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+            .sessions-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px;}
             .session-item { width: 45px; }
             .btn-add-session { width: auto; padding: 6px 15px; }
 
             .header-icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+            
             .bottom-actions-bar { flex-direction: column-reverse; align-items: center; gap: 20px; }
             .btn-container { width: 100%; justify-content: center; }
+            
             .export-grid { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
-            .export-btn { flex-direction: row; justify-content: flex-start; padding: 15px 20px; gap: 20px; }
+            .export-btn { flex-direction: row; justify-content: flex-start; padding: 15px 20px; gap: 20px;}
             .export-btn i { font-size: 1.8rem; }
         }
+
     </style>
 </head>
 <body>
@@ -409,15 +454,17 @@
         <div class="grid-row" style="grid-template-columns: 1fr;">
             <div class="card">
                 <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-key"></i> PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)</div></div>
-                <div class="perfil-eixida-wrapper" id="perfil-eixida-container">
-                    <div class="cc-table" data-cc="CCL"><div class="cc-header">CCL</div><div class="cc-body"><div class="cc-cell" data-desc="CCL1">1</div><div class="cc-cell" data-desc="CCL2">2</div><div class="cc-cell" data-desc="CCL3">3</div><div class="cc-cell" data-desc="CCL4">4</div><div class="cc-cell" data-desc="CCL5">5</div></div></div>
-                    <div class="cc-table" data-cc="CP"><div class="cc-header">CP</div><div class="cc-body"><div class="cc-cell" data-desc="CP1">1</div><div class="cc-cell" data-desc="CP2">2</div><div class="cc-cell" data-desc="CP3">3</div></div></div>
-                    <div class="cc-table" data-cc="STEM"><div class="cc-header">STEM</div><div class="cc-body"><div class="cc-cell" data-desc="STEM1">1</div><div class="cc-cell" data-desc="STEM2">2</div><div class="cc-cell" data-desc="STEM3">3</div><div class="cc-cell" data-desc="STEM4">4</div><div class="cc-cell" data-desc="STEM5">5</div></div></div>
-                    <div class="cc-table" data-cc="CD"><div class="cc-header">CD</div><div class="cc-body"><div class="cc-cell" data-desc="CD1">1</div><div class="cc-cell" data-desc="CD2">2</div><div class="cc-cell" data-desc="CD3">3</div><div class="cc-cell" data-desc="CD4">4</div><div class="cc-cell" data-desc="CD5">5</div></div></div>
-                    <div class="cc-table" data-cc="CPSAA"><div class="cc-header">CPSAA</div><div class="cc-body"><div class="cc-cell" data-desc="CPSAA1">1</div><div class="cc-cell" data-desc="CPSAA2">2</div><div class="cc-cell" data-desc="CPSAA3">3</div><div class="cc-cell" data-desc="CPSAA4">4</div><div class="cc-cell" data-desc="CPSAA5">5</div></div></div>
-                    <div class="cc-table" data-cc="CC"><div class="cc-header">CC</div><div class="cc-body"><div class="cc-cell" data-desc="CC1">1</div><div class="cc-cell" data-desc="CC2">2</div><div class="cc-cell" data-desc="CC3">3</div><div class="cc-cell" data-desc="CC4">4</div></div></div>
-                    <div class="cc-table" data-cc="CE"><div class="cc-header">CE</div><div class="cc-body"><div class="cc-cell" data-desc="CE1">1</div><div class="cc-cell" data-desc="CE2">2</div><div class="cc-cell" data-desc="CE3">3</div></div></div>
-                    <div class="cc-table" data-cc="CCEC"><div class="cc-header">CCEC</div><div class="cc-body"><div class="cc-cell" data-desc="CCEC1">1</div><div class="cc-cell" data-desc="CCEC2">2</div><div class="cc-cell" data-desc="CCEC3">3</div><div class="cc-cell" data-desc="CCEC4">4</div></div></div>
+                <div class="perfil-wrapper-scroll">
+                    <div class="perfil-eixida-wrapper" id="perfil-eixida-container">
+                        <div class="cc-table" data-cc="CCL"><div class="cc-header">CCL</div><div class="cc-body"><div class="cc-cell" data-desc="CCL1">1</div><div class="cc-cell" data-desc="CCL2">2</div><div class="cc-cell" data-desc="CCL3">3</div><div class="cc-cell" data-desc="CCL4">4</div><div class="cc-cell" data-desc="CCL5">5</div></div></div>
+                        <div class="cc-table" data-cc="CP"><div class="cc-header">CP</div><div class="cc-body"><div class="cc-cell" data-desc="CP1">1</div><div class="cc-cell" data-desc="CP2">2</div><div class="cc-cell" data-desc="CP3">3</div></div></div>
+                        <div class="cc-table" data-cc="STEM"><div class="cc-header">STEM</div><div class="cc-body"><div class="cc-cell" data-desc="STEM1">1</div><div class="cc-cell" data-desc="STEM2">2</div><div class="cc-cell" data-desc="STEM3">3</div><div class="cc-cell" data-desc="STEM4">4</div><div class="cc-cell" data-desc="STEM5">5</div></div></div>
+                        <div class="cc-table" data-cc="CD"><div class="cc-header">CD</div><div class="cc-body"><div class="cc-cell" data-desc="CD1">1</div><div class="cc-cell" data-desc="CD2">2</div><div class="cc-cell" data-desc="CD3">3</div><div class="cc-cell" data-desc="CD4">4</div><div class="cc-cell" data-desc="CD5">5</div></div></div>
+                        <div class="cc-table" data-cc="CPSAA"><div class="cc-header">CPSAA</div><div class="cc-body"><div class="cc-cell" data-desc="CPSAA1">1</div><div class="cc-cell" data-desc="CPSAA2">2</div><div class="cc-cell" data-desc="CPSAA3">3</div><div class="cc-cell" data-desc="CPSAA4">4</div><div class="cc-cell" data-desc="CPSAA5">5</div></div></div>
+                        <div class="cc-table" data-cc="CC"><div class="cc-header">CC</div><div class="cc-body"><div class="cc-cell" data-desc="CC1">1</div><div class="cc-cell" data-desc="CC2">2</div><div class="cc-cell" data-desc="CC3">3</div><div class="cc-cell" data-desc="CC4">4</div></div></div>
+                        <div class="cc-table" data-cc="CE"><div class="cc-header">CE</div><div class="cc-body"><div class="cc-cell" data-desc="CE1">1</div><div class="cc-cell" data-desc="CE2">2</div><div class="cc-cell" data-desc="CE3">3</div></div></div>
+                        <div class="cc-table" data-cc="CCEC"><div class="cc-header">CCEC</div><div class="cc-body"><div class="cc-cell" data-desc="CCEC1">1</div><div class="cc-cell" data-desc="CCEC2">2</div><div class="cc-cell" data-desc="CCEC3">3</div><div class="cc-cell" data-desc="CCEC4">4</div></div></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -586,26 +633,6 @@
 
 <script>
     // ==========================================
-    // UTILITATS GLOBALS (OPTIMITZACIÓ)
-    // ==========================================
-    const $ = id => document.getElementById(id);
-    const $$ = selector => document.querySelectorAll(selector);
-    const addUnic = (arr, val) => { if (val && !arr.includes(val)) arr.push(val); };
-    const REGEX_MAP = { 'BL': /BL\s*(\d+)/, 'CA': /CA\s*(\d+\.\d+)/, 'CE': /CE\s*(\d+)/ };
-
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    function normalizeTextForKeys(str) { 
-        return !str ? "" : str.replace(/\[.*?\]/g, '').replace(/\(.*?\)$/g, '').replace(/[\.\,\;\:]+$/, '').replace(/\s+/g, ' ').trim().toUpperCase(); 
-    }
-
-    // ==========================================
     // ESTRUCTURA DE DADES I URLS
     // ==========================================
     const llistaAreas = [
@@ -632,43 +659,73 @@
 
     let cacheDadesCurriculars = {}; 
     let dadesDiversitat = { destinataris: [], n3_acces: [], n3_apr: [], n3_par: [], n4_rec: [], n4_acces: [], n4_apr: [], n4_par: [] };
-    let sabersColors = {}; 
-    let mapaCEs = {}; 
-    let itemsAmbEstrella = new Set(); 
+    let sabersColors = {}; let mapaCEs = {}; let itemsAmbEstrella = new Set(); 
     let isRestoring = true;
 
     // ==========================================
-    // INICIALITZACIÓ I EVENTS GLOBALS
+    // INICIALITZACIÓ I EVENTS
     // ==========================================
     document.addEventListener('DOMContentLoaded', async function() {
-        $('btn-dark-mode').addEventListener('click', toggleDarkMode);
+        document.getElementById('btn-dark-mode').addEventListener('click', toggleDarkMode);
         
-        $$('.toggle-section').forEach(header => {
-            header.addEventListener('click', () => toggleBlock(header.getAttribute('data-target')));
+        document.querySelectorAll('.toggle-section').forEach(header => {
+            header.addEventListener('click', () => {
+                const targetId = header.getAttribute('data-target');
+                toggleBlock(targetId);
+            });
         });
 
-        $('btn-mesures-no').addEventListener('click', () => setMesures(false));
-        $('btn-mesures-si').addEventListener('click', () => setMesures(true));
-        $('btn-add-destinatari').addEventListener('click', addDestinatari);
-        $('btn-add-step').addEventListener('click', addSequenceStep);
-        $('btn-clear').addEventListener('click', clearState);
+        document.getElementById('btn-mesures-no').addEventListener('click', () => setMesures(false));
+        document.getElementById('btn-mesures-si').addEventListener('click', () => setMesures(true));
+        document.getElementById('btn-add-destinatari').addEventListener('click', addDestinatari);
+        document.getElementById('btn-add-step').addEventListener('click', addSequenceStep);
+        document.getElementById('btn-clear').addEventListener('click', clearState);
 
-        const modal = $('export-modal');
-        $('btn-open-export').addEventListener('click', () => modal.classList.add('show'));
-        $('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
+        const modal = document.getElementById('export-modal');
+        document.getElementById('btn-open-export').addEventListener('click', () => modal.classList.add('show'));
+        document.getElementById('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
         modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
         
-        $('export-doc').addEventListener('click', () => { generateWord(); modal.classList.remove('show'); });
-        $('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
+        document.getElementById('export-doc').addEventListener('click', () => { generateWord(); modal.classList.remove('show'); });
+        document.getElementById('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
         
-        $('btn-import-trigger').addEventListener('click', () => $('import-json-file').click());
-        $('import-json-file').addEventListener('change', importJSON);
+        document.getElementById('btn-import-trigger').addEventListener('click', () => document.getElementById('import-json-file').click());
+        document.getElementById('import-json-file').addEventListener('change', importJSON);
 
-        $$('.week-box').forEach(box => {
-            box.addEventListener('click', function() { this.classList.toggle('active'); });
+        // Afegir event a les caselles de temporalització
+        document.querySelectorAll('.week-box').forEach(box => {
+            box.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
         });
 
-        $$('.cc-cell').forEach(cell => {
+        // Crear tooltip flotant per al perfil d'eixida
+        const tooltip = document.createElement('div');
+        tooltip.id = 'custom-tooltip';
+        document.body.appendChild(tooltip);
+
+        // Events a les caselles de perfil d'eixida
+        document.querySelectorAll('.cc-cell').forEach(cell => {
+            // Hover (Mostrar text sencer)
+            cell.addEventListener('mouseenter', function(e) {
+                const text = this.getAttribute('data-fulltext');
+                if (text) {
+                    tooltip.innerHTML = `<strong>${this.dataset.desc}</strong><br><span style="font-weight:normal; font-size:0.8rem; display:block; margin-top:4px;">${text}</span>`;
+                    tooltip.classList.add('show');
+                }
+            });
+            cell.addEventListener('mousemove', function(e) {
+                let x = e.pageX + 15;
+                let y = e.pageY + 15;
+                if (x + 280 > window.innerWidth) x = e.pageX - 295; // Evitar que surti de la pantalla
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
+            });
+            cell.addEventListener('mouseleave', function() {
+                tooltip.classList.remove('show');
+            });
+
+            // Click manual
             cell.addEventListener('click', function() {
                 this.classList.toggle('manual-active');
                 updateCellVisual(this);
@@ -676,7 +733,7 @@
             });
         });
 
-        const loadingMsg = $('loading-msg');
+        const loadingMsg = document.getElementById('loading-msg');
         loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
         try {
             await fetchDiversitat();
@@ -697,41 +754,271 @@
     });
 
     // ==========================================
-    // LOGICA DE DADES I CONNEXIONS
+    // CUSTOM PROMPT (Modal Altre...)
     // ==========================================
-    async function fetchCsvData(area, nomCicle, url) {
-        let response = await fetch(url); 
-        let csvText = await response.text();
+    function showCustomPrompt(callback) {
+        const modal = document.getElementById('custom-prompt-modal');
+        const input = document.getElementById('custom-prompt-input');
+        input.value = '';
+        modal.classList.add('show');
+        setTimeout(() => input.focus(), 50); 
+
+        const handleOk = () => {
+            modal.classList.remove('show');
+            cleanup();
+            callback(input.value.trim());
+        };
+        const handleCancel = () => {
+            modal.classList.remove('show');
+            cleanup();
+            callback(null);
+        };
+        const handleKey = (e) => {
+            if(e.key === 'Enter') handleOk();
+            if(e.key === 'Escape') handleCancel();
+        };
+
+        document.getElementById('custom-prompt-ok').onclick = handleOk;
+        document.getElementById('custom-prompt-cancel').onclick = handleCancel;
+        input.onkeydown = handleKey;
+
+        function cleanup() {
+            document.getElementById('custom-prompt-ok').onclick = null;
+            document.getElementById('custom-prompt-cancel').onclick = null;
+            input.onkeydown = null;
+        }
+    }
+
+    // ==========================================
+    // AUTO-GUARDAT (LOCAL STORAGE)
+    // ==========================================
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    function getStateObject() {
+        const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [] };
+        state.darkMode = document.body.classList.contains('dark-mode');
         
+        ['input-sa-num', 'input-sa-title', 'input-repte', 'input-tasca', 'input-materials'].forEach(id => {
+            state.inputs[id] = document.getElementById(id).value;
+        });
+        
+        ['input-area', 'input-cicle', 'input-curs', 'input-trimestre'].forEach(id => {
+            state.selects[id] = getSelectedText(id) !== '-' ? getSelectedText(id) : '';
+        });
+        
+        const tagContainers = ['tags-obj-gen', 'tags-ods', 'tags-comp-espec', 'tags-criteris', 'tags-blocs', 'tags-sabers', 'tags-metodologia', 'tags-agrupaments', 'tags-instruments', 'tags-tipus-avaluacio', 'tags-dua-acces', 'tags-dua-part', 'tags-dua-prog'];
+        tagContainers.forEach(id => {
+            state.tags[id] = Array.from(document.getElementById(id).querySelectorAll('.tag-text')).map(t => t.innerText);
+        });
+        
+        // Guardar l'estat del grid de temporalització i perfil
+        state.temporalitzacio = Array.from(document.querySelectorAll('.week-box')).map(box => box.classList.contains('active'));
+        state.perfilEixida = Array.from(document.querySelectorAll('.cc-cell.manual-active')).map(c => c.dataset.desc);
+        
+        state.mesuresActives = document.getElementById('btn-mesures-si').classList.contains('active');
+        
+        document.querySelectorAll('.destinatari-item').forEach(dest => {
+            const destData = { tags: {} };
+            ['dest', 'n3-acc', 'n3-apr', 'n3-par', 'n4-rec', 'n4-acc', 'n4-apr', 'n4-par'].forEach(prefix => {
+                const tagArea = dest.querySelector(`[id^="tags-${prefix}-"]`);
+                if (tagArea) {
+                    destData.tags[prefix] = Array.from(tagArea.querySelectorAll('.tag-text')).map(t => t.innerText);
+                }
+            });
+            state.destinataris.push(destData);
+        });
+        
+        document.querySelectorAll('.sequence-step').forEach(step => {
+            const stepData = {
+                title: step.querySelector('.step-title-input').value,
+                sessions: step.querySelectorAll('.session-item').length,
+                activities: []
+            };
+            step.querySelectorAll('.sequence-activity').forEach(act => {
+                stepData.activities.push({
+                    text: act.querySelector('.activity-textarea').value,
+                    evalActive: act.querySelector('.btn-eval-a').classList.contains('active'),
+                    criteria: Array.from(act.querySelectorAll('.mini-criteria-tag span')).map(s => s.innerText)
+                });
+            });
+            state.sequence.push(stepData);
+        });
+        return state;
+    }
+
+    function saveState() {
+        if (isRestoring || !document.getElementById('input-cicle')) return;
+        
+        const ind = document.getElementById('inline-save-indicator');
+        const icon = document.getElementById('save-icon');
+        const text = document.getElementById('save-text');
+        
+        ind.style.display = 'flex';
+        ind.classList.add('saving');
+        icon.className = 'fa-solid fa-arrows-rotate fa-spin';
+        text.innerText = 'Desant...';
+
+        const state = getStateObject();
+        localStorage.setItem('clickSA_state', JSON.stringify(state));
+
+        setTimeout(() => {
+            ind.classList.remove('saving');
+            icon.className = 'fa-solid fa-floppy-disk';
+            text.innerText = 'Desat ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 500);
+    }
+
+    function setCustomSelectValue(selectId, value) {
+        const ori = document.getElementById(selectId);
+        if (!ori) return;
+        ori.value = value;
+        const wrapper = ori.nextElementSibling;
+        if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+            wrapper.querySelector('.custom-select-trigger span').textContent = value;
+        }
+    }
+
+    function updateCellVisual(cell) {
+        if (cell.classList.contains('auto-active') || cell.classList.contains('manual-active')) {
+            cell.classList.add('active');
+        } else {
+            cell.classList.remove('active');
+        }
+    }
+
+    async function restoreState() {
+        const savedStr = localStorage.getItem('clickSA_state');
+        if (!savedStr) return;
+        try {
+            const state = JSON.parse(savedStr);
+            if (state.darkMode && !document.body.classList.contains('dark-mode')) toggleDarkMode();
+            
+            for (let id in state.inputs) if (document.getElementById(id)) document.getElementById(id).value = state.inputs[id];
+            
+            const savedArea = state.selects['input-area'];
+            const savedCicle = state.selects['input-cicle'];
+            
+            if (savedArea) setCustomSelectValue('input-area', savedArea);
+            if (savedCicle) setCustomSelectValue('input-cicle', savedCicle);
+            
+            if (savedArea && savedCicle) {
+                if (!cacheDadesCurriculars[savedArea]) cacheDadesCurriculars[savedArea] = {};
+                if (!cacheDadesCurriculars[savedArea][savedCicle]) {
+                    const url = urlsData[savedArea] ? urlsData[savedArea][savedCicle] : null;
+                    if (url) {
+                        const loadingMsg = document.getElementById('loading-msg');
+                        loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
+                        await fetchCsvData(savedArea, savedCicle, url);
+                        loadingMsg.innerHTML = '';
+                    }
+                }
+                if (cacheDadesCurriculars[savedArea][savedCicle]) {
+                    actualitzarDesplegablesCurriculars(savedArea, savedCicle);
+                }
+            }
+            
+            if (state.selects['input-curs']) setCustomSelectValue('input-curs', state.selects['input-curs']);
+            if (state.selects['input-trimestre']) setCustomSelectValue('input-trimestre', state.selects['input-trimestre']);
+            
+            for (let id in state.tags) {
+                if(state.tags[id]) state.tags[id].forEach(val => addTag(val, id));
+            }
+            
+            // Restaurar estat temporalització i perfil manual
+            if (state.temporalitzacio && state.temporalitzacio.length === 40) {
+                document.querySelectorAll('.week-box').forEach((box, index) => {
+                    if (state.temporalitzacio[index]) box.classList.add('active');
+                    else box.classList.remove('active');
+                });
+            }
+
+            if (state.perfilEixida) {
+                state.perfilEixida.forEach(desc => {
+                    const cell = document.querySelector(`.cc-cell[data-desc="${desc}"]`);
+                    if (cell) { cell.classList.add('manual-active'); updateCellVisual(cell); }
+                });
+            }
+
+            if (state.mesuresActives) {
+                setMesures(true);
+                document.getElementById('destinataris-list').innerHTML = ''; 
+                state.destinataris.forEach(dest => {
+                    addDestinatari();
+                    const destId = `dest-${destinatariCount}`;
+                    for (let prefix in dest.tags) dest.tags[prefix].forEach(val => addTag(val, `tags-${prefix}-${destId}`));
+                });
+            }
+            
+            if (state.sequence && state.sequence.length > 0) {
+                document.getElementById('sequence-container').innerHTML = '';
+                state.sequence.forEach(stepData => {
+                    addSequenceStep();
+                    const steps = document.querySelectorAll('.sequence-step');
+                    const newStep = steps[steps.length - 1];
+                    const stepId = newStep.id;
+                    
+                    newStep.querySelector('.step-title-input').value = stepData.title || '';
+                    document.getElementById('sessions-' + stepId).innerHTML = ''; 
+                    for(let i=0; i<stepData.sessions; i++) addSession(stepId);
+                    
+                    stepData.activities.forEach(actData => {
+                        addActivity(stepId);
+                        const acts = newStep.querySelectorAll('.sequence-activity');
+                        const newAct = acts[acts.length - 1];
+                        
+                        newAct.querySelector('.activity-textarea').value = actData.text || '';
+                        if (actData.evalActive) {
+                            const evalBtn = newAct.querySelector('.btn-eval-a');
+                            const actDOMId = newAct.querySelector('.btn-add-criteria').closest('[id^="criteria-container-"]').id.replace('criteria-container-', '');
+                            toggleEval(evalBtn, actDOMId);
+                            actData.criteria.forEach(crit => addMiniCriteriaTag(crit, actDOMId));
+                        }
+                    });
+                });
+            }
+
+            recalcularTotaLaCadena(); 
+            
+            const ind = document.getElementById('inline-save-indicator');
+            ind.style.display = 'flex';
+            document.getElementById('save-icon').className = 'fa-solid fa-floppy-disk';
+            document.getElementById('save-text').innerText = 'Recuperat';
+
+        } catch (e) { console.error("Error restaurant l'estat previ:", e); }
+    }
+
+    function clearState() {
+        if(confirm("Estàs segur que vols esborrar totes les dades i començar una nova Situació d'Aprenentatge? Aquesta acció no es pot desfer.")) {
+            localStorage.removeItem('clickSA_state');
+            location.reload();
+        }
+    }
+
+    function normalizeTextForKeys(str) { return !str ? "" : str.replace(/\[.*?\]/g, '').replace(/\(.*?\)$/g, '').replace(/[\.\,\;\:]+$/, '').replace(/\s+/g, ' ').trim().toUpperCase(); }
+
+    async function fetchCsvData(area, nomCicle, url) {
+        let response = await fetch(url); let csvText = await response.text();
         return new Promise(resolve => {
             Papa.parse(csvText, {
                 header: true, skipEmptyLines: true,
                 complete: function(results) {
                     if (!cacheDadesCurriculars[area]) cacheDadesCurriculars[area] = {};
                     const dades = { descriptoresMap: {}, curs: [], trimestre: [], objectiusGenerals: [], ods: [], competenciesEspecifiques: [], criterisAvaluacio: [], blocsContinguts: [], sabersBasics: [], metodologia: [], agrupaments: [], instrumentsAvaluacio: [], tipusAvaluacio: [], representacio: [], motivacio: [], accio: [] };
+                    const addUnic = (arr, val) => { if(val && !arr.includes(val)) arr.push(val); };
                     
                     results.data.forEach(row => {
-                        let r = {}; 
-                        for (let k in row) r[k.trim().toUpperCase()] = row[k] ? row[k].trim() : "";
-                        
-                        addUnic(dades.curs, r['NIVELL']); 
-                        addUnic(dades.trimestre, r['TRIMESTRE']);
-                        
+                        let r = {}; for (let k in row) r[k.trim().toUpperCase()] = row[k] ? row[k].trim() : "";
+                        addUnic(dades.curs, r['NIVELL']); addUnic(dades.trimestre, r['TRIMESTRE']);
                         let textObj = r['OBJ. GENERALS'];
-                        if (textObj) { 
-                            let isStarred = textObj.trim().endsWith('*'); 
-                            let cleanObj = isStarred ? textObj.replace(/\*$/, '').trim() : textObj.trim(); 
-                            addUnic(dades.objectiusGenerals, cleanObj); 
-                            if (isStarred) itemsAmbEstrella.add(cleanObj); 
-                        }
-                        
+                        if (textObj) { let isStarred = textObj.trim().endsWith('*'); let cleanObj = isStarred ? textObj.replace(/\*$/, '').trim() : textObj.trim(); addUnic(dades.objectiusGenerals, cleanObj); if (isStarred) itemsAmbEstrella.add(cleanObj); }
                         let textODS = r['ODS'];
-                        if (textODS) { 
-                            let isStarred = textODS.trim().endsWith('*'); 
-                            let cleanODS = isStarred ? textODS.replace(/\*$/, '').trim() : textODS.trim(); 
-                            addUnic(dades.ods, cleanODS); 
-                            if (isStarred) itemsAmbEstrella.add(cleanODS); 
-                        }
+                        if (textODS) { let isStarred = textODS.trim().endsWith('*'); let cleanODS = isStarred ? textODS.replace(/\*$/, '').trim() : textODS.trim(); addUnic(dades.ods, cleanODS); if (isStarred) itemsAmbEstrella.add(cleanODS); }
                         
                         let textCC = r['COMPETÈNCIES CLAU'] || r["PERFIL D'EIXIDA"] || r["PERFIL DE SORTIDA"];
                         if (textCC) {
@@ -751,29 +1038,17 @@
                                 textCENet = textCE.replace(match[0], '').trim(); 
                                 ccCodes = match[1].split(/[\/,]/).map(c => c.trim().toUpperCase()); 
                             }
-                            addUnic(dades.competenciesEspecifiques, textCENet); 
-                            if (ccCodes.length > 0) mapaCEs[normalizeTextForKeys(textCENet)] = ccCodes;
+                            addUnic(dades.competenciesEspecifiques, textCENet); if (ccCodes.length > 0) mapaCEs[normalizeTextForKeys(textCENet)] = ccCodes;
                         }
 
                         addUnic(dades.criterisAvaluacio, r["CRITERIS D'AVALUACIÓ"] || r["CRITERIS D’AVALUACIÓ"] || r["CRITERIS D´AVALUACIÓ"]);
                         addUnic(dades.blocsContinguts, r['BLOCS']);
-                        
                         let textSaber = r['SABERS BÀSICS'];
-                        if (textSaber) { 
-                            let ceForColor = null; 
-                            let m = textSaber.match(/CA\s*(\d+)/i); 
-                            if(m) ceForColor = m[1]; 
-                            addUnic(dades.sabersBasics, textSaber); 
-                            if (ceForColor) sabersColors[textSaber] = ceForColor; 
-                        }
-                        
-                        addUnic(dades.metodologia, r['MODEL, METODOLOGIA, ESTIL'] || r['METODOLOGIA, MODEL, ESTIL']); 
-                        addUnic(dades.agrupaments, r['AGRUPAMENTS']);
+                        if (textSaber) { let ceForColor = null; let m = textSaber.match(/CA\s*(\d+)/i); if(m) ceForColor = m[1]; addUnic(dades.sabersBasics, textSaber); if (ceForColor) sabersColors[textSaber] = ceForColor; }
+                        addUnic(dades.metodologia, r['MODEL, METODOLOGIA, ESTIL'] || r['METODOLOGIA, MODEL, ESTIL']); addUnic(dades.agrupaments, r['AGRUPAMENTS']);
                         addUnic(dades.instrumentsAvaluacio, r["INSTRUMENTS D'AVALUACIÓ"] || r["INSTRUMENTS D’AVALUACIÓ"] || r["INSTRUMENTS D´AVALUACIÓ"] || r["INSSTRUMENTS D'AVALUACIÓ"]);
                         addUnic(dades.tipusAvaluacio, r["TIPUS D'AVALUACIÓ"] || r["TIPUS D’AVALUACIÓ"] || r["TIPUS D´AVALUACIÓ"]);
-                        addUnic(dades.representacio, r['DUA REPRESENTACIÓ']); 
-                        addUnic(dades.motivacio, r['DUA MOTIVACIÓ']); 
-                        addUnic(dades.accio, r['DUA ACCIÓ']);
+                        addUnic(dades.representacio, r['DUA REPRESENTACIÓ']); addUnic(dades.motivacio, r['DUA MOTIVACIÓ']); addUnic(dades.accio, r['DUA ACCIÓ']);
                     });
                     
                     cacheDadesCurriculars[area][nomCicle] = dades;
@@ -784,19 +1059,15 @@
     }
 
     async function fetchDiversitat() {
-        let response = await fetch(urlDiversitat); 
-        let csvText = await response.text();
-        
+        let response = await fetch(urlDiversitat); let csvText = await response.text();
         return new Promise(resolve => {
             Papa.parse(csvText, {
                 header: true, skipEmptyLines: true,
                 complete: function(results) {
+                    const addUnic = (arr, val) => { if(val && !arr.includes(val)) arr.push(val); };
                     results.data.forEach(row => {
                         for (let k in row) {
-                            let val = row[k] ? row[k].trim() : ""; 
-                            if (!val) continue; 
-                            let key = k.toUpperCase();
-                            
+                            let val = row[k] ? row[k].trim() : ""; if (!val) continue; let key = k.toUpperCase();
                             if (key.includes('DESTINATARI')) addUnic(dadesDiversitat.destinataris, val);
                             else if (key.includes('3') && (key.includes('ACC') || key.includes('ACCESS') || key.includes('ACCÉS'))) addUnic(dadesDiversitat.n3_acces, val);
                             else if (key.includes('3') && (key.includes('APRE') || key.includes('APRENENTATGE'))) addUnic(dadesDiversitat.n3_apr, val);
@@ -813,9 +1084,6 @@
         });
     }
 
-    // ==========================================
-    // GESTIÓ DE DESPLEGABLES I INTERFÍCIE
-    // ==========================================
     function inicialitzarDesplegablesIncials() {
         buildCustomSelect('input-area', llistaAreas, null);
         buildCustomSelect('input-cicle', ["Primer Cicle", "Segon Cicle", "Tercer Cicle"], null);
@@ -825,13 +1093,13 @@
     }
 
     function getAreaActiva() {
-        const wrapper = $('input-area').nextElementSibling;
-        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : $('input-area').value;
+        const wrapper = document.getElementById('input-area').nextElementSibling;
+        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : document.getElementById('input-area').value;
     }
 
     function getCicleActiu() {
-        const wrapper = $('input-cicle').nextElementSibling;
-        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : $('input-cicle').value;
+        const wrapper = document.getElementById('input-cicle').nextElementSibling;
+        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : document.getElementById('input-cicle').value;
     }
 
     async function handleAreaCicleChange() {
@@ -841,7 +1109,8 @@
         
         if (!area || area === '-' || !cicle || cicle === '-') return;
 
-        const loadingMsg = $('loading-msg');
+        const loadingMsg = document.getElementById('loading-msg');
+        
         if (!cacheDadesCurriculars[area]) cacheDadesCurriculars[area] = {};
         
         if (cacheDadesCurriculars[area][cicle]) {
@@ -867,20 +1136,19 @@
     }
 
     function actualitzarDesplegablesCurricularsVuit() {
-        $$('.selection-area').forEach(el => {
+        document.querySelectorAll('.selection-area').forEach(el => {
             if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = '';
         });
         const map = ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'];
         map.forEach(id => buildCustomSelect(id, [], null));
         
-        $$('.cc-cell').forEach(cell => { cell.title = cell.dataset.desc; cell.classList.remove('auto-active'); updateCellVisual(cell);});
+        document.querySelectorAll('.cc-cell').forEach(cell => { cell.setAttribute('data-fulltext', cell.dataset.desc); cell.removeAttribute('title'); cell.classList.remove('auto-active'); updateCellVisual(cell);});
     }
 
     function actualitzarDesplegablesCurriculars(area, cicle) {
-        const dades = cacheDadesCurriculars[area][cicle]; 
-        if (!dades) return;
+        const dades = cacheDadesCurriculars[area][cicle]; if (!dades) return;
         
-        $$('.selection-area').forEach(el => {
+        document.querySelectorAll('.selection-area').forEach(el => {
             if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = '';
         });
         
@@ -896,301 +1164,25 @@
         ];
         map.forEach(m => buildCustomSelect(m[0], m[1], m[2]));
 
-        $$('.cc-cell').forEach(cell => {
+        document.querySelectorAll('.cc-cell').forEach(cell => {
              const code = cell.dataset.desc;
-             cell.title = (dades.descriptoresMap && dades.descriptoresMap[code]) ? dades.descriptoresMap[code] : code;
+             if (dades.descriptoresMap && dades.descriptoresMap[code]) {
+                 cell.setAttribute('data-fulltext', dades.descriptoresMap[code]);
+             } else {
+                 cell.setAttribute('data-fulltext', code);
+             }
+             cell.removeAttribute('title'); // Esborrar el natiu per usar el nostre custom
         });
         recalcularTotaLaCadena();
     }
 
-    // ==========================================
-    // LOGICA CUSTOM SELECTS
-    // ==========================================
-    function buildCustomSelect(selectId, opciones, containerId) {
-        const ori = $(selectId); 
-        if (!ori) return;
-        
-        if (ori.nextElementSibling?.classList.contains('custom-select-wrapper')) {
-            ori.nextElementSibling.remove();
-        }
-        
-        const wrap = document.createElement('div'); 
-        wrap.className = 'custom-select-wrapper';
-        
-        const trig = document.createElement('div'); 
-        trig.className = 'custom-select-trigger'; 
-        trig.innerHTML = '<span></span><i class="fa-solid fa-chevron-down"></i>';
-        trig.setAttribute('tabindex', '0');
-        
-        trig.addEventListener('keydown', (e) => { 
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trig.click(); } 
-        });
-
-        ori.value = "";
-        const optsDiv = document.createElement('div'); 
-        optsDiv.className = 'custom-options';
-        
-        let ops = [...opciones];
-        const selectsAmbAltre = ['select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'];
-        
-        if (selectsAmbAltre.includes(selectId) || selectId.startsWith('select-dest-') || selectId.startsWith('select-n3-') || selectId.startsWith('select-n4-')) {
-            ops.push("Altre...");
-        }
-
-        if (ops.length === 0) {
-            optsDiv.innerHTML = '<div class="custom-option" style="color:var(--text-muted);font-style:italic;">Sense dades / Tria Cicle</div>';
-        } else {
-            ops.forEach(o => {
-                const opt = document.createElement('div'); 
-                opt.className = 'custom-option'; 
-                opt.textContent = o;
-                opt.setAttribute('tabindex', '0');
-                
-                opt.addEventListener('keydown', (e) => { 
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); } 
-                });
-
-                if (o === "Altre...") { 
-                    opt.style.cssText = "color:var(--accent);font-weight:bold;font-style:italic;"; 
-                } else { 
-                    assignColorClass(opt, o, containerId || 'tags-' + selectId.replace('select-', '')); 
-                    if (itemsAmbEstrella.has(o)) {
-                        opt.innerHTML = o + ' <i class="fa-solid fa-star" style="color: var(--text-muted); opacity: 0.6; float: right; margin-top: 3px;" title="Destacat"></i>'; 
-                    }
-                }
-                
-                opt.onclick = () => {
-                    if (o === "Altre...") {
-                        showCustomPrompt((vFinal) => handleOptionSelection(vFinal, containerId, trig, ori, optsDiv, wrap, selectId));
-                    } else {
-                        handleOptionSelection(o, containerId, trig, ori, optsDiv, wrap, selectId);
-                    }
-                };
-                optsDiv.appendChild(opt);
-            });
-        }
-        
-        trig.onclick = (e) => { 
-            e.stopPropagation(); 
-            $$('.custom-options').forEach(el => { 
-                if (el !== optsDiv) { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; } 
-            }); 
-            optsDiv.classList.toggle('open'); 
-            wrap.style.zIndex = optsDiv.classList.contains('open') ? '9999' : '1'; 
-        };
-        
-        wrap.append(trig, optsDiv); 
-        ori.style.display = 'none'; 
-        ori.parentNode.insertBefore(wrap, ori.nextSibling);
-    }
-
-    function handleOptionSelection(val, containerId, trig, ori, optsDiv, wrap, selectId) {
-        if (!val) return;
-        if (containerId) {
-            addTag(val, containerId); 
-        } else { 
-            trig.querySelector('span').textContent = val; 
-            ori.value = val; 
-            if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); 
-        }
-        optsDiv.classList.remove('open'); 
-        wrap.style.zIndex = '1';
-        trig.focus();
-    }
-
-    // ==========================================
-    // ETIQUETES I ARROSSEGAMENT (DRAG & DROP)
-    // ==========================================
-    function addTag(val, containerId) {
-        const container = $(containerId);
-        if (!val || Array.from(container.querySelectorAll('.tag-text')).some(s => s.innerText === val)) return;
-        
-        const tag = document.createElement('div'); 
-        tag.className = 'tag'; 
-        tag.draggable = true;
-        assignColorClass(tag, val, containerId);
-        tag.innerHTML = `<span class="tag-text">${val}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
-        
-        const selectId = containerId.replace('tags-', 'select-');
-        const customOptions = $$(`#${selectId} ~ .custom-select-wrapper .custom-option`);
-        
-        customOptions.forEach(opt => { 
-            if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'none'; 
-        });
-        
-        tag.querySelector('.remove-x').onclick = function() {
-            tag.remove();
-            customOptions.forEach(opt => { 
-                if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'block'; 
-            });
-            if (containerId === 'tags-sabers' || containerId === 'tags-comp-espec') recalcularTotaLaCadena();
-        };
-        
-        container.appendChild(tag); 
-        makeTagsSortable(container);
-        
-        if (containerId === 'tags-sabers') establecerConexionesSaber(val); 
-        if (containerId === 'tags-comp-espec') establecerConexionesCE(val);
-    }
-
-    function makeTagsSortable(container) {
-        if (container.dataset.sortableInitialized) return; 
-        container.dataset.sortableInitialized = "true";
-        let drg = null;
-        
-        container.addEventListener('dragstart', e => { 
-            if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } 
-        });
-        container.addEventListener('dragend', e => { 
-            if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; } 
-        });
-        container.addEventListener('dragover', e => {
-            e.preventDefault(); 
-            if(!drg || !drg.classList.contains('tag')) return;
-            const after = [...container.querySelectorAll('.tag:not(.dragging)')].reduce((closest, child) => {
-                const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
-                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-            after == null ? container.appendChild(drg) : container.insertBefore(drg, after);
-        });
-    }
-
-    function assignColorClass(el, val, cId) {
-        let n = null;
-        if (cId === 'tags-comp-espec') { let m = val.match(/^CE\s*(\d+)/i); if(m) n = m[1]; }
-        else if (cId === 'tags-criteris') { let m = val.match(/^CA\s*(\d+)/i); if(m) n = m[1]; }
-        else if (cId === 'tags-sabers') n = sabersColors[val];
-        
-        if(n && n >= 1 && n <= 6) el.classList.add((el.classList.contains('tag') ? 'tag-ce' : 'opt-ce') + n);
-    }
-
-    // ==========================================
-    // CÀLCUL DE DEPENDÈNCIES (AUTO-COMPLETAT)
-    // ==========================================
-    function establecerConexionesSaber(textSaber) {
-        if (isRestoring) return; 
-        const area = getAreaActiva(); 
-        const cicle = getCicleActiu();
-        const dades = cacheDadesCurriculars[area]?.[cicle]; 
-        if (!dades) return;
-        
-        [...textSaber.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => {
-            const foundCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${m[1]}\\.${m[2]}\\b`, 'i').test(c)); 
-            if (foundCA) addTag(foundCA, 'tags-criteris');
-            const foundCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${m[1]}\\b`, 'i').test(c)); 
-            if (foundCE) addTag(foundCE, 'tags-comp-espec');
-        });
-        [...textSaber.matchAll(/BL\s*(\d+)/gi)].forEach(m => {
-            const foundBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${m[1]}\\b`, 'i').test(b)); 
-            if (foundBL) addTag(foundBL, 'tags-blocs');
-        });
-    }
-
-    function establecerConexionesCE() {
-        if (!isRestoring) recalcularTotaLaCadena(); 
-    }
-
-    function recalcularTotaLaCadena() {
-        const area = getAreaActiva(); 
-        const cicle = getCicleActiu();
-        const dades = cacheDadesCurriculars[area]?.[cicle]; 
-        if (!dades) return;
-        
-        let reqCA = new Set(), reqCE = new Set(), reqBL = new Set(), reqCC = new Set();
-        
-        $$('#tags-sabers .tag-text').forEach(s => {
-            [...s.innerText.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => { reqCA.add(`${m[1]}.${m[2]}`); reqCE.add(m[1]); });
-            [...s.innerText.matchAll(/BL\s*(\d+)/gi)].forEach(m => reqBL.add(m[1]));
-        });
-        
-        checkAndRemoveUnused('tags-criteris', reqCA, 'CA'); 
-        checkAndRemoveUnused('tags-blocs', reqBL, 'BL'); 
-        checkAndRemoveUnused('tags-comp-espec', reqCE, 'CE');
-        
-        $$('#tags-comp-espec .tag-text').forEach(s => {
-            (mapaCEs[normalizeTextForKeys(s.innerText)] || []).forEach(cc => reqCC.add(cc.replace(/[\s-]/g, '').toUpperCase()));
-        });
-        
-        // Actualitzar Perfil d'Eixida de manera interactiva
-        $$('.cc-cell').forEach(cell => {
-            if (reqCC.has(cell.dataset.desc)) cell.classList.add('auto-active');
-            else cell.classList.remove('auto-active');
-            updateCellVisual(cell);
-        });
-    }
-
-    function checkAndRemoveUnused(containerId, reqSet, prefix) {
-        const container = $(containerId); 
-        if(!container) return;
-        
-        const selectId = containerId.replace('tags-', 'select-');
-        const customOptions = $$(`#${selectId} ~ .custom-select-wrapper .custom-option`);
-        
-        container.querySelectorAll('.tag').forEach(tag => {
-            const tagText = tag.querySelector('.tag-text').innerText;
-            const text = tagText.toUpperCase(); 
-            let codi = null; 
-            const m = text.match(REGEX_MAP[prefix]);
-            if (m) codi = m[1]; 
-            
-            if (codi && !reqSet.has(codi)) {
-                tag.remove();
-                customOptions.forEach(opt => { 
-                    if (opt.textContent.replace(' ★', '').trim() === tagText) opt.style.display = 'block'; 
-                });
-            }
-        });
-    }
-
-    // ==========================================
-    // ELEMENTS DINÀMICS EXTRA
-    // ==========================================
-    function showCustomPrompt(callback) {
-        const modal = $('custom-prompt-modal');
-        const input = $('custom-prompt-input');
-        input.value = '';
-        modal.classList.add('show');
-        setTimeout(() => input.focus(), 50); 
-
-        const handleOk = () => { modal.classList.remove('show'); cleanup(); callback(input.value.trim()); };
-        const handleCancel = () => { modal.classList.remove('show'); cleanup(); callback(null); };
-        const handleKey = (e) => { if(e.key === 'Enter') handleOk(); if(e.key === 'Escape') handleCancel(); };
-
-        $('custom-prompt-ok').onclick = handleOk;
-        $('custom-prompt-cancel').onclick = handleCancel;
-        input.onkeydown = handleKey;
-
-        function cleanup() { $('custom-prompt-ok').onclick = null; $('custom-prompt-cancel').onclick = null; input.onkeydown = null; }
-    }
-
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode'); 
-        $('dark-icon').className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    }
-
-    function toggleBlock(id) { 
-        const b = $(id), i = $('icon-'+id); 
-        const isHid = b.style.display === 'none' || b.style.display === ''; 
-        b.style.display = isHid ? 'block' : 'none'; 
-        i.style.transform = isHid ? 'rotate(0deg)' : 'rotate(180deg)'; 
-    }
-
-    document.addEventListener('click', e => { 
-        if (!e.target.closest('.custom-select-wrapper')) {
-            $$('.custom-options').forEach(el => { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; });
-        } 
-    });
-
-    // ==========================================
-    // MESURES EDUCATIVES (BLOC 5)
-    // ==========================================
     function setMesures(isYes) {
-        const container = $('mesures-addicionals-container'); 
-        const btnNo = $('btn-mesures-no');
-        const btnSi = $('btn-mesures-si');
+        const container = document.getElementById('mesures-addicionals-container'); 
+        const btnNo = document.getElementById('btn-mesures-no');
+        const btnSi = document.getElementById('btn-mesures-si');
         if (isYes) {
             btnNo.classList.remove('active'); btnSi.classList.add('active'); container.style.display = 'flex'; container.style.flexDirection = 'column';
-            if ($('destinataris-list').children.length === 0) addDestinatari();
+            if (document.getElementById('destinataris-list').children.length === 0) addDestinatari();
         } else {
             btnNo.classList.add('active'); btnSi.classList.remove('active'); container.style.display = 'none';
         }
@@ -1198,22 +1190,15 @@
 
     let destinatariCount = 0;
     function addDestinatari() {
-        destinatariCount++; 
-        const id = 'dest-' + destinatariCount; 
-        const list = $('destinataris-list');
-        const div = document.createElement('div'); 
-        div.className = 'destinatari-item';
+        destinatariCount++; const id = 'dest-' + destinatariCount; const list = document.getElementById('destinataris-list');
+        const div = document.createElement('div'); div.className = 'destinatari-item';
         div.style.cssText = 'background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; width: 100%;';
         
         div.innerHTML = `
             <div class="remove-x btn-remove-dest" style="top: 10px; right: 10px; position: absolute; transform: none;" title="Eliminar Destinatari"><i class="fa-solid fa-xmark"></i></div>
-            <div style="margin-bottom: 5px; width: 100%;">
-                <span class="sub-label">Destinatari</span><select id="select-dest-${id}"></select>
-                <div class="selection-area" id="tags-dest-${id}" style="margin-top: 8px; min-height: 0;"></div>
-            </div>
+            <div style="margin-bottom: 5px; width: 100%;"><span class="sub-label">Destinatari</span><select id="select-dest-${id}"></select><div class="selection-area" id="tags-dest-${id}" style="margin-top: 8px; min-height: 0;"></div></div>
             <div class="nivell-box minimized" style="border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: var(--card-bg); margin-bottom: 10px;">
-                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i>
-                <span class="sub-label" style="margin-bottom: 10px; color: var(--accent);">MESURES NIVELL III</span>
+                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i><span class="sub-label" style="margin-bottom: 10px; color: var(--accent);">MESURES NIVELL III</span>
                 <div class="mesures-grid">
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Accés</span><select id="select-n3-acc-${id}"></select><div class="selection-area" id="tags-n3-acc-${id}"></div></div>
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Aprenentatge</span><select id="select-n3-apr-${id}"></select><div class="selection-area" id="tags-n3-apr-${id}"></div></div>
@@ -1221,16 +1206,14 @@
                 </div>
             </div>
             <div class="nivell-box minimized" style="border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: var(--card-bg);">
-                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i>
-                <span class="sub-label" style="margin-bottom: 10px; color: var(--accent);">MESURES NIVELL IV</span>
+                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i><span class="sub-label" style="margin-bottom: 10px; color: var(--accent);">MESURES NIVELL IV</span>
                 <div class="mesures-grid-4">
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Recursos Personals</span><select id="select-n4-rec-${id}"></select><div class="selection-area" id="tags-n4-rec-${id}"></div></div>
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Accés</span><select id="select-n4-acc-${id}"></select><div class="selection-area" id="tags-n4-acc-${id}"></div></div>
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Aprenentatge</span><select id="select-n4-apr-${id}"></select><div class="selection-area" id="tags-n4-apr-${id}"></div></div>
                     <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Participació</span><select id="select-n4-par-${id}"></select><div class="selection-area" id="tags-n4-par-${id}"></div></div>
                 </div>
-            </div>
-        `;
+            </div>`;
         
         list.appendChild(div);
         
@@ -1245,73 +1228,202 @@
     }
 
     function toggleMinimize(icon) {
-        const box = icon.closest('.nivell-box'); 
-        box.classList.toggle('minimized');
+        const box = icon.closest('.nivell-box'); box.classList.toggle('minimized');
         icon.classList.toggle('fa-plus', box.classList.contains('minimized'));
         icon.classList.toggle('fa-minus', !box.classList.contains('minimized'));
     }
 
-    // ==========================================
-    // SEQÜÈNCIA DIDÀCTICA (BLOC 6)
-    // ==========================================
+    function establecerConexionesSaber(textSaber) {
+        if (isRestoring) return; 
+        const area = getAreaActiva(); const cicle = getCicleActiu();
+        const dades = cacheDadesCurriculars[area]?.[cicle]; if (!dades) return;
+        [...textSaber.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => {
+            const foundCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${m[1]}\\.${m[2]}\\b`, 'i').test(c)); if (foundCA) addTag(foundCA, 'tags-criteris');
+            const foundCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${m[1]}\\b`, 'i').test(c)); if (foundCE) addTag(foundCE, 'tags-comp-espec');
+        });
+        [...textSaber.matchAll(/BL\s*(\d+)/gi)].forEach(m => {
+            const foundBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${m[1]}\\b`, 'i').test(b)); if (foundBL) addTag(foundBL, 'tags-blocs');
+        });
+    }
+
+    function establecerConexionesCE(textCE) {
+        if (isRestoring) return;
+        recalcularTotaLaCadena(); 
+    }
+
+    function recalcularTotaLaCadena() {
+        const area = getAreaActiva(); const cicle = getCicleActiu();
+        const dades = cacheDadesCurriculars[area]?.[cicle]; if (!dades) return;
+        let reqCA = new Set(), reqCE = new Set(), reqBL = new Set(), reqCC = new Set();
+        
+        document.querySelectorAll('#tags-sabers .tag-text').forEach(s => {
+            [...s.innerText.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => { reqCA.add(`${m[1]}.${m[2]}`); reqCE.add(m[1]); });
+            [...s.innerText.matchAll(/BL\s*(\d+)/gi)].forEach(m => reqBL.add(m[1]));
+        });
+        checkAndRemoveUnused('tags-criteris', reqCA, 'CA'); checkAndRemoveUnused('tags-blocs', reqBL, 'BL'); checkAndRemoveUnused('tags-comp-espec', reqCE, 'CE');
+        
+        document.querySelectorAll('#tags-comp-espec .tag-text').forEach(s => {
+            (mapaCEs[normalizeTextForKeys(s.innerText)] || []).forEach(cc => reqCC.add(cc.replace(/[\s-]/g, '').toUpperCase()));
+        });
+        
+        // Actualitzar Perfil d'Eixida Auto
+        document.querySelectorAll('.cc-cell').forEach(cell => {
+            const desc = cell.dataset.desc;
+            if (reqCC.has(desc)) {
+                cell.classList.add('auto-active');
+            } else {
+                cell.classList.remove('auto-active');
+            }
+            updateCellVisual(cell);
+        });
+    }
+
+    function checkAndRemoveUnused(containerId, reqSet, prefix) {
+        const container = document.getElementById(containerId); if(!container) return;
+        const regexMap = { 'BL': /BL\s*(\d+)/, 'CA': /CA\s*(\d+\.\d+)/, 'CE': /CE\s*(\d+)/ };
+        
+        container.querySelectorAll('.tag').forEach(tag => {
+            let text = tag.querySelector('.tag-text').innerText.toUpperCase(); let codi = null; let m = text.match(regexMap[prefix]);
+            if (m) codi = m[1]; 
+            if (codi && !reqSet.has(codi)) {
+                tag.remove();
+                document.querySelectorAll('.custom-option').forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === tag.querySelector('.tag-text').innerText) opt.style.display = 'block'; });
+            }
+        });
+    }
+
+    function assignColorClass(el, val, cId) {
+        let n = null;
+        if (cId === 'tags-comp-espec') { let m = val.match(/^CE\s*(\d+)/i); if(m) n = m[1]; }
+        else if (cId === 'tags-criteris') { let m = val.match(/^CA\s*(\d+)/i); if(m) n = m[1]; }
+        else if (cId === 'tags-sabers') n = sabersColors[val];
+        if(n && n >= 1 && n <= 6) el.classList.add((el.classList.contains('tag') ? 'tag-ce' : 'opt-ce') + n);
+    }
+
+    function buildCustomSelect(selectId, opciones, containerId) {
+        const ori = document.getElementById(selectId); if(!ori) return;
+        if (ori.nextElementSibling?.classList.contains('custom-select-wrapper')) ori.nextElementSibling.remove();
+        
+        const wrap = document.createElement('div'); wrap.className = 'custom-select-wrapper';
+        const trig = document.createElement('div'); trig.className = 'custom-select-trigger'; trig.innerHTML = '<span></span><i class="fa-solid fa-chevron-down"></i>';
+        trig.setAttribute('tabindex', '0');
+        trig.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trig.click(); } });
+
+        ori.value = "";
+        const optsDiv = document.createElement('div'); optsDiv.className = 'custom-options';
+        let ops = [...opciones];
+        if (['select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].includes(selectId) || selectId.startsWith('select-dest-') || selectId.startsWith('select-n3-') || selectId.startsWith('select-n4-')) ops.push("Altre...");
+
+        if (ops.length === 0) {
+            optsDiv.innerHTML = '<div class="custom-option" style="color:var(--text-muted);font-style:italic;">Sense dades / Tria Cicle</div>';
+        } else {
+            ops.forEach(o => {
+                const opt = document.createElement('div'); opt.className = 'custom-option'; opt.textContent = o;
+                opt.setAttribute('tabindex', '0');
+                opt.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); } });
+
+                if (o === "Altre...") { opt.style.cssText = "color:var(--accent);font-weight:bold;font-style:italic;"; } 
+                else { assignColorClass(opt, o, containerId || 'tags-' + selectId.replace('select-', '')); if (itemsAmbEstrella.has(o)) opt.innerHTML = o + ' <i class="fa-solid fa-star" style="color: var(--text-muted); opacity: 0.6; float: right; margin-top: 3px;" title="Destacat"></i>'; }
+                
+                opt.onclick = () => {
+                    if (o === "Altre...") {
+                        showCustomPrompt((vFinal) => {
+                            if (!vFinal) return;
+                            if(containerId) addTag(vFinal, containerId); 
+                            else { 
+                                trig.querySelector('span').textContent = vFinal; 
+                                ori.value = vFinal; 
+                                if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); 
+                            }
+                            optsDiv.classList.remove('open'); wrap.style.zIndex = '1';
+                            trig.focus();
+                        });
+                    } else {
+                        let vFinal = o;
+                        if(containerId) addTag(vFinal, containerId); 
+                        else { 
+                            trig.querySelector('span').textContent = vFinal; 
+                            ori.value = vFinal; 
+                            if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); 
+                        }
+                        optsDiv.classList.remove('open'); wrap.style.zIndex = '1';
+                        trig.focus();
+                    }
+                };
+                optsDiv.appendChild(opt);
+            });
+        }
+        trig.onclick = (e) => { e.stopPropagation(); document.querySelectorAll('.custom-options').forEach(el => { if(el !== optsDiv) { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; } }); optsDiv.classList.toggle('open'); wrap.style.zIndex = optsDiv.classList.contains('open') ? '9999' : '1'; };
+        wrap.append(trig, optsDiv); ori.style.display = 'none'; ori.parentNode.insertBefore(wrap, ori.nextSibling);
+    }
+
+    function addTag(val, containerId) {
+        if (!val || Array.from(document.getElementById(containerId).querySelectorAll('.tag-text')).some(s => s.innerText === val)) return;
+        const tag = document.createElement('div'); tag.className = 'tag'; tag.draggable = true;
+        assignColorClass(tag, val, containerId);
+        tag.innerHTML = `<span class="tag-text">${val}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
+        
+        document.querySelectorAll(`#${containerId.replace('tags-', 'select-')} ~ .custom-select-wrapper .custom-option`).forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'none'; });
+        
+        tag.querySelector('.remove-x').onclick = function() {
+            tag.remove();
+            document.querySelectorAll('.custom-option').forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'block'; });
+            if (containerId === 'tags-sabers' || containerId === 'tags-comp-espec') recalcularTotaLaCadena();
+        };
+        document.getElementById(containerId).appendChild(tag); makeTagsSortable(document.getElementById(containerId));
+        if (containerId === 'tags-sabers') establecerConexionesSaber(val); if (containerId === 'tags-comp-espec') establecerConexionesCE(val);
+    }
+
+    function makeTagsSortable(container) {
+        if (container.dataset.sortableInitialized) return; container.dataset.sortableInitialized = "true";
+        let drg = null;
+        container.addEventListener('dragstart', e => { if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } });
+        container.addEventListener('dragend', e => { if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; } });
+        container.addEventListener('dragover', e => {
+            e.preventDefault(); if(!drg || !drg.classList.contains('tag')) return;
+            const after = [...container.querySelectorAll('.tag:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
+                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            after == null ? container.appendChild(drg) : container.insertBefore(drg, after);
+        });
+    }
+
+    document.addEventListener('click', e => { if (!e.target.closest('.custom-select-wrapper')) document.querySelectorAll('.custom-options').forEach(el => { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; }); });
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode'); const icon = document.getElementById('dark-icon');
+        icon.className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    function toggleBlock(id) { 
+        const b = document.getElementById(id), i = document.getElementById('icon-'+id); 
+        const isHid = b.style.display === 'none' || b.style.display === ''; 
+        b.style.display = isHid ? 'block' : 'none'; 
+        i.style.transform = isHid ? 'rotate(0deg)' : 'rotate(180deg)'; 
+    }
+
     function addSequenceStep() {
         const id = 'step-' + Date.now();
-        const div = document.createElement('div'); 
-        div.className = 'sequence-step'; 
-        div.id = id; 
-        div.draggable = true;
+        const div = document.createElement('div'); div.className = 'sequence-step'; div.id = id; div.draggable = true;
+        div.innerHTML = `<div class="remove-x btn-remove-step" style="top: 8px; right: 8px; position: absolute; transform: none;" title="Eliminar Fase"><i class="fa-solid fa-xmark"></i></div><div class="sequence-step-grid"><div class="phase-main"><div class="step-header"><div class="step-number" title="Arrossega per moure"></div><input type="text" class="step-title-input" placeholder="Nom del pas o fase"></div><div class="step-body"><div class="activities-container" id="activities-${id}"></div><button class="btn-add-activity btn-add-act" title="Afegir nova activitat"><i class="fa-solid fa-plus"></i> Afegir activitat</button></div></div><div class="phase-sessions"><div class="session-title">Sessió</div><div class="sessions-list" id="sessions-${id}"></div><button class="btn-add-session btn-add-sess" title="Afegir Sessió"><i class="fa-solid fa-plus"></i></button></div></div>`;
         
-        div.innerHTML = `
-            <div class="remove-x btn-remove-step" style="top: 8px; right: 8px; position: absolute; transform: none;" title="Eliminar Fase"><i class="fa-solid fa-xmark"></i></div>
-            <div class="sequence-step-grid">
-                <div class="phase-main">
-                    <div class="step-header">
-                        <div class="step-number" title="Arrossega per moure"></div>
-                        <input type="text" class="step-title-input" placeholder="Nom del pas o fase">
-                    </div>
-                    <div class="step-body">
-                        <div class="activities-container" id="activities-${id}"></div>
-                        <button class="btn-add-activity btn-add-act" title="Afegir nova activitat"><i class="fa-solid fa-plus"></i> Afegir activitat</button>
-                    </div>
-                </div>
-                <div class="phase-sessions">
-                    <div class="session-title">Sessió</div>
-                    <div class="sessions-list" id="sessions-${id}"></div>
-                    <button class="btn-add-session btn-add-sess" title="Afegir Sessió"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
-        `;
-        
-        $('sequence-container').appendChild(div); 
+        document.getElementById('sequence-container').appendChild(div); 
         
         div.querySelector('.btn-remove-step').addEventListener('click', () => { div.remove(); updateStepNumbers(); updateGlobalSessionNumbers(); });
         div.querySelector('.btn-add-act').addEventListener('click', () => addActivity(id));
         div.querySelector('.btn-add-sess').addEventListener('click', () => addSession(id));
 
         updateStepNumbers(); 
-        if (!isRestoring) addSession(id); 
+        if(!isRestoring) addSession(id); 
     }
 
     function addActivity(stepId) {
         const actId = 'act-' + Date.now() + Math.floor(Math.random()*1000);
-        const div = document.createElement('div'); 
-        div.className = 'sequence-activity';
+        const div = document.createElement('div'); div.className = 'sequence-activity';
+        div.innerHTML = `<div class="remove-x btn-remove-act" title="Eliminar Activitat"><i class="fa-solid fa-xmark"></i></div><div class="activity-bullet"><i class="fa-solid fa-angle-right"></i></div><div style="flex-grow: 1; display: flex; flex-direction: column;"><textarea class="activity-textarea" placeholder="Descripció de l'activitat..." rows="1"></textarea><div class="eval-tools"><div class="btn-eval-a btn-eval" title="Marcar com Avaluable">A</div><div id="criteria-container-${actId}" style="display: none; align-items: center; gap: 6px; flex-wrap: wrap;"><div class="btn-add-criteria btn-add-crit" title="Vincular Criteri d'Avaluació"><i class="fa-solid fa-plus"></i></div></div></div></div>`;
         
-        div.innerHTML = `
-            <div class="remove-x btn-remove-act" title="Eliminar Activitat"><i class="fa-solid fa-xmark"></i></div>
-            <div class="activity-bullet"><i class="fa-solid fa-angle-right"></i></div>
-            <div style="flex-grow: 1; display: flex; flex-direction: column;">
-                <textarea class="activity-textarea" placeholder="Descripció de l'activitat..." rows="1"></textarea>
-                <div class="eval-tools">
-                    <div class="btn-eval-a btn-eval" title="Marcar com Avaluable">A</div>
-                    <div id="criteria-container-${actId}" style="display: none; align-items: center; gap: 6px; flex-wrap: wrap;">
-                        <div class="btn-add-criteria btn-add-crit" title="Vincular Criteri d'Avaluació"><i class="fa-solid fa-plus"></i></div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        $('activities-' + stepId).appendChild(div);
+        document.getElementById('activities-' + stepId).appendChild(div);
 
         div.querySelector('.btn-remove-act').addEventListener('click', () => div.remove());
         const evalBtn = div.querySelector('.btn-eval');
@@ -1319,108 +1431,51 @@
         div.querySelector('.btn-add-crit').addEventListener('click', function() { showCriteriaDropdown(this, actId); });
     }
 
-    function toggleEval(btn, actId) { 
-        btn.classList.toggle('active'); 
-        $(`criteria-container-${actId}`).style.display = btn.classList.contains('active') ? 'flex' : 'none'; 
-    }
+    function toggleEval(btn, actId) { btn.classList.toggle('active'); document.getElementById(`criteria-container-${actId}`).style.display = btn.classList.contains('active') ? 'flex' : 'none'; }
 
     let activeCriteriaDropdown = null;
     function showCriteriaDropdown(btn, actId) {
         if (activeCriteriaDropdown) activeCriteriaDropdown.remove();
-        
-        const container = $(`criteria-container-${actId}`);
+        const container = document.getElementById(`criteria-container-${actId}`);
         const added = Array.from(container.querySelectorAll('.mini-criteria-tag')).map(s => s.title);
-        const available = Array.from($$('#tags-criteris .tag-text')).map(s => s.innerText).filter(c => !added.includes(c));
+        const available = Array.from(document.querySelectorAll('#tags-criteris .tag-text')).map(s => s.innerText).filter(c => !added.includes(c));
 
-        const drop = document.createElement('div'); 
-        drop.className = 'criteria-dropdown';
-        
-        const rect = btn.getBoundingClientRect(); 
-        drop.style.top = (rect.bottom + window.scrollY + 5) + 'px'; 
-        drop.style.left = (rect.left + window.scrollX) + 'px';
+        const drop = document.createElement('div'); drop.className = 'criteria-dropdown';
+        const rect = btn.getBoundingClientRect(); drop.style.top = (rect.bottom + window.scrollY + 5) + 'px'; drop.style.left = (rect.left + window.scrollX) + 'px';
 
-        if (available.length === 0) {
-            drop.innerHTML = `<div class="criteria-dropdown-empty">Cap criteri disponible. (Fixa'n al Bloc 2)</div>`;
-        } else {
-            available.forEach(crit => { 
-                const item = document.createElement('div'); 
-                item.className = 'criteria-dropdown-item'; 
-                item.innerText = crit; 
-                item.onclick = () => { 
-                    addMiniCriteriaTag(crit, actId); 
-                    drop.remove(); 
-                    activeCriteriaDropdown = null; 
-                }; 
-                drop.appendChild(item); 
-            });
-        }
-        
-        document.body.appendChild(drop); 
-        activeCriteriaDropdown = drop;
-        
-        setTimeout(() => {
-            document.addEventListener('click', function closeDrop(e) { 
-                if (!drop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) { 
-                    drop.remove(); 
-                    activeCriteriaDropdown = null; 
-                    document.removeEventListener('click', closeDrop); 
-                } 
-            });
-        }, 10);
+        if (available.length === 0) drop.innerHTML = `<div class="criteria-dropdown-empty">Cap criteri disponible. (Fixa'n al Bloc 2)</div>`;
+        else available.forEach(crit => { const item = document.createElement('div'); item.className = 'criteria-dropdown-item'; item.innerText = crit; item.onclick = () => { addMiniCriteriaTag(crit, actId); drop.remove(); activeCriteriaDropdown = null; }; drop.appendChild(item); });
+        document.body.appendChild(drop); activeCriteriaDropdown = drop;
+        setTimeout(() => document.addEventListener('click', function closeDrop(e) { if (!drop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) { drop.remove(); activeCriteriaDropdown = null; document.removeEventListener('click', closeDrop); } }), 10);
     }
 
     function addMiniCriteriaTag(val, actId) {
-        const container = $(`criteria-container-${actId}`);
-        const tag = document.createElement('div'); 
-        tag.className = 'mini-criteria-tag'; 
-        tag.title = val;
-        
+        const container = document.getElementById(`criteria-container-${actId}`);
+        const tag = document.createElement('div'); tag.className = 'mini-criteria-tag'; tag.title = val;
         let shortLabel = val, n = null, match = val.match(/^CA\s*\d+(?:\.\d+)?/i);
-        if (match) { 
-            shortLabel = match[0]; 
-            let m = val.match(/^CA\s*(\d+)/i); 
-            if (m) n = m[1]; 
-        }
-        
-        if (n) {
-            tag.classList.add(`mini-tag-ce${n}`); 
-        } else {
-            tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
-        }
-        
-        tag.innerHTML = `<span>${shortLabel}</span> <i class="fa-solid fa-xmark"></i>`; 
-        tag.onclick = () => tag.remove();
+        if(match) { shortLabel = match[0]; let m = val.match(/^CA\s*(\d+)/i); if(m) n = m[1]; }
+        if(n) tag.classList.add(`mini-tag-ce${n}`); else tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
+        tag.innerHTML = `<span>${shortLabel}</span> <i class="fa-solid fa-xmark"></i>`; tag.onclick = () => tag.remove();
         container.insertBefore(tag, container.querySelector('.btn-add-criteria'));
     }
 
     function addSession(stepId) {
-        const div = document.createElement('div'); 
-        div.className = 'session-item'; 
-        div.title = 'Clic per eliminar sessió'; 
+        const div = document.createElement('div'); div.className = 'session-item'; div.title = 'Clic per eliminar sessió'; 
         div.addEventListener('click', function() { this.remove(); updateGlobalSessionNumbers(); });
         div.innerHTML = `<span class="session-num-text"></span><div class="session-trash"><i class="fa-solid fa-trash-can"></i></div>`;
-        $('sessions-' + stepId).appendChild(div); 
-        updateGlobalSessionNumbers();
+        document.getElementById('sessions-' + stepId).appendChild(div); updateGlobalSessionNumbers();
     }
 
-    function updateGlobalSessionNumbers() { $$('.session-num-text').forEach((s, i) => s.innerText = i + 1); }
-    function updateStepNumbers() { $$('.sequence-step').forEach((s, i) => s.querySelector('.step-number').innerText = i + 1); }
+    function updateGlobalSessionNumbers() { document.querySelectorAll('.session-num-text').forEach((s, i) => s.innerText = i + 1); }
+    function updateStepNumbers() { document.querySelectorAll('.sequence-step').forEach((s, i) => s.querySelector('.step-number').innerText = i + 1); }
 
     function makeSequenceSortable() {
-        const c = $('sequence-container'); 
-        if (c.dataset.sortableInitialized) return; 
-        c.dataset.sortableInitialized = "true"; 
-        let drg = null;
-        
-        c.addEventListener('dragstart', e => { 
-            if (e.target.classList.contains('sequence-step')) { drg = e.target; e.target.classList.add('dragging-step'); e.dataTransfer.effectAllowed='move'; } 
-        });
-        c.addEventListener('dragend', e => { 
-            if (e.target.classList.contains('sequence-step')) { e.target.classList.remove('dragging-step'); drg = null; updateStepNumbers(); updateGlobalSessionNumbers(); } 
-        });
+        const c = document.getElementById('sequence-container'); if (c.dataset.sortableInitialized) return; c.dataset.sortableInitialized = "true"; let drg = null;
+        c.addEventListener('dragstart', e => { if(e.target.classList.contains('sequence-step')) { drg = e.target; e.target.classList.add('dragging-step'); e.dataTransfer.effectAllowed='move'; } });
+        c.addEventListener('dragend', e => { if(e.target.classList.contains('sequence-step')) { e.target.classList.remove('dragging-step'); drg = null; updateStepNumbers(); updateGlobalSessionNumbers(); } });
         c.addEventListener('dragover', e => {
             e.preventDefault();
-            if (!drg || !drg.classList.contains('sequence-step')) return;
+            if(!drg || !drg.classList.contains('sequence-step')) return;
             const after = [...c.querySelectorAll('.sequence-step:not(.dragging-step)')].reduce((closest, child) => {
                 const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
                 return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
@@ -1432,28 +1487,20 @@
     // ==========================================
     // EXPORTACIÓ I IMPORTACIÓ
     // ==========================================
-    function getSelectedText(id) { 
-        const w = $(id).nextElementSibling; 
-        return w?.classList.contains('custom-select-wrapper') ? (w.querySelector('span')?.innerText || "-") : ($(id).value || "-"); 
-    }
-    
+    function getSelectedText(id) { const w = document.getElementById(id).nextElementSibling; return w?.classList.contains('custom-select-wrapper') ? (w.querySelector('span')?.innerText || "-") : (document.getElementById(id).value || "-"); }
     function formatPdfTagsWord(id) {
-        const c = $(id); 
-        if (!c) return '-'; 
-        const tags = Array.from(c.querySelectorAll('.tag-text')).map(t => t.innerText); 
-        if (tags.length === 0) return '-';
-        
+        const c = document.getElementById(id); if (!c) return '-'; const tags = Array.from(c.querySelectorAll('.tag-text')).map(t => t.innerText); if (tags.length === 0) return '-';
         if (id === 'tags-obj-gen') return tags.map(t => t.match(/^[a-z]\)|\./i) ? t.match(/^[a-z]\)|\./i)[0] : t.split(' ')[0]).join(', ');
         if (id === 'tags-ods') return tags.map(t => t.match(/ODS\s*(\d+)/i) ? "ODS " + t.match(/ODS\s*(\d+)/i)[1] : t).join(', ');
         return '<ul style="margin:0; padding-left:12px;">' + tags.map(t => `<li style="margin-bottom:2px; text-align:justify;">${t}</li>`).join('') + '</ul>';
     }
 
     function buildExportHTML() {
-        const saNum = $('input-sa-num').value || "___";
-        const saTitle = $('input-sa-title').value || "Sense títol";
+        const saNum = document.getElementById('input-sa-num').value || "___";
+        const saTitle = document.getElementById('input-sa-title').value || "Sense títol";
 
-        // Temporalització
-        const weeks = Array.from($$('.week-box'));
+        // Generar fileres de temporalització per al word
+        const weeks = Array.from(document.querySelectorAll('.week-box'));
         let weeksHtml = '';
         weeks.forEach(box => {
             const isActive = box.classList.contains('active');
@@ -1461,9 +1508,10 @@
             weeksHtml += `<td style="border: 1px solid #D5E0E0; background-color: ${bg}; height: 14px; padding:0;"></td>`;
         });
 
-        // Perfil d'Eixida
+        // Generar Grid Perfil d'Eixida per al Word
         let perfilHtml = `<table style="border-collapse: collapse; margin-bottom: 5px;"><tr>`;
-        $$('.cc-table').forEach(table => {
+        const tables = document.querySelectorAll('.cc-table');
+        tables.forEach(table => {
             const ccName = table.querySelector('.cc-header').innerText;
             let cellsHtml = '';
             table.querySelectorAll('.cc-cell').forEach(cell => {
@@ -1474,12 +1522,12 @@
                 cellsHtml += `<td style="border: 1px solid #D5E0E0; background-color: ${bg}; color: ${color}; text-align:center; width:16px; font-size:7pt; padding:2px;">${num}</td>`;
             });
             perfilHtml += `
-                <td style="padding:0; border:none; padding-right:8px; vertical-align:top;">
-                    <table style="border-collapse: collapse;">
-                        <tr><th colspan="${table.querySelectorAll('.cc-cell').length}" style="background-color:#E6EDED; border: 1px solid #D5E0E0; font-size:7pt; color:#788F90; text-align:center; padding:2px;">${ccName}</th></tr>
-                        <tr>${cellsHtml}</tr>
-                    </table>
-                </td>`;
+            <td style="padding:0; border:none; padding-right:8px; vertical-align:top;">
+                <table style="border-collapse: collapse;">
+                    <tr><th colspan="${table.querySelectorAll('.cc-cell').length}" style="background-color:#E6EDED; border: 1px solid #D5E0E0; font-size:7pt; color:#788F90; text-align:center; padding:2px;">${ccName}</th></tr>
+                    <tr>${cellsHtml}</tr>
+                </table>
+            </td>`;
         });
         perfilHtml += `</tr></table>`;
 
@@ -1497,7 +1545,9 @@
             </table>
 
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 7.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th colspan="40" style="background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: center; color: #6B9596;">TEMPORALITZACIÓ</th></tr>
+                <tr>
+                    <th colspan="40" style="background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: center; color: #6B9596;">TEMPORALITZACIÓ</th>
+                </tr>
                 <tr>
                     <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F2F5F5; font-weight: normal; padding: 2px;">Set.</th>
                     <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F2F5F5; font-weight: normal; padding: 2px;">Oct.</th>
@@ -1510,7 +1560,9 @@
                     <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F2F5F5; font-weight: normal; padding: 2px;">Maig</th>
                     <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F2F5F5; font-weight: normal; padding: 2px;">Juny</th>
                 </tr>
-                <tr>${weeksHtml}</tr>
+                <tr>
+                    ${weeksHtml}
+                </tr>
             </table>
 
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
@@ -1522,11 +1574,15 @@
                     <th style="width: 25%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: center;">ODS</th>
                 </tr>
                 <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${($('input-repte').value||"-").replace(/\n/g, '<br>')}</td>
+                    <td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${(document.getElementById('input-repte').value||"-").replace(/\n/g, '<br>')}</td>
                     <td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: center; vertical-align: top;" rowspan="3">${formatPdfTagsWord("tags-ods")}</td>
                 </tr>
-                <tr><th style="background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Producte Final</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${($('input-tasca').value||"-").replace(/\n/g, '<br>')}</td></tr>
+                <tr>
+                    <th style="background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Producte Final</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${(document.getElementById('input-tasca').value||"-").replace(/\n/g, '<br>')}</td>
+                </tr>
             </table>
             
             <div class="section-title" style="font-size: 10pt; font-weight: 800; color: #6B9596; text-transform: uppercase; margin-top: 15px; margin-bottom: 4px; border-bottom: 2px solid #6B9596; padding-bottom: 2px; font-family: 'Arial', sans-serif;">2. Concreció Curricular</div>
@@ -1541,8 +1597,8 @@
                 <tr><td style="border: 1px solid #D5E0E0; padding: 6px;">${perfilHtml}</td></tr>
             </table>`;
 
-        let ceElements = Array.from($$('#tags-comp-espec .tag-text')).map(t => t.innerText);
-        let caElements = Array.from($$('#tags-criteris .tag-text')).map(t => t.innerText);
+        let ceElements = Array.from(document.querySelectorAll('#tags-comp-espec .tag-text')).map(t => t.innerText);
+        let caElements = Array.from(document.querySelectorAll('#tags-criteris .tag-text')).map(t => t.innerText);
 
         html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
                  <tr><th style="width: 50%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Competències Específiques (CE)</th><th style="width: 50%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Criteris d'Avaluació (CA)</th></tr>`;
@@ -1567,7 +1623,7 @@
             <div class="section-title" style="font-size: 10pt; font-weight: 800; color: #6B9596; text-transform: uppercase; margin-top: 15px; margin-bottom: 4px; border-bottom: 2px solid #6B9596; padding-bottom: 2px; font-family: 'Arial', sans-serif;">3. Metodologia i Organització</div>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
                 <tr><th style="width:33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Metodologia / Model / Estil</th><th style="width:33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Agrupaments</th><th style="width:33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Espais i recursos materials</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${formatPdfTagsWord("tags-metodologia")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${formatPdfTagsWord("tags-agrupaments")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${($('input-materials').value || "-").replace(/\n/g, '<br>')}</td></tr>
+                <tr><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${formatPdfTagsWord("tags-metodologia")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${formatPdfTagsWord("tags-agrupaments")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px; text-align: justify; vertical-align: top;">${(document.getElementById('input-materials').value || "-").replace(/\n/g, '<br>')}</td></tr>
             </table>
             
             <div class="section-title" style="font-size: 10pt; font-weight: 800; color: #6B9596; text-transform: uppercase; margin-top: 15px; margin-bottom: 4px; border-bottom: 2px solid #6B9596; padding-bottom: 2px; font-family: 'Arial', sans-serif;">4. Avaluació</div>
@@ -1582,13 +1638,12 @@
                 <tr><td style="border: 1px solid #D5E0E0; padding: 4px 6px;">${formatPdfTagsWord("tags-dua-acces")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px;">${formatPdfTagsWord("tags-dua-part")}</td><td style="border: 1px solid #D5E0E0; padding: 4px 6px;">${formatPdfTagsWord("tags-dua-prog")}</td></tr>
             </table>`;
 
-        const destItems = $$('.destinatari-item');
+        const destItems = document.querySelectorAll('.destinatari-item');
         if (destItems.length > 0) {
             html += `<div class="section-title" style="font-size: 9pt; color:#788F90; margin-top:5px; border-bottom: none; font-weight: 800; text-transform: uppercase; font-family: 'Arial', sans-serif;">Mesures Específiques de Resposta</div>`;
             destItems.forEach((item, index) => {
                 const getTags = id => formatPdfTagsWord(item.querySelector(`[id^="${id}"]`).id);
-                html += `
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
+                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
                     <tr><th colspan="4" style="background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Destinatari ${index + 1}: ${getTags('tags-dest-') !== '-' ? getTags('tags-dest-') : '(Sense especificar)'}</th></tr>
                     <tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 7.5pt; border: 1px solid #D5E0E0; padding: 4px 6px;">NIVELL III</th></tr>
                     <tr><th style="width: 33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Accés</th><th style="width: 33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;">Aprenentatge</th><th style="width: 33.3%; background-color: #F2F5F5; border: 1px solid #D5E0E0; padding: 4px 6px; text-align: left;" colspan="2">Participació</th></tr>
@@ -1600,7 +1655,7 @@
             });
         }
 
-        const steps = $$('.sequence-step');
+        const steps = document.querySelectorAll('.sequence-step');
         if (steps.length > 0) {
             html += `<div class="section-title" style="font-size: 10pt; font-weight: 800; color: #6B9596; text-transform: uppercase; margin-top: 15px; margin-bottom: 4px; border-bottom: 2px solid #6B9596; padding-bottom: 2px; font-family: 'Arial', sans-serif;">6. Seqüència Didàctica</div>`;
             steps.forEach((step, index) => {
@@ -1616,8 +1671,7 @@
                     }
                     if(txt) actsHTML += `<div style="margin-bottom: 4px; text-align:justify; color: #3A4B4C;">▶ ${txt.replace(/\n/g, '<br>')}${critHtml}</div>`;
                 });
-                html += `
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
+                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 8.5pt; font-family: 'Arial', sans-serif; table-layout: fixed;">
                     <tr><th style="background-color: #D5E0E0; padding: 6px; text-align: left; border: 1px solid #D5E0E0; color: #2B3A3B;">FASE ${index + 1}. ${title}</th></tr>
                     <tr><td style="padding: 6px; border: 1px solid #D5E0E0;">${actsHTML || '<i style="color:#788F90;">(Sense activitats detallades)</i>'}</td></tr>
                     <tr><td style="background-color: #F2F5F5; text-align: right; font-weight: 700; color: #788F90; font-size: 8pt; border-top: 1px dashed #D5E0E0; border-left: 1px solid #D5E0E0; border-right: 1px solid #D5E0E0; border-bottom: 1px solid #D5E0E0; font-family: 'Arial', sans-serif; padding: 4px;">Sessions: ${sessionHtml}</td></tr>
@@ -1628,8 +1682,8 @@
     }
 
     function generateWord() {
-        const saNum = $('input-sa-num').value || "___";
-        const saTitle = $('input-sa-title').value || "Sense títol";
+        const saNum = document.getElementById('input-sa-num').value || "___";
+        const saTitle = document.getElementById('input-sa-title').value || "Sense títol";
         const htmlContent = buildExportHTML();
         
         const docHTML = `
@@ -1642,26 +1696,18 @@
             <body><div class="Section1">${htmlContent}</div></body></html>`;
         
         const blob = new Blob(['\ufeff', docHTML], { type: 'application/msword' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        
-        link.style.display = 'none'; 
-        link.href = url; 
-        link.download = `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.doc`;
-        
-        document.body.appendChild(link); 
-        link.click(); 
-        setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(url); }, 100);
+        const url = URL.createObjectURL(blob), link = document.createElement('a');
+        link.style.display = 'none'; link.href = url; link.download = `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.doc`;
+        document.body.appendChild(link); link.click(); setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(url); }, 100);
     }
 
     function generateJSON() {
-        const saNum = $('input-sa-num').value || "___";
-        const saTitle = $('input-sa-title').value || "Sense_titol";
+        const saNum = document.getElementById('input-sa-num').value || "___";
+        const saTitle = document.getElementById('input-sa-title').value || "Sense_titol";
         const state = getStateObject();
         
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
         const link = document.createElement('a');
-        
         link.setAttribute("href", dataStr);
         link.setAttribute("download", `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.json`);
         document.body.appendChild(link);
