@@ -9,201 +9,67 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
-        /* ==========================================
-           1. VARIABLES CSS (Tema Claro y Oscuro)
-           ========================================== */
         :root {
-            /* PALETA ZEN - PANTONE PQ 14-4810 TCX (Canal Blue / Aqua Empolvat) */
-            --primary: #2B3A3B; 
-            --accent: #6B9596; 
-            --accent-hover: #507677; 
-            --bg: #F2F5F5; 
-            --card-bg: #FFFFFF; 
-            --text-main: #3A4B4C; 
-            --text-muted: #788F90; 
-            --border: #D5E0E0; 
-            --radius: 12px; 
+            --primary: #2B3A3B; --accent: #6B9596; --accent-hover: #507677; 
+            --bg: #F2F5F5; --card-bg: #FFFFFF; --text-main: #3A4B4C; 
+            --text-muted: #788F90; --border: #D5E0E0; --radius: 12px; 
             --shadow: 0 4px 6px -1px rgba(43, 58, 59, 0.06); 
-            
-            --tag-bg: #E6EDED; 
-            --tag-border: #CDDCDC; 
-            --tag-border-left: #90A9A9; 
-            --tag-text: #3A4B4C; 
-            --tag-icon: #90A9A9; 
-            --tag-icon-hover: #C68B87; 
+            --tag-bg: #E6EDED; --tag-border: #CDDCDC; --tag-border-left: #90A9A9; 
+            --tag-text: #3A4B4C; --tag-icon: #90A9A9; --tag-icon-hover: #C68B87; 
         }
 
         body.dark-mode {
-            /* MODO NIT - Monocromàtic Profund */
-            --primary: #F0F4F4; 
-            --accent: #9EC2C3; 
-            --accent-hover: #B8D7D8;
-            --bg: #1C2324; 
-            --card-bg: #263031; 
-            --text-main: #E8EEEE; 
-            --text-muted: #92A8A9; 
-            --border: #374849;
-            
-            --tag-bg: #303E3F; 
-            --tag-border: #405354; 
-            --tag-border-left: #85A7A8; 
-            --tag-text: #E8EEEE; 
-            --tag-icon: #92A8A9; 
-            --tag-icon-hover: #D69793;
+            --primary: #F0F4F4; --accent: #9EC2C3; --accent-hover: #B8D7D8;
+            --bg: #1C2324; --card-bg: #263031; --text-main: #E8EEEE; 
+            --text-muted: #92A8A9; --border: #374849;
+            --tag-bg: #303E3F; --tag-border: #405354; --tag-border-left: #85A7A8; 
+            --tag-text: #E8EEEE; --tag-icon: #92A8A9; --tag-icon-hover: #D69793;
         }
 
-        /* ==========================================
-           2. BASE Y RESETS
-           ========================================== */
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Inter', sans-serif; 
-        }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { 
-            background-color: var(--bg); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 40px 20px; 
-            transition: background-color 0.4s ease, color 0.4s ease; 
+            background-color: var(--bg); color: var(--text-main); margin: 0; 
+            padding: 40px 20px; transition: background-color 0.4s ease, color 0.4s ease; 
         }
         
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
 
-        /* ==========================================
-           3. CABECERA (HEADER)
-           ========================================== */
         header { 
-            position: relative; 
-            background: var(--card-bg); 
-            padding: 40px 30px; 
-            border-radius: var(--radius); 
-            text-align: center; 
-            margin-bottom: 20px; 
-            box-shadow: var(--shadow); 
-            border-top: 5px solid var(--accent); 
-            transition: all 0.3s ease; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            position: relative; background: var(--card-bg); padding: 40px 30px; 
+            border-radius: var(--radius); text-align: center; margin-bottom: 20px; 
+            box-shadow: var(--shadow); border-top: 5px solid var(--accent); 
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; 
         }
         
-        header h1 { 
-            color: var(--primary); 
-            font-size: 3.8rem; 
-            margin: 0; 
-            font-weight: 900; 
-            letter-spacing: -0.03em; 
-            text-transform: none; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: default; 
-        }
-        
+        header h1 { color: var(--primary); font-size: 3.8rem; margin: 0; font-weight: 900; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; cursor: default; }
         header h1 span { color: var(--accent); }
-        
-        header h1 i { 
-            font-size: 2.2rem; 
-            color: var(--accent); 
-            margin-left: 8px; 
-            transform: rotate(-15deg) translateY(5px); 
-            transition: transform 0.3s ease; 
-        }
-        
+        header h1 i { font-size: 2.2rem; color: var(--accent); margin-left: 8px; transform: rotate(-15deg) translateY(5px); transition: transform 0.3s ease; }
         header h1:hover i { transform: rotate(0deg) translateY(0) scale(1.1); }
-        
-        header h2 { 
-            color: var(--text-muted); 
-            font-size: 1rem; 
-            margin: 5px 0 0 0; 
-            font-weight: 600; 
-            text-transform: none; 
-            letter-spacing: normal; 
-        }
+        header h2 { color: var(--text-muted); font-size: 1rem; margin: 5px 0 0 0; font-weight: 600; }
 
         .header-icon-btn { 
-            position: absolute; 
-            width: 32px; 
-            height: 32px; 
-            background: transparent; 
-            border: 1.5px solid var(--border); 
-            color: var(--accent); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            z-index: 10; 
-            opacity: 0.7;
+            position: absolute; width: 32px; height: 32px; background: transparent; 
+            border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.9rem; 
+            cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7;
         }
-        
-        .header-icon-btn:hover { 
-            opacity: 1; 
-            transform: scale(1.1); 
-            background: var(--bg); 
-            border-color: var(--accent); 
-        }
-        
+        .header-icon-btn:hover { opacity: 1; transform: scale(1.1); background: var(--bg); border-color: var(--accent); }
         #btn-dark-mode { top: 15px; right: 15px; }
         #btn-import-trigger { bottom: 15px; right: 15px; }
 
-        /* ==========================================
-           4. ESTRUCTURA Y GRIDS
-           ========================================== */
-        .section-header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin: 50px 0 20px 0; 
-            padding: 12px 15px; 
-            border-bottom: 2px solid var(--border); 
-            cursor: pointer; 
-            border-radius: 8px 8px 0 0; 
-            transition: background-color 0.2s ease; 
-            user-select: none; 
-        }
-        
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin: 50px 0 20px 0; padding: 12px 15px; border-bottom: 2px solid var(--border); cursor: pointer; border-radius: 8px 8px 0 0; transition: background-color 0.2s ease; user-select: none; }
         .section-header:hover { background-color: rgba(107, 149, 150, 0.05); }
         .section-header-left { display: flex; align-items: center; gap: 15px; }
         
-        .section-number { 
-            background: var(--accent); 
-            color: var(--card-bg); 
-            width: 38px; 
-            height: 38px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 8px; 
-            font-weight: 800; 
-            font-size: 1.2rem; 
-        }
-        
+        .section-number { background: var(--accent); color: var(--card-bg); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 1.2rem; }
         body.dark-mode .section-number { color: #1C2324; }
         
-        .section-title-text { 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            color: var(--primary); 
-            text-transform: uppercase; 
-            letter-spacing: 0.05em; 
-        }
-        
-        .toggle-icon { 
-            font-size: 1.3rem; 
-            color: var(--primary); 
-            transition: transform 0.3s ease; 
-        }
+        .section-title-text { font-size: 1.3rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .toggle-icon { font-size: 1.3rem; color: var(--primary); transition: transform 0.3s ease; }
 
         .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .grid-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
@@ -221,73 +87,20 @@
         .block-content { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ==========================================
-           5. COMPONENTES PRINCIPALES (Tarjetas, Inputs)
-           ========================================== */
-        .card { 
-            background: var(--card-bg); 
-            padding: 24px; 
-            border-radius: var(--radius); 
-            border: 1px solid var(--border); 
-            box-shadow: var(--shadow); 
-            display: flex; 
-            flex-direction: column; 
-            height: 100%; 
-            transition: all 0.3s ease; 
-            min-width: 0; 
-        }
-        
-        .card-title { 
-            font-weight: 700; 
-            font-size: 0.85rem; 
-            color: var(--text-muted); 
-            text-transform: uppercase; 
-            letter-spacing: 0.08em; 
-            margin-bottom: 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            gap: 10px; 
-            width: 100%; 
-        }
-        
+        .card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; transition: all 0.3s ease; min-width: 0; }
+        .card-title { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
         .card-title-left { display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--accent); font-size: 1.1rem; width: 24px; text-align: center; }
 
-        input, textarea, select { 
-            width: 100%; 
-            padding: 14px 16px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            font-size: 0.95rem; 
-            color: var(--text-main); 
-            background: var(--bg); 
-            transition: all 0.2s ease; 
-            resize: vertical; 
-            max-width: 100%; 
-        }
-        
+        input, textarea, select { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); transition: all 0.2s ease; resize: vertical; max-width: 100%; }
         textarea { min-height: 80px; line-height: 1.5; }
-        
-        input:focus, textarea:focus, select:focus { 
-            outline: none; 
-            border-color: var(--accent); 
-            background: var(--card-bg); 
-            box-shadow: 0 0 0 3px rgba(107, 149, 150, 0.15); 
-        }
-        
-        body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus { 
-            box-shadow: 0 0 0 3px rgba(158, 194, 195, 0.15); 
-        }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(107, 149, 150, 0.15); }
+        body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus { box-shadow: 0 0 0 3px rgba(158, 194, 195, 0.15); }
         
         #input-sa-num { font-weight: 800; font-size: 1.2rem; text-align: center; color: var(--accent); }
         #input-sa-title { font-weight: 600; font-size: 1.1rem; }
         .sub-label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; }
 
-        /* ==========================================
-           6. COMPONENTES ESPECÍFICOS
-           ========================================== */
-        /* Grid Temporalització */
         .temporalitzacio-wrapper { overflow-x: auto; padding-bottom: 8px; border-radius: 8px; width: 100%; -webkit-overflow-scrolling: touch; }
         .temporalitzacio-wrapper::-webkit-scrollbar { height: 6px; }
         .temporalitzacio-wrapper::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
@@ -300,7 +113,6 @@
         .week-box:hover { background-color: var(--bg); }
         .week-box.active { background-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
 
-        /* Grid Perfil Eixida */
         .perfil-wrapper-scroll { overflow-x: auto; padding-bottom: 8px; border-radius: 8px; width: 100%; -webkit-overflow-scrolling: touch; }
         .perfil-wrapper-scroll::-webkit-scrollbar { height: 6px; }
         .perfil-wrapper-scroll::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
@@ -313,7 +125,6 @@
         .cc-cell:hover { background: var(--bg); }
         .cc-cell.active { background: var(--accent); color: var(--card-bg); font-weight: 800; border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);}
 
-        /* Tooltip Personalizado */
         #custom-tooltip {
             position: absolute; top: 0; left: 0; background: var(--primary); color: #E8EEEE; padding: 12px;
             border-radius: 8px; font-size: 0.85rem; max-width: 280px; z-index: 999999; box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
@@ -323,7 +134,6 @@
         #custom-tooltip.show { opacity: 1; visibility: visible; }
         body.dark-mode #custom-tooltip { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.6); }
 
-        /* Selects Personalizados */
         .custom-select-wrapper { position: relative; width: 100%; z-index: 1; }
         .custom-select-trigger { width: 100%; min-height: 48px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
         .custom-select-trigger:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -337,7 +147,6 @@
         .custom-option:hover { background-color: var(--bg); }
         body.dark-mode .custom-options { border-color: var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4); }
 
-        /* Colores Dinámicos de Cicles */
         .opt-ce1, .tag-ce1 { background-color: #E2D6F0 !important; color: #533E6D !important; } .opt-ce1 { border-left: 4px solid #9D85C0 !important; } .tag-ce1 { border-color: #D0BCE3 !important; border-left-color: #9D85C0 !important; } .tag-ce1 .remove-x { color: #533E6D !important; }
         .opt-ce2, .tag-ce2 { background-color: #D3EDEE !important; color: #32676A !important; } .opt-ce2 { border-left: 4px solid #78B5B9 !important; } .tag-ce2 { border-color: #B5DEDF !important; border-left-color: #78B5B9 !important; } .tag-ce2 .remove-x { color: #32676A !important; }
         .opt-ce3, .tag-ce3 { background-color: #D6E4F6 !important; color: #395079 !important; } .opt-ce3 { border-left: 4px solid #789AD1 !important; } .tag-ce3 { border-color: #B9CDE9 !important; border-left-color: #789AD1 !important; } .tag-ce3 .remove-x { color: #395079 !important; }
@@ -346,7 +155,6 @@
         .opt-ce6, .tag-ce6 { background-color: #FADCDC !important; color: #873E3E !important; } .opt-ce6 { border-left: 4px solid #D27979 !important; } .tag-ce6 { border-color: #EEBDBD !important; border-left-color: #D27979 !important; } .tag-ce6 .remove-x { color: #873E3E !important; }
         .opt-ce1:hover, .opt-ce2:hover, .opt-ce3:hover, .opt-ce4:hover, .opt-ce5:hover, .opt-ce6:hover { filter: brightness(0.95); }
 
-        /* Tags / Selection Area */
         .selection-area { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; min-height: 10px; }
         .tag { width: 100%; background: var(--tag-bg); border: 1px solid var(--tag-border); border-left: 4px solid var(--tag-border-left); padding: 12px 32px 12px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; color: var(--tag-text); display: flex; justify-content: space-between; align-items: center; animation: slideIn 0.2s ease-out; transition: transform 0.1s ease, box-shadow 0.1s ease; text-align: justify; cursor: grab; position: relative; word-break: break-word; }
         .tag:active { cursor: grabbing; }
@@ -355,7 +163,6 @@
         .remove-x:hover { color: var(--tag-icon-hover) !important; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Botones Especiales y Modificadores */
         .toggle-group { display: flex; gap: 6px; }
         .btn-toggle { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; }
         .btn-toggle:hover { background: var(--border); color: var(--text-main); }
@@ -367,9 +174,6 @@
         .nivell-box.minimized .mesures-grid, .nivell-box.minimized .mesures-grid-4 { display: none !important; }
         .nivell-box.minimized .sub-label { margin-bottom: 0 !important; }
 
-        /* ==========================================
-           7. SECUENCIA DIDÁCTICA
-           ========================================== */
         .sequence-step { position: relative; background: var(--card-bg); border: 1px solid var(--border); padding: 12px 16px 36px 12px; border-radius: var(--radius); margin-bottom: 15px; animation: fadeIn 0.3s ease; }
         .sequence-step-grid { display: grid; grid-template-columns: 1fr 90px; gap: 20px; }
         .sequence-step:not(:last-child)::after { content: '\f103'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; bottom: 12px; left: 25px; transform: translateX(-50%); color: var(--text-muted); font-size: 1.1rem; opacity: 0.5; }
@@ -404,7 +208,6 @@
         .btn-add-step { background: transparent; color: var(--text-muted); border: 2px dashed var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; }
         .btn-add-step:hover { background: var(--card-bg); color: var(--accent); border-color: var(--accent); border-style: solid; }
 
-        /* Avaluació Activitats */
         .eval-tools { display: flex; align-items: center; gap: 8px; margin-top: 4px; padding-bottom: 4px; }
         .btn-eval-a { width: 22px; height: 22px; border: 1.5px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; user-select: none; }
         .btn-eval-a:hover { border-color: var(--accent); color: var(--accent); }
@@ -430,9 +233,6 @@
         .criteria-dropdown-item:hover { background: var(--bg); color: var(--accent); }
         .criteria-dropdown-empty { padding: 8px 12px; font-style: italic; color: var(--text-muted); font-size: 0.75rem;}
 
-        /* ==========================================
-           8. UTILIDADES Y MODALES
-           ========================================== */
         .bottom-actions-bar { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20px;}
         .btn-container { display: flex; gap: 12px; }
         
@@ -459,16 +259,12 @@
         .close-modal:hover { color: var(--accent); }
         
         .export-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 30px 25px; }
-        
         .export-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 25px 10px; cursor: pointer; transition: all 0.2s ease; color: var(--text-main); }
         .export-btn i { font-size: 2.2rem; color: var(--accent); transition: transform 0.2s ease; }
         .export-btn span { font-size: 0.85rem; font-weight: 700; }
         .export-btn:hover { border-color: var(--accent); background: var(--card-bg); transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(107, 149, 150, 0.15); }
         .export-btn:hover i { transform: scale(1.1); }
 
-        /* ==========================================
-           9. RESPONSIVE (MÓVIL)
-           ========================================== */
         @media (max-width: 1024px) {
             body { padding: 15px 10px; }
             .container { padding: 0; max-width: 100%; }
@@ -476,32 +272,24 @@
             header h1 { font-size: 2.8rem; letter-spacing: -0.02em; }
             header h1 i { font-size: 1.8rem; }
             header h2 { font-size: 0.95rem; }
-            
             .grid-row, .grid-row-3, .grid-row-4, .grid-row-4-equal, .grid-row-5, .split-header-row, .dua-grid, .mesures-grid, .mesures-grid-4, .block1-custom-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
             .b1-ods { grid-column: 1 / 2; grid-row: auto; }
-
             .card { padding: 18px; }
             .card-title { font-size: 0.8rem; margin-bottom: 10px; }
-            
             input, textarea, select, .custom-select-trigger { font-size: 0.95rem; padding: 10px 12px; }
             .tag { padding: 10px 28px 10px 12px; font-size: 0.85rem; }
             .remove-x { right: 5px; }
-
             .section-header { margin: 30px 0 15px 0; padding: 10px; }
             .section-title-text { font-size: 1.1rem; }
             .section-number { width: 32px; height: 32px; font-size: 1rem; }
-            
             .sequence-step-grid { grid-template-columns: 1fr; gap: 15px; }
             .phase-sessions { border-left: none; border-top: 1px dashed var(--border); padding-left: 0; padding-top: 15px; }
             .sessions-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px;}
             .session-item { width: 45px; }
             .btn-add-session { width: auto; padding: 6px 15px; }
-
             .header-icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
-            
             .bottom-actions-bar { flex-direction: column-reverse; align-items: center; gap: 20px; }
             .btn-container { width: 100%; justify-content: center; }
-            
             .export-grid { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
             .export-btn { flex-direction: row; justify-content: flex-start; padding: 15px 20px; gap: 20px;}
             .export-btn i { font-size: 1.8rem; }
@@ -513,12 +301,8 @@
 <main class="container">
     
     <header>
-        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar">
-            <i class="fa-solid fa-moon" id="dark-icon"></i>
-        </button>
-        <button class="header-icon-btn" id="btn-import-trigger" title="Importar fitxer JSON previ">
-            <i class="fa-solid fa-file-import"></i>
-        </button>
+        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-moon" id="dark-icon"></i></button>
+        <button class="header-icon-btn" id="btn-import-trigger" title="Importar fitxer JSON previ"><i class="fa-solid fa-file-import"></i></button>
         <h1>Click<span>SA</span><i class="fa-solid fa-arrow-pointer"></i></h1>
         <h2>Dissenyador de situacions d'aprenentatge</h2>
         <div id="loading-msg" style="color:var(--accent); font-weight:bold; margin-top:10px;"></div>
@@ -534,22 +318,10 @@
         </div>
         <div id="block-1" class="block-content" style="display: none;">
             <div class="grid-row-4-equal">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book"></i> ÀREA</div></div>
-                    <select id="input-area"></select>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-shapes"></i> CICLE</div></div>
-                    <select id="input-cicle"></select>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-graduation-cap"></i> NIVELL</div></div>
-                    <select id="input-curs"></select>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-calendar-week"></i> TRIMESTRE</div></div>
-                    <select id="input-trimestre"></select>
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book"></i> ÀREA</div></div><select id="input-area"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-shapes"></i> CICLE</div></div><select id="input-cicle"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-graduation-cap"></i> NIVELL</div></div><select id="input-curs"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-calendar-week"></i> TRIMESTRE</div></div><select id="input-trimestre"></select></div>
             </div>
             <div class="grid-row" style="grid-template-columns: 1fr;">
                 <div class="card">
@@ -571,47 +343,24 @@
                 </div>
             </div>
             <div class="split-header-row">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-hashtag"></i> Nº</div></div>
-                    <input type="text" id="input-sa-num" placeholder="">
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book-open"></i> TÍTOL</div></div>
-                    <input type="text" id="input-sa-title" placeholder="">
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-hashtag"></i> Nº</div></div><input type="text" id="input-sa-num"></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book-open"></i> TÍTOL</div></div><input type="text" id="input-sa-title"></div>
             </div>
             <div class="block1-custom-grid">
-                <div class="card b1-repte">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag"></i> REPTE, PROBLEMA, NECESSITAT</div></div>
-                    <textarea id="input-repte" rows="2" placeholder="Quin és el repte a superar? Detalla'l..."></textarea>
-                </div>
-                <div class="card b1-ods">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-earth-europe"></i> ODS</div></div>
-                    <select id="select-ods"></select><div class="selection-area" id="tags-ods"></div>
-                </div>
-                <div class="card b1-producte">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag-checkered"></i> PRODUCTE FINAL</div></div>
-                    <textarea id="input-tasca" rows="2" placeholder="Què crearan o faran al final? Descriu-ho..."></textarea>
-                </div>
+                <div class="card b1-repte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag"></i> REPTE, PROBLEMA, NECESSITAT</div></div><textarea id="input-repte" rows="2" placeholder="Quin és el repte a superar? Detalla'l..."></textarea></div>
+                <div class="card b1-ods"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-earth-europe"></i> ODS</div></div><select id="select-ods"></select><div class="selection-area" id="tags-ods"></div></div>
+                <div class="card b1-producte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag-checkered"></i> PRODUCTE FINAL</div></div><textarea id="input-tasca" rows="2" placeholder="Què crearan o faran al final? Descriu-ho..."></textarea></div>
             </div>
         </div>
     </section>
 
     <section class="section-container">
         <div class="section-header toggle-section" data-target="block-2">
-            <div class="section-header-left">
-                <div class="section-number">2</div>
-                <div class="section-title-text">Concreció Curricular</div>
-            </div>
+            <div class="section-header-left"><div class="section-number">2</div><div class="section-title-text">Concreció Curricular</div></div>
             <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-2" style="transform: rotate(180deg);"></i>
         </div>
         <div id="block-2" class="block-content" style="display: none;">
-            <div class="grid-row" style="grid-template-columns: 1fr;">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-stairs"></i> OBJ. GENERALS D'ETAPA</div></div>
-                    <select id="select-obj-gen"></select><div class="selection-area" id="tags-obj-gen"></div>
-                </div>
-            </div>
+            <div class="grid-row" style="grid-template-columns: 1fr;"><div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-stairs"></i> OBJ. GENERALS D'ETAPA</div></div><select id="select-obj-gen"></select><div class="selection-area" id="tags-obj-gen"></div></div></div>
             <div class="grid-row" style="grid-template-columns: 1fr;">
                 <div class="card">
                     <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-key"></i> PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)</div></div>
@@ -630,82 +379,46 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> COMPETÈNCIES ESPECÍFIQUES</div></div>
-                    <select id="select-comp-espec"></select><div class="selection-area" id="tags-comp-espec"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-list-ol"></i> CRITERIS D'AVALUACIÓ</div></div>
-                    <select id="select-criteris"></select><div class="selection-area" id="tags-criteris"></div>
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> COMPETÈNCIES ESPECÍFIQUES</div></div><select id="select-comp-espec"></select><div class="selection-area" id="tags-comp-espec"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-list-ol"></i> CRITERIS D'AVALUACIÓ</div></div><select id="select-criteris"></select><div class="selection-area" id="tags-criteris"></div></div>
             </div>
             <div class="grid-row">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-layer-group"></i> BLOCS DE CONTINGUTS</div></div>
-                    <select id="select-blocs"></select><div class="selection-area" id="tags-blocs"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-lightbulb"></i> SABERS BÀSICS</div></div>
-                    <select id="select-sabers"></select><div class="selection-area" id="tags-sabers"></div>
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-layer-group"></i> BLOCS DE CONTINGUTS</div></div><select id="select-blocs"></select><div class="selection-area" id="tags-blocs"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-lightbulb"></i> SABERS BÀSICS</div></div><select id="select-sabers"></select><div class="selection-area" id="tags-sabers"></div></div>
             </div>
         </div>
     </section>
 
     <section class="section-container">
         <div class="section-header toggle-section" data-target="block-3">
-            <div class="section-header-left">
-                <div class="section-number">3</div>
-                <div class="section-title-text">Metodologia i Organització</div>
-            </div>
+            <div class="section-header-left"><div class="section-number">3</div><div class="section-title-text">Metodologia i Organització</div></div>
             <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-3" style="transform: rotate(180deg);"></i>
         </div>
         <div id="block-3" class="block-content" style="display: none;">
             <div class="grid-row-3">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-person-running"></i> METODOLOGIA / MODEL / ESTIL</div></div>
-                    <select id="select-metodologia"></select><div class="selection-area" id="tags-metodologia"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-users"></i> AGRUPAMENTS</div></div>
-                    <select id="select-agrupaments"></select><div class="selection-area" id="tags-agrupaments"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-box-open"></i> ESPAIS I RECURSOS MATERIALS</div></div>
-                    <textarea id="input-materials" rows="3" placeholder="Escriu els materials necessaris..."></textarea>
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-person-running"></i> METODOLOGIA / MODEL / ESTIL</div></div><select id="select-metodologia"></select><div class="selection-area" id="tags-metodologia"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-users"></i> AGRUPAMENTS</div></div><select id="select-agrupaments"></select><div class="selection-area" id="tags-agrupaments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-box-open"></i> ESPAIS I RECURSOS MATERIALS</div></div><textarea id="input-materials" rows="3" placeholder="Escriu els materials necessaris..."></textarea></div>
             </div>
         </div>
     </section>
 
     <section class="section-container">
         <div class="section-header toggle-section" data-target="block-4">
-            <div class="section-header-left">
-                <div class="section-number">4</div>
-                <div class="section-title-text">Avaluació</div>
-            </div>
+            <div class="section-header-left"><div class="section-number">4</div><div class="section-title-text">Avaluació</div></div>
             <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-4" style="transform: rotate(180deg);"></i>
         </div>
         <div id="block-4" class="block-content" style="display: none;">
             <div class="grid-row">
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-clipboard-check"></i> INSTRUMENTS D'AVALUACIÓ</div></div>
-                    <select id="select-instruments"></select><div class="selection-area" id="tags-instruments"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-chart-pie"></i> TIPUS D'AVALUACIÓ</div></div>
-                    <select id="select-tipus-avaluacio"></select><div class="selection-area" id="tags-tipus-avaluacio"></div>
-                </div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-clipboard-check"></i> INSTRUMENTS D'AVALUACIÓ</div></div><select id="select-instruments"></select><div class="selection-area" id="tags-instruments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-chart-pie"></i> TIPUS D'AVALUACIÓ</div></div><select id="select-tipus-avaluacio"></select><div class="selection-area" id="tags-tipus-avaluacio"></div></div>
             </div>
         </div>
     </section>
 
     <section class="section-container">
         <div class="section-header toggle-section" data-target="block-5">
-            <div class="section-header-left">
-                <div class="section-number">5</div>
-                <div class="section-title-text">Mesures per a l'atenció educativa</div>
-            </div>
+            <div class="section-header-left"><div class="section-number">5</div><div class="section-title-text">Mesures per a l'atenció educativa</div></div>
             <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-5" style="transform: rotate(180deg);"></i>
         </div>
         <div id="block-5" class="block-content" style="display: none;">
@@ -742,26 +455,19 @@
 
     <section class="section-container">
         <div class="section-header toggle-section" data-target="block-6">
-            <div class="section-header-left">
-                <div class="section-number">6</div>
-                <div class="section-title-text">Seqüència Didàctica</div>
-            </div>
+            <div class="section-header-left"><div class="section-number">6</div><div class="section-title-text">Seqüència Didàctica</div></div>
             <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-6" style="transform: rotate(180deg);"></i>
         </div>
         <div id="block-6" class="block-content" style="display: none;">
             <div id="sequence-container"></div>
-            <div style="margin-top: 20px;">
-                <button class="btn-add-step" id="btn-add-step" title="Afegir FASE"><i class="fa-solid fa-plus fa-xl"></i></button>
-            </div>
+            <div style="margin-top: 20px;"><button class="btn-add-step" id="btn-add-step" title="Afegir FASE"><i class="fa-solid fa-plus fa-xl"></i></button></div>
         </div>
     </section>
 
     <div class="bottom-actions-bar">
         <div id="inline-save-indicator" style="display: none;">
-            <i class="fa-solid fa-floppy-disk" id="save-icon"></i>
-            <span id="save-text"></span>
+            <i class="fa-solid fa-floppy-disk" id="save-icon"></i><span id="save-text"></span>
         </div>
-        
         <div class="btn-container">
             <button class="action-btn btn-clear" id="btn-clear" title="Esborrar dades i començar una nova SA"><i class="fa-solid fa-trash-can"></i></button>
             <button class="action-btn btn-download" id="btn-open-export" title="Exportar Situació d'Aprenentatge"><i class="fa-solid fa-download"></i></button>
@@ -776,14 +482,8 @@
                 <i class="fa-solid fa-xmark close-modal" id="close-export-modal"></i>
             </div>
             <div class="modal-body export-grid">
-                <button class="export-btn" id="export-doc">
-                    <i class="fa-solid fa-file-word"></i>
-                    <span>Word (.doc)</span>
-                </button>
-                <button class="export-btn" id="export-json">
-                    <i class="fa-solid fa-file-code"></i>
-                    <span>Dades (.json)</span>
-                </button>
+                <button class="export-btn" id="export-doc"><i class="fa-solid fa-file-word"></i><span>Word (.doc)</span></button>
+                <button class="export-btn" id="export-json"><i class="fa-solid fa-file-code"></i><span>Dades (.json)</span></button>
             </div>
         </div>
     </div>
@@ -798,23 +498,17 @@
             </div>
         </div>
     </div>
-
 </main>
 
 <script>
-    /**
-     * ==========================================
-     * ESTADO DE LA APLICACIÓN (Encapsulado)
-     * ==========================================
-     */
+    /** ==========================================
+     * STATE & CONSTANTS
+     * ========================================== */
     const AppState = {
         isRestoring: true,
         destinatariCount: 0,
         cacheDadesCurriculars: {},
-        dadesDiversitat: { 
-            destinataris: [], n3_acces: [], n3_apr: [], n3_par: [], 
-            n4_rec: [], n4_acces: [], n4_apr: [], n4_par: [] 
-        },
+        dadesDiversitat: { destinataris: [], n3_acces: [], n3_apr: [], n3_par: [], n4_rec: [], n4_acces: [], n4_apr: [], n4_par: [] },
         sabersColors: {},
         mapaCEs: {},
         itemsAmbEstrella: new Set(),
@@ -822,17 +516,7 @@
     };
 
     const CONSTANTES_GLOBALES = {
-        llistaAreas: [
-            "Coneixement del Medi Natural, Social i Cultural",
-            "Educació Artística: Música i Dansa",
-            "Educació Artística: Plàstica i Visual",
-            "Educació Física",
-            "Llengua i Literatura Valenciana",
-            "Llengua i Literatura Castellana",
-            "Llengua Estrangera: Anglès",
-            "Matemàtiques",
-            "Educació en Valors Cívics i Ètics"
-        ],
+        llistaAreas: ["Coneixement del Medi Natural, Social i Cultural", "Educació Artística: Música i Dansa", "Educació Artística: Plàstica i Visual", "Educació Física", "Llengua i Literatura Valenciana", "Llengua i Literatura Castellana", "Llengua Estrangera: Anglès", "Matemàtiques", "Educació en Valors Cívics i Ètics"],
         urlsData: {
             "Educació Física": {
                 "Primer Cicle": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVbYbOlXgfL6mgnyygS9Gn_ojrwmIjw5z69RpC5b8722GhhS8pQam4-wq4cWR6y4yTldO2oqIVWaf_/pub?gid=0&single=true&output=csv",
@@ -843,111 +527,110 @@
         urlDiversitat: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSPWZz2fXSfsQwfDDbtsNMPNGYC2xIeGRKrB9qhNulHcWGVwRZ3blGtQD7ZBfRcVTyB3TFx58veXtWO/pub?gid=0&single=true&output=csv"
     };
 
-    /**
-     * ==========================================
-     * INICIALIZACIÓN Y EVENTOS GLOBALES
-     * ==========================================
-     */
+    /** ==========================================
+     * UTILITIES
+     * ========================================== */
+    const selectEl = id => document.getElementById(id);
+    const queryEl = sel => document.querySelector(sel);
+    const queryAll = sel => document.querySelectorAll(sel);
+    
+    const debounce = (func, wait) => {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    };
+
+    const normalizeTextForKeys = str => !str ? "" : str.replace(/\[.*?\]/g, '').replace(/\(.*?\)$/g, '').replace(/[\.\,\;\:]+$/, '').replace(/\s+/g, ' ').trim().toUpperCase();
+
+    const getSelectedText = id => {
+        const w = selectEl(id)?.nextElementSibling;
+        return w?.classList.contains('custom-select-wrapper') ? (w.querySelector('span')?.innerText || "-") : (selectEl(id)?.value || "-");
+    };
+
+    /** ==========================================
+     * INITIALIZATION & EVENT LISTENERS
+     * ========================================== */
     document.addEventListener('DOMContentLoaded', async () => {
         setupGlobalListeners();
         setupTooltipListeners();
         
-        const loadingMsg = document.getElementById('loading-msg');
+        const loadingMsg = selectEl('loading-msg');
         loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
         
         try {
             await fetchDiversitat();
             loadingMsg.innerHTML = '';
             inicialitzarDesplegablesIncials();
-            
             await restoreState();
             AppState.isRestoring = false;
 
-            // Auto-guardado
             const saveDebounced = debounce(saveState, 1000);
             ['input', 'change', 'click', 'dragend'].forEach(evt => document.addEventListener(evt, saveDebounced));
-
         } catch (error) {
             loadingMsg.innerHTML = '❌ No hem pogut connectar a la base de dades.';
-            console.error(error);
         }
     });
 
     function setupGlobalListeners() {
-        document.getElementById('btn-dark-mode').addEventListener('click', toggleDarkMode);
+        selectEl('btn-dark-mode').addEventListener('click', toggleDarkMode);
         
-        // Delegación de Eventos para Secciones
-        document.body.addEventListener('click', (e) => {
+        document.body.addEventListener('click', e => {
             const header = e.target.closest('.toggle-section');
-            if (header) toggleBlock(header.getAttribute('data-target'));
+            if (header) toggleBlock(header.dataset.target);
         });
 
-        // Eventos estáticos de UI
-        document.getElementById('btn-mesures-no').addEventListener('click', () => setMesures(false));
-        document.getElementById('btn-mesures-si').addEventListener('click', () => setMesures(true));
-        document.getElementById('btn-add-destinatari').addEventListener('click', addDestinatari);
-        document.getElementById('btn-add-step').addEventListener('click', addSequenceStep);
-        document.getElementById('btn-clear').addEventListener('click', clearState);
+        selectEl('btn-mesures-no').addEventListener('click', () => setMesures(false));
+        selectEl('btn-mesures-si').addEventListener('click', () => setMesures(true));
+        selectEl('btn-add-destinatari').addEventListener('click', addDestinatari);
+        selectEl('btn-add-step').addEventListener('click', addSequenceStep);
+        selectEl('btn-clear').addEventListener('click', clearState);
 
-        // Modales
-        const modal = document.getElementById('export-modal');
-        document.getElementById('btn-open-export').addEventListener('click', () => modal.classList.add('show'));
-        document.getElementById('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
-        modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
+        const modal = selectEl('export-modal');
+        selectEl('btn-open-export').addEventListener('click', () => modal.classList.add('show'));
+        selectEl('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
+        modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('show'); });
         
-        document.getElementById('export-doc').addEventListener('click', () => { generateWord(); modal.classList.remove('show'); });
-        document.getElementById('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
+        selectEl('export-doc').addEventListener('click', () => { generateWord(); modal.classList.remove('show'); });
+        selectEl('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
         
-        document.getElementById('btn-import-trigger').addEventListener('click', () => document.getElementById('import-json-file').click());
-        document.getElementById('import-json-file').addEventListener('change', importJSON);
+        selectEl('btn-import-trigger').addEventListener('click', () => selectEl('import-json-file').click());
+        selectEl('import-json-file').addEventListener('change', importJSON);
 
-        // Delegación de Eventos para Temporalització (Click en casillas)
-        document.getElementById('temporalitzacio-container').addEventListener('click', (e) => {
-            if (e.target.classList.contains('week-box')) {
-                e.target.classList.toggle('active');
-            }
+        selectEl('temporalitzacio-container').addEventListener('click', e => {
+            if (e.target.classList.contains('week-box')) e.target.classList.toggle('active');
         });
 
-        // Delegación de Eventos para Seqüència Didàctica (Rendimiento)
-        document.getElementById('sequence-container').addEventListener('click', (e) => {
-            // Eliminar fase
-            if (e.target.closest('.btn-remove-step')) {
-                e.target.closest('.sequence-step').remove();
+        selectEl('sequence-container').addEventListener('click', e => {
+            const btnRemoveStep = e.target.closest('.btn-remove-step');
+            const btnRemoveAct = e.target.closest('.btn-remove-act');
+            const btnAddAct = e.target.closest('.btn-add-act');
+            const btnAddSess = e.target.closest('.btn-add-sess');
+            const btnEval = e.target.closest('.btn-eval');
+            const btnAddCrit = e.target.closest('.btn-add-crit');
+
+            if (btnRemoveStep) {
+                btnRemoveStep.closest('.sequence-step').remove();
                 updateStepNumbers();
                 updateGlobalSessionNumbers();
-            }
-            // Eliminar actividad
-            else if (e.target.closest('.btn-remove-act')) {
-                e.target.closest('.sequence-activity').remove();
-            }
-            // Añadir Actividad
-            else if (e.target.closest('.btn-add-act')) {
-                const step = e.target.closest('.sequence-step');
-                addActivity(step.id);
-            }
-            // Añadir Sessión
-            else if (e.target.closest('.btn-add-sess')) {
-                const step = e.target.closest('.sequence-step');
-                addSession(step.id);
-            }
-            // Botón Eval
-            else if (e.target.closest('.btn-eval')) {
-                const btn = e.target.closest('.btn-eval');
-                const actId = e.target.closest('.sequence-activity').querySelector('[id^="criteria-container-"]').id.replace('criteria-container-', '');
-                toggleEval(btn, actId);
-            }
-            // Botón Add Criteria
-            else if (e.target.closest('.btn-add-crit')) {
-                const btn = e.target.closest('.btn-add-crit');
-                const actId = btn.closest('[id^="criteria-container-"]').id.replace('criteria-container-', '');
-                showCriteriaDropdown(btn, actId);
+            } else if (btnRemoveAct) {
+                btnRemoveAct.closest('.sequence-activity').remove();
+            } else if (btnAddAct) {
+                addActivity(btnAddAct.closest('.sequence-step').id);
+            } else if (btnAddSess) {
+                addSession(btnAddSess.closest('.sequence-step').id);
+            } else if (btnEval) {
+                const actId = btnEval.closest('.sequence-activity').querySelector('[id^="criteria-container-"]').id.replace('criteria-container-', '');
+                toggleEval(btnEval, actId);
+            } else if (btnAddCrit) {
+                showCriteriaDropdown(btnAddCrit, btnAddCrit.closest('[id^="criteria-container-"]').id.replace('criteria-container-', ''));
             }
         });
 
-        // Click fuera para Selects custom
-        document.addEventListener('click', (e) => { 
+        document.addEventListener('click', e => { 
             if (!e.target.closest('.custom-select-wrapper')) {
-                document.querySelectorAll('.custom-options').forEach(el => { 
+                queryAll('.custom-options').forEach(el => { 
                     el.classList.remove('open'); 
                     if(el.parentElement) el.parentElement.style.zIndex = '1'; 
                 }); 
@@ -960,114 +643,78 @@
         tooltip.id = 'custom-tooltip';
         document.body.appendChild(tooltip);
 
-        const container = document.getElementById('perfil-eixida-container');
+        const container = selectEl('perfil-eixida-container');
         if (!container) return;
 
-        container.addEventListener('mouseover', (e) => {
+        container.addEventListener('mouseover', e => {
             const cell = e.target.closest('.cc-cell');
-            if (cell) {
-                const text = cell.getAttribute('data-fulltext');
-                if (text) {
-                    tooltip.innerHTML = `<strong>${cell.dataset.desc}</strong><br><span style="font-weight:normal; font-size:0.8rem; display:block; margin-top:4px;">${text}</span>`;
-                    tooltip.classList.add('show');
-                }
+            if (cell && cell.dataset.fulltext) {
+                tooltip.innerHTML = `<strong>${cell.dataset.desc}</strong><br><span style="font-weight:normal; font-size:0.8rem; display:block; margin-top:4px;">${cell.dataset.fulltext}</span>`;
+                tooltip.classList.add('show');
             }
         });
 
-        container.addEventListener('mousemove', (e) => {
+        container.addEventListener('mousemove', e => {
             if (tooltip.classList.contains('show')) {
-                let x = e.pageX + 15;
-                let y = e.pageY + 15;
+                let x = e.pageX + 15, y = e.pageY + 15;
                 if (x + 280 > window.innerWidth) x = e.pageX - 295;
                 tooltip.style.left = x + 'px';
                 tooltip.style.top = y + 'px';
             }
         });
 
-        container.addEventListener('mouseout', (e) => {
-            if (e.target.closest('.cc-cell')) tooltip.classList.remove('show');
-        });
-
-        container.addEventListener('click', (e) => {
+        container.addEventListener('mouseout', e => { if (e.target.closest('.cc-cell')) tooltip.classList.remove('show'); });
+        
+        container.addEventListener('click', e => {
             const cell = e.target.closest('.cc-cell');
-            if (cell) {
-                cell.classList.toggle('manual-active');
-                updateCellVisual(cell);
-            }
+            if (cell) { cell.classList.toggle('manual-active'); updateCellVisual(cell); }
         });
-    }
-
-    /**
-     * ==========================================
-     * UTILIDADES
-     * ==========================================
-     */
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
     }
 
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode'); 
-        const icon = document.getElementById('dark-icon');
-        icon.className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        selectEl('dark-icon').className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
     }
 
     function toggleBlock(id) { 
-        const block = document.getElementById(id);
-        const icon = document.getElementById('icon-' + id); 
+        const block = selectEl(id);
+        const icon = selectEl('icon-' + id); 
+        if(!block || !icon) return;
         const isHidden = block.style.display === 'none' || block.style.display === ''; 
         block.style.display = isHidden ? 'block' : 'none'; 
         icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)'; 
     }
 
-    /**
-     * ==========================================
-     * ESTADO Y ALMACENAMIENTO (LOCALSTORAGE)
-     * ==========================================
-     */
+    /** ==========================================
+     * STATE MANAGEMENT
+     * ========================================== */
     function getStateObject() {
-        const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [] };
-        state.darkMode = document.body.classList.contains('dark-mode');
+        const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [], darkMode: document.body.classList.contains('dark-mode') };
         
-        ['input-sa-num', 'input-sa-title', 'input-repte', 'input-tasca', 'input-materials'].forEach(id => {
-            state.inputs[id] = document.getElementById(id)?.value || "";
-        });
-        
+        ['input-sa-num', 'input-sa-title', 'input-repte', 'input-tasca', 'input-materials'].forEach(id => state.inputs[id] = selectEl(id)?.value || "");
         ['input-area', 'input-cicle', 'input-curs', 'input-trimestre'].forEach(id => {
             const text = getSelectedText(id);
             state.selects[id] = text !== '-' ? text : '';
         });
         
         const tagContainers = ['tags-obj-gen', 'tags-ods', 'tags-comp-espec', 'tags-criteris', 'tags-blocs', 'tags-sabers', 'tags-metodologia', 'tags-agrupaments', 'tags-instruments', 'tags-tipus-avaluacio', 'tags-dua-acces', 'tags-dua-part', 'tags-dua-prog'];
-        tagContainers.forEach(id => {
-            state.tags[id] = Array.from(document.getElementById(id)?.querySelectorAll('.tag-text') || []).map(t => t.innerText);
-        });
+        tagContainers.forEach(id => state.tags[id] = Array.from(selectEl(id)?.querySelectorAll('.tag-text') || []).map(t => t.innerText));
         
-        state.temporalitzacio = Array.from(document.querySelectorAll('.week-box')).map(box => box.classList.contains('active'));
-        state.perfilEixida = Array.from(document.querySelectorAll('.cc-cell.manual-active')).map(c => c.dataset.desc);
-        state.mesuresActives = document.getElementById('btn-mesures-si')?.classList.contains('active');
+        state.temporalitzacio = Array.from(queryAll('.week-box')).map(box => box.classList.contains('active'));
+        state.perfilEixida = Array.from(queryAll('.cc-cell.manual-active')).map(c => c.dataset.desc);
+        state.mesuresActives = selectEl('btn-mesures-si')?.classList.contains('active');
         
-        document.querySelectorAll('.destinatari-item').forEach(dest => {
+        queryAll('.destinatari-item').forEach(dest => {
             const destData = { tags: {} };
             ['dest', 'n3-acc', 'n3-apr', 'n3-par', 'n4-rec', 'n4-acc', 'n4-apr', 'n4-par'].forEach(prefix => {
                 const tagArea = dest.querySelector(`[id^="tags-${prefix}-"]`);
-                if (tagArea) {
-                    destData.tags[prefix] = Array.from(tagArea.querySelectorAll('.tag-text')).map(t => t.innerText);
-                }
+                if (tagArea) destData.tags[prefix] = Array.from(tagArea.querySelectorAll('.tag-text')).map(t => t.innerText);
             });
             state.destinataris.push(destData);
         });
         
-        document.querySelectorAll('.sequence-step').forEach(step => {
-            const stepData = {
-                title: step.querySelector('.step-title-input').value,
-                sessions: step.querySelectorAll('.session-item').length,
-                activities: []
-            };
+        queryAll('.sequence-step').forEach(step => {
+            const stepData = { title: step.querySelector('.step-title-input').value, sessions: step.querySelectorAll('.session-item').length, activities: [] };
             step.querySelectorAll('.sequence-activity').forEach(act => {
                 stepData.activities.push({
                     text: act.querySelector('.activity-textarea').value,
@@ -1081,19 +728,17 @@
     }
 
     function saveState() {
-        if (AppState.isRestoring || !document.getElementById('input-cicle')) return;
+        if (AppState.isRestoring || !selectEl('input-cicle')) return;
         
-        const ind = document.getElementById('inline-save-indicator');
-        const icon = document.getElementById('save-icon');
-        const text = document.getElementById('save-text');
+        const ind = selectEl('inline-save-indicator');
+        const icon = selectEl('save-icon');
+        const text = selectEl('save-text');
         
-        ind.style.display = 'flex';
-        ind.classList.add('saving');
+        ind.style.display = 'flex'; ind.classList.add('saving');
         icon.className = 'fa-solid fa-arrows-rotate fa-spin';
         text.innerText = 'Desant...';
 
-        const state = getStateObject();
-        localStorage.setItem('clickSA_state', JSON.stringify(state));
+        localStorage.setItem('clickSA_state', JSON.stringify(getStateObject()));
 
         setTimeout(() => {
             ind.classList.remove('saving');
@@ -1110,82 +755,64 @@
             const state = JSON.parse(savedStr);
             if (state.darkMode && !document.body.classList.contains('dark-mode')) toggleDarkMode();
             
-            Object.keys(state.inputs).forEach(id => {
-                if (document.getElementById(id)) document.getElementById(id).value = state.inputs[id];
-            });
+            Object.keys(state.inputs).forEach(id => { if (selectEl(id)) selectEl(id).value = state.inputs[id]; });
             
-            const savedArea = state.selects['input-area'];
-            const savedCicle = state.selects['input-cicle'];
-            
+            const [savedArea, savedCicle] = [state.selects['input-area'], state.selects['input-cicle']];
             if (savedArea) setCustomSelectValue('input-area', savedArea);
             if (savedCicle) setCustomSelectValue('input-cicle', savedCicle);
             
             if (savedArea && savedCicle) {
                 if (!AppState.cacheDadesCurriculars[savedArea]) AppState.cacheDadesCurriculars[savedArea] = {};
                 if (!AppState.cacheDadesCurriculars[savedArea][savedCicle]) {
-                    const url = CONSTANTES_GLOBALES.urlsData[savedArea] ? CONSTANTES_GLOBALES.urlsData[savedArea][savedCicle] : null;
+                    const url = CONSTANTES_GLOBALES.urlsData[savedArea]?.[savedCicle];
                     if (url) {
-                        const loadingMsg = document.getElementById('loading-msg');
-                        loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
+                        selectEl('loading-msg').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
                         await fetchCsvData(savedArea, savedCicle, url);
-                        loadingMsg.innerHTML = '';
+                        selectEl('loading-msg').innerHTML = '';
                     }
                 }
-                if (AppState.cacheDadesCurriculars[savedArea][savedCicle]) {
-                    actualitzarDesplegablesCurriculars(savedArea, savedCicle);
-                }
+                if (AppState.cacheDadesCurriculars[savedArea][savedCicle]) actualitzarDesplegablesCurriculars(savedArea, savedCicle);
             }
             
             if (state.selects['input-curs']) setCustomSelectValue('input-curs', state.selects['input-curs']);
             if (state.selects['input-trimestre']) setCustomSelectValue('input-trimestre', state.selects['input-trimestre']);
             
-            Object.keys(state.tags).forEach(id => {
-                if(state.tags[id]) state.tags[id].forEach(val => addTag(val, id));
-            });
+            Object.keys(state.tags).forEach(id => state.tags[id]?.forEach(val => addTag(val, id)));
             
-            if (state.temporalitzacio && state.temporalitzacio.length === 40) {
-                document.querySelectorAll('.week-box').forEach((box, index) => {
-                    box.classList.toggle('active', !!state.temporalitzacio[index]);
-                });
-            }
+            if (state.temporalitzacio?.length === 40) queryAll('.week-box').forEach((box, index) => box.classList.toggle('active', !!state.temporalitzacio[index]));
 
-            if (state.perfilEixida) {
-                state.perfilEixida.forEach(desc => {
-                    const cell = document.querySelector(`.cc-cell[data-desc="${desc}"]`);
-                    if (cell) { cell.classList.add('manual-active'); updateCellVisual(cell); }
-                });
-            }
+            state.perfilEixida?.forEach(desc => {
+                const cell = queryEl(`.cc-cell[data-desc="${desc}"]`);
+                if (cell) { cell.classList.add('manual-active'); updateCellVisual(cell); }
+            });
 
             if (state.mesuresActives) {
                 setMesures(true);
-                document.getElementById('destinataris-list').innerHTML = ''; 
+                selectEl('destinataris-list').innerHTML = ''; 
                 state.destinataris.forEach(dest => {
                     addDestinatari();
                     const destId = `dest-${AppState.destinatariCount}`;
-                    Object.keys(dest.tags).forEach(prefix => {
-                        dest.tags[prefix].forEach(val => addTag(val, `tags-${prefix}-${destId}`));
-                    });
+                    Object.keys(dest.tags).forEach(prefix => dest.tags[prefix].forEach(val => addTag(val, `tags-${prefix}-${destId}`)));
                 });
             }
             
-            if (state.sequence && state.sequence.length > 0) {
-                document.getElementById('sequence-container').innerHTML = '';
+            if (state.sequence?.length > 0) {
+                selectEl('sequence-container').innerHTML = '';
                 state.sequence.forEach(stepData => {
                     addSequenceStep();
-                    const steps = document.querySelectorAll('.sequence-step');
-                    const newStep = steps[steps.length - 1];
+                    const newStep = queryAll('.sequence-step')[queryAll('.sequence-step').length - 1];
                     const stepId = newStep.id;
                     
                     newStep.querySelector('.step-title-input').value = stepData.title || '';
-                    document.getElementById('sessions-' + stepId).innerHTML = ''; 
+                    selectEl('sessions-' + stepId).innerHTML = ''; 
                     for(let i=0; i<stepData.sessions; i++) addSession(stepId);
                     
                     stepData.activities.forEach(actData => {
                         addActivity(stepId);
                         const acts = newStep.querySelectorAll('.sequence-activity');
                         const newAct = acts[acts.length - 1];
-                        
                         newAct.querySelector('.activity-textarea').value = actData.text || '';
+                        
                         if (actData.evalActive) {
                             const evalBtn = newAct.querySelector('.btn-eval-a');
                             const actDOMId = newAct.querySelector('.btn-add-criteria').closest('[id^="criteria-container-"]').id.replace('criteria-container-', '');
@@ -1197,14 +824,11 @@
             }
 
             recalcularTotaLaCadena(); 
-            
-            const ind = document.getElementById('inline-save-indicator');
-            ind.style.display = 'flex';
-            document.getElementById('save-icon').className = 'fa-solid fa-floppy-disk';
-            document.getElementById('save-text').innerText = 'Recuperat';
-
-        } catch (e) { 
-            console.error("Error restaurant l'estat previ:", e); 
+            selectEl('inline-save-indicator').style.display = 'flex';
+            selectEl('save-icon').className = 'fa-solid fa-floppy-disk';
+            selectEl('save-text').innerText = 'Recuperat';
+        } catch (e) {
+            // Silently fail restore on broken JSON
         }
     }
 
@@ -1215,15 +839,9 @@
         }
     }
 
-    /**
-     * ==========================================
-     * LÓGICA DE NEGOCIO Y DATOS
-     * ==========================================
-     */
-    function normalizeTextForKeys(str) { 
-        return !str ? "" : str.replace(/\[.*?\]/g, '').replace(/\(.*?\)$/g, '').replace(/[\.\,\;\:]+$/, '').replace(/\s+/g, ' ').trim().toUpperCase(); 
-    }
-
+    /** ==========================================
+     * API & DATA PARSING
+     * ========================================== */
     async function fetchCsvData(area, nomCicle, url) {
         const response = await fetch(url); 
         const csvText = await response.text();
@@ -1231,100 +849,59 @@
         return new Promise(resolve => {
             Papa.parse(csvText, {
                 header: true, skipEmptyLines: true,
-                complete: function(results) {
+                complete: results => {
                     if (!AppState.cacheDadesCurriculars[area]) AppState.cacheDadesCurriculars[area] = {};
-                    
-                    const dades = { 
-                        descriptoresMap: {}, curs: [], trimestre: [], objectiusGenerals: [], ods: [], 
-                        competenciesEspecifiques: [], criterisAvaluacio: [], blocsContinguts: [], 
-                        sabersBasics: [], metodologia: [], agrupaments: [], instrumentsAvaluacio: [], 
-                        tipusAvaluacio: [], representacio: [], motivacio: [], accio: [] 
-                    };
-                    
+                    const d = { descriptoresMap: {}, curs: [], trimestre: [], objectiusGenerals: [], ods: [], competenciesEspecifiques: [], criterisAvaluacio: [], blocsContinguts: [], sabersBasics: [], metodologia: [], agrupaments: [], instrumentsAvaluacio: [], tipusAvaluacio: [], representacio: [], motivacio: [], accio: [] };
                     const addUnic = (arr, val) => { if (val && !arr.includes(val)) arr.push(val); };
                     
                     results.data.forEach(row => {
                         let r = {}; 
                         for (let k in row) r[k.trim().toUpperCase()] = row[k] ? row[k].trim() : "";
                         
-                        addUnic(dades.curs, r['NIVELL']); 
-                        addUnic(dades.trimestre, r['TRIMESTRE']);
+                        addUnic(d.curs, r['NIVELL']); addUnic(d.trimestre, r['TRIMESTRE']);
                         
-                        let textObj = r['OBJ. GENERALS'];
-                        if (textObj) { 
-                            let isStarred = textObj.trim().endsWith('*'); 
-                            let cleanObj = isStarred ? textObj.replace(/\*$/, '').trim() : textObj.trim(); 
-                            addUnic(dades.objectiusGenerals, cleanObj); 
-                            if (isStarred) AppState.itemsAmbEstrella.add(cleanObj); 
-                        }
-                        
-                        let textODS = r['ODS'];
-                        if (textODS) { 
-                            let isStarred = textODS.trim().endsWith('*'); 
-                            let cleanODS = isStarred ? textODS.replace(/\*$/, '').trim() : textODS.trim(); 
-                            addUnic(dades.ods, cleanODS); 
-                            if (isStarred) AppState.itemsAmbEstrella.add(cleanODS); 
-                        }
+                        const processStarred = (text, targetArr) => {
+                            if (!text) return;
+                            const isStarred = text.trim().endsWith('*'); 
+                            const cleanText = isStarred ? text.replace(/\*$/, '').trim() : text.trim(); 
+                            addUnic(targetArr, cleanText); 
+                            if (isStarred) AppState.itemsAmbEstrella.add(cleanText);
+                        };
+                        processStarred(r['OBJ. GENERALS'], d.objectiusGenerals);
+                        processStarred(r['ODS'], d.ods);
                         
                         let textCC = r['COMPETÈNCIES CLAU'] || r["PERFIL D'EIXIDA"] || r["PERFIL DE SORTIDA"] || r["PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)"] || r["DESCRIPTORS OPERATIUS"];
-                        if (!textCC) {
-                            for (let k in r) {
-                                if (k.includes('PERFIL') || k.includes('DESCRIPTOR') || k.includes('CLAU')) {
-                                    textCC = r[k];
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        if (textCC) {
-                            textCC.split('\n').forEach(line => {
-                                let codeMatch = line.match(/\b(CCL|CP|STEM|CD|CPSAA|CC|CE|CCEC)\s*(\d+)\b/i);
-                                if (codeMatch) {
-                                    let code = codeMatch[1].toUpperCase() + codeMatch[2];
-                                    dades.descriptoresMap[code] = line.trim();
-                                }
-                            });
+                        if (!textCC) for (let k in r) if (k.includes('PERFIL') || k.includes('DESCRIPTOR') || k.includes('CLAU')) { textCC = r[k]; break; }
+                        if (textCC) textCC.split('\n').forEach(line => {
+                            let match = line.match(/\b(CCL|CP|STEM|CD|CPSAA|CC|CE|CCEC)\s*(\d+)\b/i);
+                            if (match) d.descriptoresMap[match[1].toUpperCase() + match[2]] = line.trim();
+                        });
+
+                        if (r['COMPETÈNCIES ESPECÍFIQUES']) {
+                            let match = r['COMPETÈNCIES ESPECÍFIQUES'].match(/\s*[\(\[](.*?)[\)\]][.\s]*$/);
+                            let textCENet = match ? r['COMPETÈNCIES ESPECÍFIQUES'].replace(match[0], '').trim() : r['COMPETÈNCIES ESPECÍFIQUES'];
+                            addUnic(d.competenciesEspecifiques, textCENet); 
+                            if (match) AppState.mapaCEs[normalizeTextForKeys(textCENet)] = match[1].split(/[\/,]/).map(c => c.trim().toUpperCase());
                         }
 
-                        let textCE = r['COMPETÈNCIES ESPECÍFIQUES'];
-                        if (textCE) {
-                            let textCENet = textCE; 
-                            let match = textCE.match(/\s*[\(\[](.*?)[\)\]][.\s]*$/);
-                            let ccCodes = [];
-                            if (match) { 
-                                textCENet = textCE.replace(match[0], '').trim(); 
-                                ccCodes = match[1].split(/[\/,]/).map(c => c.trim().toUpperCase()); 
-                            }
-                            addUnic(dades.competenciesEspecifiques, textCENet); 
-                            if (ccCodes.length > 0) AppState.mapaCEs[normalizeTextForKeys(textCENet)] = ccCodes;
-                        }
-
-                        addUnic(dades.criterisAvaluacio, r["CRITERIS D'AVALUACIÓ"] || r["CRITERIS D’AVALUACIÓ"] || r["CRITERIS D´AVALUACIÓ"]);
-                        addUnic(dades.blocsContinguts, r['BLOCS']);
+                        addUnic(d.criterisAvaluacio, r["CRITERIS D'AVALUACIÓ"] || r["CRITERIS D’AVALUACIÓ"] || r["CRITERIS D´AVALUACIÓ"]);
+                        addUnic(d.blocsContinguts, r['BLOCS']);
                         
-                        let textSaber = r['SABERS BÀSICS'];
-                        if (textSaber) { 
-                            let ceForColor = null; 
-                            let m = textSaber.match(/CA\s*(\d+)/i); 
-                            if(m) ceForColor = m[1]; 
-                            
-                            addUnic(dades.sabersBasics, textSaber); 
-                            
-                            // LIMPIEZA ABSOLUTA: Ignora formato y remueve todo el paréntesis que contenga 1ER, 2ON o 3ER
-                            let cleanSaberText = textSaber.replace(/\s*\([^)]*(?:1ER|2ON|3ER)[^)]*\)/gi, '').trim();
-                            if (ceForColor) AppState.sabersColors[cleanSaberText] = ceForColor; 
+                        if (r['SABERS BÀSICS']) { 
+                            let m = r['SABERS BÀSICS'].match(/CA\s*(\d+)/i);
+                            addUnic(d.sabersBasics, r['SABERS BÀSICS']); 
+                            let cleanSaberText = r['SABERS BÀSICS'].replace(/\s*\([^)]*(?:1ER|2ON|3ER)[^)]*\)/gi, '').trim();
+                            if (m) AppState.sabersColors[cleanSaberText] = m[1]; 
                         }
                         
-                        addUnic(dades.metodologia, r['MODEL, METODOLOGIA, ESTIL'] || r['METODOLOGIA, MODEL, ESTIL']); 
-                        addUnic(dades.agrupaments, r['AGRUPAMENTS']);
-                        addUnic(dades.instrumentsAvaluacio, r["INSTRUMENTS D'AVALUACIÓ"] || r["INSTRUMENTS D’AVALUACIÓ"] || r["INSTRUMENTS D´AVALUACIÓ"] || r["INSSTRUMENTS D'AVALUACIÓ"]);
-                        addUnic(dades.tipusAvaluacio, r["TIPUS D'AVALUACIÓ"] || r["TIPUS D’AVALUACIÓ"] || r["TIPUS D´AVALUACIÓ"]);
-                        addUnic(dades.representacio, r['DUA REPRESENTACIÓ']); 
-                        addUnic(dades.motivacio, r['DUA MOTIVACIÓ']); 
-                        addUnic(dades.accio, r['DUA ACCIÓ']);
+                        addUnic(d.metodologia, r['MODEL, METODOLOGIA, ESTIL'] || r['METODOLOGIA, MODEL, ESTIL']); 
+                        addUnic(d.agrupaments, r['AGRUPAMENTS']);
+                        addUnic(d.instrumentsAvaluacio, r["INSTRUMENTS D'AVALUACIÓ"] || r["INSTRUMENTS D’AVALUACIÓ"] || r["INSTRUMENTS D´AVALUACIÓ"] || r["INSSTRUMENTS D'AVALUACIÓ"]);
+                        addUnic(d.tipusAvaluacio, r["TIPUS D'AVALUACIÓ"] || r["TIPUS D’AVALUACIÓ"] || r["TIPUS D´AVALUACIÓ"]);
+                        addUnic(d.representacio, r['DUA REPRESENTACIÓ']); addUnic(d.motivacio, r['DUA MOTIVACIÓ']); addUnic(d.accio, r['DUA ACCIÓ']);
                     });
                     
-                    AppState.cacheDadesCurriculars[area][nomCicle] = dades;
+                    AppState.cacheDadesCurriculars[area][nomCicle] = d;
                     resolve();
                 }
             });
@@ -1334,19 +911,15 @@
     async function fetchDiversitat() {
         const response = await fetch(CONSTANTES_GLOBALES.urlDiversitat); 
         const csvText = await response.text();
-        
         return new Promise(resolve => {
             Papa.parse(csvText, {
                 header: true, skipEmptyLines: true,
-                complete: function(results) {
+                complete: results => {
                     const addUnic = (arr, val) => { if(val && !arr.includes(val)) arr.push(val); };
-                    
                     results.data.forEach(row => {
                         for (let k in row) {
-                            let val = row[k] ? row[k].trim() : ""; 
-                            if (!val) continue; 
+                            let val = row[k]?.trim(); if (!val) continue; 
                             let key = k.toUpperCase();
-                            
                             if (key.includes('DESTINATARI')) addUnic(AppState.dadesDiversitat.destinataris, val);
                             else if (key.includes('3') && (key.includes('ACC') || key.includes('ACCESS') || key.includes('ACCÉS'))) addUnic(AppState.dadesDiversitat.n3_acces, val);
                             else if (key.includes('3') && (key.includes('APRE') || key.includes('APRENENTATGE'))) addUnic(AppState.dadesDiversitat.n3_apr, val);
@@ -1363,50 +936,33 @@
         });
     }
 
-    /**
-     * ==========================================
-     * MANEJO DEL DOM (INTERFAZ Y CONSTRUCCIÓN)
-     * ==========================================
-     */
+    /** ==========================================
+     * UI & DOM MANIPULATION
+     * ========================================== */
     function inicialitzarDesplegablesIncials() {
         buildCustomSelect('input-area', CONSTANTES_GLOBALES.llistaAreas, null);
         buildCustomSelect('input-cicle', ["Primer Cicle", "Segon Cicle", "Tercer Cicle"], null);
-        
-        const emptySelects = ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'];
-        emptySelects.forEach(id => buildCustomSelect(id, [], null));
+        ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].forEach(id => buildCustomSelect(id, [], null));
         makeSequenceSortable();
     }
 
-    function getAreaActiva() {
-        const wrapper = document.getElementById('input-area').nextElementSibling;
-        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : document.getElementById('input-area').value;
-    }
-
-    function getCicleActiu() {
-        const wrapper = document.getElementById('input-cicle').nextElementSibling;
-        return wrapper?.classList.contains('custom-select-wrapper') ? wrapper.querySelector('span')?.innerText : document.getElementById('input-cicle').value;
-    }
+    const getAreaActiva = () => getSelectedText('input-area');
+    const getCicleActiu = () => getSelectedText('input-cicle');
 
     async function handleAreaCicleChange() {
         if (AppState.isRestoring) return;
-        const area = getAreaActiva();
-        const cicle = getCicleActiu();
-        
+        const area = getAreaActiva(), cicle = getCicleActiu();
         if (!area || area === '-' || !cicle || cicle === '-') return;
 
-        const loadingMsg = document.getElementById('loading-msg');
+        const loadingMsg = selectEl('loading-msg');
         if (!AppState.cacheDadesCurriculars[area]) AppState.cacheDadesCurriculars[area] = {};
         
-        if (AppState.cacheDadesCurriculars[area][cicle]) {
-            actualitzarDesplegablesCurriculars(area, cicle);
-            return;
-        }
+        if (AppState.cacheDadesCurriculars[area][cicle]) return actualitzarDesplegablesCurriculars(area, cicle);
 
-        const url = CONSTANTES_GLOBALES.urlsData[area] ? CONSTANTES_GLOBALES.urlsData[area][cicle] : null;
+        const url = CONSTANTES_GLOBALES.urlsData[area]?.[cicle];
         if (!url) {
             alert("En construcció");
-            actualitzarDesplegablesCurricularsVuit();
-            return;
+            return actualitzarDesplegablesCurricularsVuit();
         }
 
         loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
@@ -1420,121 +976,67 @@
     }
 
     function actualitzarDesplegablesCurricularsVuit() {
-        document.querySelectorAll('.selection-area').forEach(el => {
-            if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = '';
-        });
-        const map = ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'];
-        map.forEach(id => buildCustomSelect(id, [], null));
-        
-        document.querySelectorAll('.cc-cell').forEach(cell => { 
-            cell.setAttribute('data-fulltext', cell.dataset.desc); 
-            cell.classList.remove('auto-active'); 
-            updateCellVisual(cell);
-        });
+        queryAll('.selection-area').forEach(el => { if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = ''; });
+        ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].forEach(id => buildCustomSelect(id, [], null));
+        queryAll('.cc-cell').forEach(cell => { cell.setAttribute('data-fulltext', cell.dataset.desc); cell.classList.remove('auto-active'); updateCellVisual(cell); });
     }
 
     function actualitzarDesplegablesCurriculars(area, cicle) {
-        const dades = AppState.cacheDadesCurriculars[area][cicle]; 
-        if (!dades) return;
+        const d = AppState.cacheDadesCurriculars[area][cicle]; 
+        if (!d) return;
         
-        document.querySelectorAll('.selection-area').forEach(el => {
-            if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = '';
-        });
+        queryAll('.selection-area').forEach(el => { if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4')) el.innerHTML = ''; });
         
-        const configMap = [
-            ['input-curs', dades.curs], ['input-trimestre', dades.trimestre],
-            ['select-obj-gen', dades.objectiusGenerals, 'tags-obj-gen'], ['select-ods', dades.ods, 'tags-ods'],
-            ['select-comp-espec', dades.competenciesEspecifiques, 'tags-comp-espec'],
-            ['select-criteris', dades.criterisAvaluacio, 'tags-criteris'], ['select-blocs', dades.blocsContinguts, 'tags-blocs'],
-            ['select-sabers', dades.sabersBasics, 'tags-sabers'], ['select-metodologia', dades.metodologia, 'tags-metodologia'],
-            ['select-agrupaments', dades.agrupaments, 'tags-agrupaments'], ['select-instruments', dades.instrumentsAvaluacio, 'tags-instruments'],
-            ['select-tipus-avaluacio', dades.tipusAvaluacio, 'tags-tipus-avaluacio'],
-            ['select-dua-acces', dades.representacio, 'tags-dua-acces'], ['select-dua-part', dades.motivacio, 'tags-dua-part'], ['select-dua-prog', dades.accio, 'tags-dua-prog']
-        ];
-        
-        configMap.forEach(m => buildCustomSelect(m[0], m[1], m[2]));
+        [
+            ['input-curs', d.curs], ['input-trimestre', d.trimestre], ['select-obj-gen', d.objectiusGenerals, 'tags-obj-gen'], ['select-ods', d.ods, 'tags-ods'],
+            ['select-comp-espec', d.competenciesEspecifiques, 'tags-comp-espec'], ['select-criteris', d.criterisAvaluacio, 'tags-criteris'], ['select-blocs', d.blocsContinguts, 'tags-blocs'],
+            ['select-sabers', d.sabersBasics, 'tags-sabers'], ['select-metodologia', d.metodologia, 'tags-metodologia'], ['select-agrupaments', d.agrupaments, 'tags-agrupaments'],
+            ['select-instruments', d.instrumentsAvaluacio, 'tags-instruments'], ['select-tipus-avaluacio', d.tipusAvaluacio, 'tags-tipus-avaluacio'],
+            ['select-dua-acces', d.representacio, 'tags-dua-acces'], ['select-dua-part', d.motivacio, 'tags-dua-part'], ['select-dua-prog', d.accio, 'tags-dua-prog']
+        ].forEach(m => buildCustomSelect(m[0], m[1], m[2]));
 
-        document.querySelectorAll('.cc-cell').forEach(cell => {
-             const code = cell.dataset.desc;
-             if (dades.descriptoresMap && dades.descriptoresMap[code]) {
-                 cell.setAttribute('data-fulltext', dades.descriptoresMap[code]);
-             } else {
-                 cell.setAttribute('data-fulltext', code);
-             }
-        });
+        queryAll('.cc-cell').forEach(cell => cell.setAttribute('data-fulltext', d.descriptoresMap?.[cell.dataset.desc] || cell.dataset.desc));
         recalcularTotaLaCadena();
     }
 
     function setCustomSelectValue(selectId, value) {
-        const selectEl = document.getElementById(selectId);
-        if (!selectEl) return;
-        selectEl.value = value;
-        const wrapper = selectEl.nextElementSibling;
-        if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
-            wrapper.querySelector('.custom-select-trigger span').textContent = value;
-        }
+        const sel = selectEl(selectId); if (!sel) return; sel.value = value;
+        const w = sel.nextElementSibling;
+        if (w?.classList.contains('custom-select-wrapper')) w.querySelector('.custom-select-trigger span').textContent = value;
     }
 
     function buildCustomSelect(selectId, opciones, containerId) {
-        const ori = document.getElementById(selectId); 
-        if(!ori) return;
+        const ori = selectEl(selectId); if(!ori) return;
         if (ori.nextElementSibling?.classList.contains('custom-select-wrapper')) ori.nextElementSibling.remove();
         
-        const wrap = document.createElement('div'); 
-        wrap.className = 'custom-select-wrapper';
-        
-        const trig = document.createElement('div'); 
-        trig.className = 'custom-select-trigger'; 
-        trig.innerHTML = '<span></span><i class="fa-solid fa-chevron-down"></i>';
-        trig.setAttribute('tabindex', '0');
-        trig.addEventListener('keydown', (e) => { 
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trig.click(); } 
-        });
-
+        const wrap = document.createElement('div'); wrap.className = 'custom-select-wrapper';
+        const trig = document.createElement('div'); trig.className = 'custom-select-trigger'; 
+        trig.innerHTML = '<span></span><i class="fa-solid fa-chevron-down"></i>'; trig.setAttribute('tabindex', '0');
+        trig.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trig.click(); } });
         ori.value = "";
-        const optsDiv = document.createElement('div'); 
-        optsDiv.className = 'custom-options';
-        
+
+        const optsDiv = document.createElement('div'); optsDiv.className = 'custom-options';
         let ops = [...opciones];
         
-        if (['select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].includes(selectId) || selectId.startsWith('select-dest-') || selectId.startsWith('select-n3-') || selectId.startsWith('select-n4-')) {
-            ops.push("Altre...");
-        }
+        if (['select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].includes(selectId) || selectId.startsWith('select-dest-') || selectId.startsWith('select-n3-') || selectId.startsWith('select-n4-')) ops.push("Altre...");
 
         if (ops.length === 0) {
             optsDiv.innerHTML = '<div class="custom-option" style="color:var(--text-muted);font-style:italic;">Sense dades / Tria Cicle</div>';
         } else {
             ops.forEach(o => {
-                const opt = document.createElement('div'); 
-                opt.className = 'custom-option'; 
-                
-                let displayText = o;
-                let finalValue = o;
-                let isShaded = false;
+                const opt = document.createElement('div'); opt.className = 'custom-option'; 
+                let displayText = o, finalValue = o, isShaded = false;
 
                 if (selectId === 'select-sabers' && o !== "Altre...") {
-                    const cicle = getCicleActiu();
-                    const upperO = o.toUpperCase(); // <-- PREVENCIÓN DE MAYÚSCULAS/MINÚSCULAS
-                    
-                    if (cicle === 'Primer Cicle' && !upperO.includes('1ER')) isShaded = true;
-                    else if (cicle === 'Segon Cicle' && !upperO.includes('2ON')) isShaded = true;
-                    else if (cicle === 'Tercer Cicle' && !upperO.includes('3ER')) isShaded = true;
-
-                    // LIMPIEZA ABSOLUTA (Ignora contenido rebelde dentro del paréntesis si tiene un ciclo)
+                    const cicle = getCicleActiu(), upperO = o.toUpperCase();
+                    if ((cicle === 'Primer Cicle' && !upperO.includes('1ER')) || (cicle === 'Segon Cicle' && !upperO.includes('2ON')) || (cicle === 'Tercer Cicle' && !upperO.includes('3ER'))) isShaded = true;
                     displayText = o.replace(/\s*\([^)]*(?:1ER|2ON|3ER)[^)]*\)/gi, '').trim();
                     finalValue = displayText;
                 }
 
-                opt.textContent = displayText;
-                opt.setAttribute('tabindex', '0');
-                
-                if (isShaded) {
-                    opt.style.opacity = '0.4';
-                }
-
-                opt.addEventListener('keydown', (e) => { 
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); } 
-                });
+                opt.textContent = displayText; opt.setAttribute('tabindex', '0');
+                if (isShaded) opt.style.opacity = '0.4';
+                opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); } });
 
                 if (o === "Altre...") { 
                     opt.style.cssText = "color:var(--accent);font-weight:bold;font-style:italic;"; 
@@ -1544,89 +1046,53 @@
                 }
                 
                 opt.onclick = () => {
-                    const finalizeOption = (vFinal) => {
-                        if(containerId) addTag(vFinal, containerId); 
-                        else { 
-                            trig.querySelector('span').textContent = vFinal; 
-                            ori.value = vFinal; 
-                            if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); 
-                        }
-                        optsDiv.classList.remove('open'); 
-                        wrap.style.zIndex = '1';
-                        trig.focus();
+                    const finalize = v => {
+                        if(containerId) addTag(v, containerId); 
+                        else { trig.querySelector('span').textContent = v; ori.value = v; if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); }
+                        optsDiv.classList.remove('open'); wrap.style.zIndex = '1'; trig.focus();
                     };
-
-                    if (o === "Altre...") {
-                        showCustomPrompt((vFinal) => { if (vFinal) finalizeOption(vFinal); });
-                    } else {
-                        finalizeOption(finalValue);
-                    }
+                    if (o === "Altre...") showCustomPrompt(v => { if (v) finalize(v); }); else finalize(finalValue);
                 };
                 optsDiv.appendChild(opt);
             });
         }
         
-        trig.onclick = (e) => { 
+        trig.onclick = e => { 
             e.stopPropagation(); 
-            document.querySelectorAll('.custom-options').forEach(el => { 
-                if(el !== optsDiv) { 
-                    el.classList.remove('open'); 
-                    if(el.parentElement) el.parentElement.style.zIndex = '1'; 
-                } 
-            }); 
-            optsDiv.classList.toggle('open'); 
-            wrap.style.zIndex = optsDiv.classList.contains('open') ? '9999' : '1'; 
+            queryAll('.custom-options').forEach(el => { if(el !== optsDiv) { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; } }); 
+            optsDiv.classList.toggle('open'); wrap.style.zIndex = optsDiv.classList.contains('open') ? '9999' : '1'; 
         };
-        
-        wrap.append(trig, optsDiv); 
-        ori.style.display = 'none'; 
-        ori.parentNode.insertBefore(wrap, ori.nextSibling);
+        wrap.append(trig, optsDiv); ori.style.display = 'none'; ori.parentNode.insertBefore(wrap, ori.nextSibling);
     }
 
     function addTag(val, containerId) {
-        if (!val || Array.from(document.getElementById(containerId).querySelectorAll('.tag-text')).some(s => s.innerText === val)) return;
+        const c = selectEl(containerId);
+        if (!val || Array.from(c.querySelectorAll('.tag-text')).some(s => s.innerText === val)) return;
         
-        const tag = document.createElement('div'); 
-        tag.className = 'tag'; 
-        tag.draggable = true;
+        const tag = document.createElement('div'); tag.className = 'tag'; tag.draggable = true;
         assignColorClass(tag, val, containerId);
-        
         tag.innerHTML = `<span class="tag-text">${val}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
         
-        document.querySelectorAll(`#${containerId.replace('tags-', 'select-')} ~ .custom-select-wrapper .custom-option`).forEach(opt => { 
-            if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'none'; 
-        });
+        queryAll(`#${containerId.replace('tags-', 'select-')} ~ .custom-select-wrapper .custom-option`).forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'none'; });
         
         tag.querySelector('.remove-x').onclick = () => {
             tag.remove();
-            document.querySelectorAll('.custom-option').forEach(opt => { 
-                if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'block'; 
-            });
+            queryAll('.custom-option').forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === val) opt.style.display = 'block'; });
             if (containerId === 'tags-sabers' || containerId === 'tags-comp-espec') recalcularTotaLaCadena();
         };
         
-        const container = document.getElementById(containerId);
-        container.appendChild(tag); 
-        makeTagsSortable(container);
-        
+        c.appendChild(tag); makeTagsSortable(c);
         if (containerId === 'tags-sabers') establecerConexionesSaber(val); 
         if (containerId === 'tags-comp-espec') establecerConexionesCE(val);
     }
 
     function makeTagsSortable(container) {
-        if (container.dataset.sortableInitialized) return; 
-        container.dataset.sortableInitialized = "true";
+        if (container.dataset.sortableInitialized) return; container.dataset.sortableInitialized = "true";
         let drg = null;
-        
-        container.addEventListener('dragstart', e => { 
-            if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } 
-        });
-        container.addEventListener('dragend', e => { 
-            if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; } 
-        });
+        container.addEventListener('dragstart', e => { if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } });
+        container.addEventListener('dragend', e => { if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; } });
         container.addEventListener('dragover', e => {
-            e.preventDefault(); 
-            if(!drg || !drg.classList.contains('tag')) return;
+            e.preventDefault(); if(!drg || !drg.classList.contains('tag')) return;
             const after = [...container.querySelectorAll('.tag:not(.dragging)')].reduce((closest, child) => {
                 const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
                 return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
@@ -1636,151 +1102,87 @@
     }
 
     function assignColorClass(el, val, cId) {
-        let n = null;
-        if (cId === 'tags-comp-espec') { let m = val.match(/^CE\s*(\d+)/i); if(m) n = m[1]; }
-        else if (cId === 'tags-criteris') { let m = val.match(/^CA\s*(\d+)/i); if(m) n = m[1]; }
+        let n = null, m;
+        if (cId === 'tags-comp-espec' && (m = val.match(/^CE\s*(\d+)/i))) n = m[1];
+        else if (cId === 'tags-criteris' && (m = val.match(/^CA\s*(\d+)/i))) n = m[1];
         else if (cId === 'tags-sabers') n = AppState.sabersColors[val];
-        
         if(n && n >= 1 && n <= 6) el.classList.add((el.classList.contains('tag') ? 'tag-ce' : 'opt-ce') + n);
     }
 
     function showCustomPrompt(callback) {
-        const modal = document.getElementById('custom-prompt-modal');
-        const input = document.getElementById('custom-prompt-input');
-        input.value = '';
-        modal.classList.add('show');
-        setTimeout(() => input.focus(), 50); 
-
-        const handleOk = () => { modal.classList.remove('show'); cleanup(); callback(input.value.trim()); };
-        const handleCancel = () => { modal.classList.remove('show'); cleanup(); callback(null); };
-        const handleKey = (e) => { if(e.key === 'Enter') handleOk(); if(e.key === 'Escape') handleCancel(); };
-
-        document.getElementById('custom-prompt-ok').onclick = handleOk;
-        document.getElementById('custom-prompt-cancel').onclick = handleCancel;
-        input.onkeydown = handleKey;
-
-        function cleanup() {
-            document.getElementById('custom-prompt-ok').onclick = null;
-            document.getElementById('custom-prompt-cancel').onclick = null;
-            input.onkeydown = null;
-        }
+        const modal = selectEl('custom-prompt-modal'), input = selectEl('custom-prompt-input');
+        input.value = ''; modal.classList.add('show'); setTimeout(() => input.focus(), 50); 
+        const cleanup = () => { selectEl('custom-prompt-ok').onclick = selectEl('custom-prompt-cancel').onclick = input.onkeydown = null; };
+        const action = cb => () => { modal.classList.remove('show'); cleanup(); callback(cb ? input.value.trim() : null); };
+        selectEl('custom-prompt-ok').onclick = action(true); selectEl('custom-prompt-cancel').onclick = action(false);
+        input.onkeydown = e => { if(e.key === 'Enter') action(true)(); else if(e.key === 'Escape') action(false)(); };
     }
 
-    /**
-     * ==========================================
-     * CONEXIONES CURRICULARES
-     * ==========================================
-     */
+    /** ==========================================
+     * BUSINESS LOGIC / CURRICULAR CONNECTIONS
+     * ========================================== */
     function establecerConexionesSaber(textSaber) {
         if (AppState.isRestoring) return; 
-        const area = getAreaActiva(); 
-        const cicle = getCicleActiu();
-        const dades = AppState.cacheDadesCurriculars[area]?.[cicle]; 
-        if (!dades) return;
+        const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]; if (!dades) return;
         
         [...textSaber.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => {
-            const foundCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${m[1]}\\.${m[2]}\\b`, 'i').test(c)); 
-            if (foundCA) addTag(foundCA, 'tags-criteris');
-            const foundCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${m[1]}\\b`, 'i').test(c)); 
-            if (foundCE) addTag(foundCE, 'tags-comp-espec');
+            const fCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${m[1]}\\.${m[2]}\\b`, 'i').test(c)); if (fCA) addTag(fCA, 'tags-criteris');
+            const fCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${m[1]}\\b`, 'i').test(c)); if (fCE) addTag(fCE, 'tags-comp-espec');
         });
-        
         [...textSaber.matchAll(/BL\s*(\d+)/gi)].forEach(m => {
-            const foundBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${m[1]}\\b`, 'i').test(b)); 
-            if (foundBL) addTag(foundBL, 'tags-blocs');
+            const fBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${m[1]}\\b`, 'i').test(b)); if (fBL) addTag(fBL, 'tags-blocs');
         });
     }
 
-    function establecerConexionesCE(textCE) {
-        if (AppState.isRestoring) return;
-        recalcularTotaLaCadena(); 
-    }
+    function establecerConexionesCE() { if (!AppState.isRestoring) recalcularTotaLaCadena(); }
 
     function recalcularTotaLaCadena() {
-        const area = getAreaActiva(); 
-        const cicle = getCicleActiu();
-        const dades = AppState.cacheDadesCurriculars[area]?.[cicle]; 
-        if (!dades) return;
-        
+        if (!AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]) return;
         let reqCA = new Set(), reqCE = new Set(), reqBL = new Set(), reqCC = new Set();
         
-        document.querySelectorAll('#tags-sabers .tag-text').forEach(s => {
+        queryAll('#tags-sabers .tag-text').forEach(s => {
             [...s.innerText.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => { reqCA.add(`${m[1]}.${m[2]}`); reqCE.add(m[1]); });
             [...s.innerText.matchAll(/BL\s*(\d+)/gi)].forEach(m => reqBL.add(m[1]));
         });
         
-        checkAndRemoveUnused('tags-criteris', reqCA, 'CA'); 
-        checkAndRemoveUnused('tags-blocs', reqBL, 'BL'); 
-        checkAndRemoveUnused('tags-comp-espec', reqCE, 'CE');
+        checkAndRemoveUnused('tags-criteris', reqCA, 'CA'); checkAndRemoveUnused('tags-blocs', reqBL, 'BL'); checkAndRemoveUnused('tags-comp-espec', reqCE, 'CE');
         
-        document.querySelectorAll('#tags-comp-espec .tag-text').forEach(s => {
-            (AppState.mapaCEs[normalizeTextForKeys(s.innerText)] || []).forEach(cc => reqCC.add(cc.replace(/[\s-]/g, '').toUpperCase()));
-        });
-        
-        document.querySelectorAll('.cc-cell').forEach(cell => {
-            const desc = cell.dataset.desc;
-            cell.classList.toggle('auto-active', reqCC.has(desc));
-            updateCellVisual(cell);
-        });
+        queryAll('#tags-comp-espec .tag-text').forEach(s => (AppState.mapaCEs[normalizeTextForKeys(s.innerText)] || []).forEach(cc => reqCC.add(cc.replace(/[\s-]/g, '').toUpperCase())));
+        queryAll('.cc-cell').forEach(cell => { cell.classList.toggle('auto-active', reqCC.has(cell.dataset.desc)); updateCellVisual(cell); });
     }
 
     function checkAndRemoveUnused(containerId, reqSet, prefix) {
-        const container = document.getElementById(containerId); 
-        if(!container) return;
-        const regexMap = { 'BL': /BL\s*(\d+)/, 'CA': /CA\s*(\d+\.\d+)/, 'CE': /CE\s*(\d+)/ };
+        const c = selectEl(containerId); if(!c) return;
+        const rm = { 'BL': /BL\s*(\d+)/, 'CA': /CA\s*(\d+\.\d+)/, 'CE': /CE\s*(\d+)/ };
         
-        container.querySelectorAll('.tag').forEach(tag => {
-            let text = tag.querySelector('.tag-text').innerText.toUpperCase(); 
-            let codi = null; 
-            let m = text.match(regexMap[prefix]);
-            
-            if (m) codi = m[1]; 
-            if (codi && !reqSet.has(codi)) {
+        c.querySelectorAll('.tag').forEach(tag => {
+            let m = tag.querySelector('.tag-text').innerText.toUpperCase().match(rm[prefix]);
+            if (m && !reqSet.has(m[1])) {
                 tag.remove();
-                document.querySelectorAll('.custom-option').forEach(opt => { 
-                    if (opt.textContent.replace(' ★', '').trim() === tag.querySelector('.tag-text').innerText) opt.style.display = 'block'; 
-                });
+                queryAll('.custom-option').forEach(opt => { if (opt.textContent.replace(' ★', '').trim() === tag.querySelector('.tag-text').innerText) opt.style.display = 'block'; });
             }
         });
     }
 
-    function updateCellVisual(cell) {
-        cell.classList.toggle('active', cell.classList.contains('auto-active') || cell.classList.contains('manual-active'));
-    }
+    function updateCellVisual(cell) { cell.classList.toggle('active', cell.classList.contains('auto-active') || cell.classList.contains('manual-active')); }
 
-    /**
-     * ==========================================
-     * MANEJO DE MEDIDAS (DIVERSITAT)
-     * ==========================================
-     */
+    /** ==========================================
+     * DIVERSITY & SEQUENCING
+     * ========================================== */
     function setMesures(isYes) {
-        const container = document.getElementById('mesures-addicionals-container'); 
-        const btnNo = document.getElementById('btn-mesures-no');
-        const btnSi = document.getElementById('btn-mesures-si');
-        
-        if (isYes) {
-            btnNo.classList.remove('active'); 
-            btnSi.classList.add('active'); 
-            container.style.display = 'flex'; 
-            container.style.flexDirection = 'column';
-            if (document.getElementById('destinataris-list').children.length === 0) addDestinatari();
-        } else {
-            btnNo.classList.add('active'); 
-            btnSi.classList.remove('active'); 
-            container.style.display = 'none';
-        }
+        const c = selectEl('mesures-addicionals-container'), btnNo = selectEl('btn-mesures-no'), btnSi = selectEl('btn-mesures-si');
+        btnNo.classList.toggle('active', !isYes); btnSi.classList.toggle('active', isYes);
+        c.style.display = isYes ? 'flex' : 'none'; c.style.flexDirection = isYes ? 'column' : '';
+        if (isYes && selectEl('destinataris-list').children.length === 0) addDestinatari();
     }
 
     function addDestinatari() {
-        AppState.destinatariCount++; 
-        const id = 'dest-' + AppState.destinatariCount; 
-        const list = document.getElementById('destinataris-list');
-        const div = document.createElement('div'); 
-        div.className = 'destinatari-item';
+        const id = 'dest-' + (++AppState.destinatariCount); 
+        const div = document.createElement('div'); div.className = 'destinatari-item';
         div.style.cssText = 'background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; width: 100%;';
         
         div.innerHTML = `
-            <div class="remove-x btn-remove-dest" style="top: 10px; right: 10px; position: absolute; transform: none;" title="Eliminar Destinatari"><i class="fa-solid fa-xmark"></i></div>
+            <div class="remove-x btn-remove-dest" style="top: 10px; right: 10px; position: absolute;" title="Eliminar Destinatari"><i class="fa-solid fa-xmark"></i></div>
             <div style="margin-bottom: 5px; width: 100%;"><span class="sub-label">Destinatari</span><select id="select-dest-${id}"></select><div class="selection-area" id="tags-dest-${id}" style="margin-top: 8px; min-height: 0;"></div></div>
             <div class="nivell-box minimized" style="border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: var(--card-bg); margin-bottom: 10px;">
                 <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i><span class="sub-label" style="margin-bottom: 10px; color: var(--accent);">MESURES NIVELL III</span>
@@ -1800,71 +1202,43 @@
                 </div>
             </div>`;
         
-        list.appendChild(div);
-        
+        selectEl('destinataris-list').appendChild(div);
         div.querySelector('.btn-remove-dest').addEventListener('click', () => div.remove());
         div.querySelectorAll('.minimize-icon').forEach(icon => { 
             icon.addEventListener('click', () => {
-                const box = icon.closest('.nivell-box'); 
-                box.classList.toggle('minimized');
-                icon.classList.toggle('fa-plus', box.classList.contains('minimized'));
-                icon.classList.toggle('fa-minus', !box.classList.contains('minimized'));
+                const box = icon.closest('.nivell-box'); box.classList.toggle('minimized');
+                icon.classList.toggle('fa-plus', box.classList.contains('minimized')); icon.classList.toggle('fa-minus', !box.classList.contains('minimized'));
             }); 
         });
 
-        const dades = AppState.dadesDiversitat;
-        const sels = [
-            ['dest', dades.destinataris], ['n3-acc', dades.n3_acces], ['n3-apr', dades.n3_apr], ['n3-par', dades.n3_par],
-            ['n4-rec', dades.n4_rec], ['n4-acc', dades.n4_acces], ['n4-apr', dades.n4_apr], ['n4-par', dades.n4_par]
-        ];
-        sels.forEach(s => buildCustomSelect(`select-${s[0]}-${id}`, s[1], `tags-${s[0]}-${id}`));
+        const dd = AppState.dadesDiversitat;
+        [['dest', dd.destinataris], ['n3-acc', dd.n3_acces], ['n3-apr', dd.n3_apr], ['n3-par', dd.n3_par], ['n4-rec', dd.n4_rec], ['n4-acc', dd.n4_acces], ['n4-apr', dd.n4_apr], ['n4-par', dd.n4_par]]
+            .forEach(s => buildCustomSelect(`select-${s[0]}-${id}`, s[1], `tags-${s[0]}-${id}`));
     }
 
-    /**
-     * ==========================================
-     * SECUENCIA DIDÁCTICA (FASES Y ACTIVIDADES)
-     * ==========================================
-     */
     function addSequenceStep() {
         const id = 'step-' + Date.now();
-        const div = document.createElement('div'); 
-        div.className = 'sequence-step'; 
-        div.id = id; 
-        div.draggable = true;
+        const div = document.createElement('div'); div.className = 'sequence-step'; div.id = id; div.draggable = true;
         
         div.innerHTML = `
-            <div class="remove-x btn-remove-step" style="top: 8px; right: 8px; position: absolute; transform: none;" title="Eliminar Fase"><i class="fa-solid fa-xmark"></i></div>
+            <div class="remove-x btn-remove-step" style="top: 8px; right: 8px; position: absolute;" title="Eliminar Fase"><i class="fa-solid fa-xmark"></i></div>
             <div class="sequence-step-grid">
                 <div class="phase-main">
-                    <div class="step-header">
-                        <div class="step-number" title="Arrossega per moure"></div>
-                        <input type="text" class="step-title-input" placeholder="Nom del pas o fase">
-                    </div>
-                    <div class="step-body">
-                        <div class="activities-container" id="activities-${id}"></div>
-                        <button class="btn-add-activity btn-add-act" title="Afegir nova activitat"><i class="fa-solid fa-plus"></i> Afegir activitat</button>
-                    </div>
+                    <div class="step-header"><div class="step-number" title="Arrossega per moure"></div><input type="text" class="step-title-input" placeholder="Nom del pas o fase"></div>
+                    <div class="step-body"><div class="activities-container" id="activities-${id}"></div><button class="btn-add-activity btn-add-act" title="Afegir nova activitat"><i class="fa-solid fa-plus"></i> Afegir activitat</button></div>
                 </div>
-                <div class="phase-sessions">
-                    <div class="session-title">Sessió</div>
-                    <div class="sessions-list" id="sessions-${id}"></div>
-                    <button class="btn-add-session btn-add-sess" title="Afegir Sessió"><i class="fa-solid fa-plus"></i></button>
-                </div>
+                <div class="phase-sessions"><div class="session-title">Sessió</div><div class="sessions-list" id="sessions-${id}"></div><button class="btn-add-session btn-add-sess" title="Afegir Sessió"><i class="fa-solid fa-plus"></i></button></div>
             </div>`;
         
-        document.getElementById('sequence-container').appendChild(div); 
-        updateStepNumbers(); 
-        if(!AppState.isRestoring) addSession(id); 
+        selectEl('sequence-container').appendChild(div); 
+        updateStepNumbers(); if(!AppState.isRestoring) addSession(id); 
     }
 
     function addActivity(stepId) {
         const actId = 'act-' + Date.now() + Math.floor(Math.random()*1000);
-        const div = document.createElement('div'); 
-        div.className = 'sequence-activity';
-        
+        const div = document.createElement('div'); div.className = 'sequence-activity';
         div.innerHTML = `
-            <div class="remove-x btn-remove-act" title="Eliminar Activitat"><i class="fa-solid fa-xmark"></i></div>
-            <div class="activity-bullet"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="remove-x btn-remove-act" title="Eliminar Activitat"><i class="fa-solid fa-xmark"></i></div><div class="activity-bullet"><i class="fa-solid fa-angle-right"></i></div>
             <div style="flex-grow: 1; display: flex; flex-direction: column;">
                 <textarea class="activity-textarea" placeholder="Descripció de l'activitat..." rows="1"></textarea>
                 <div class="eval-tools">
@@ -1874,123 +1248,62 @@
                     </div>
                 </div>
             </div>`;
-        
-        document.getElementById('activities-' + stepId).appendChild(div);
+        selectEl('activities-' + stepId).appendChild(div);
     }
 
     function toggleEval(btn, actId) { 
-        btn.classList.toggle('active'); 
-        document.getElementById(`criteria-container-${actId}`).style.display = btn.classList.contains('active') ? 'flex' : 'none'; 
+        btn.classList.toggle('active'); selectEl(`criteria-container-${actId}`).style.display = btn.classList.contains('active') ? 'flex' : 'none'; 
     }
 
     function showCriteriaDropdown(btn, actId) {
         if (AppState.activeCriteriaDropdown) AppState.activeCriteriaDropdown.remove();
-        
-        const container = document.getElementById(`criteria-container-${actId}`);
-        const added = Array.from(container.querySelectorAll('.mini-criteria-tag')).map(s => s.title);
-        const available = Array.from(document.querySelectorAll('#tags-criteris .tag-text')).map(s => s.innerText).filter(c => !added.includes(c));
+        const c = selectEl(`criteria-container-${actId}`);
+        const added = Array.from(c.querySelectorAll('.mini-criteria-tag')).map(s => s.title);
+        const available = Array.from(queryAll('#tags-criteris .tag-text')).map(s => s.innerText).filter(crit => !added.includes(crit));
 
-        const drop = document.createElement('div'); 
-        drop.className = 'criteria-dropdown';
-        
-        const rect = btn.getBoundingClientRect(); 
-        drop.style.top = (rect.bottom + window.scrollY + 5) + 'px'; 
-        drop.style.left = (rect.left + window.scrollX) + 'px';
+        const drop = document.createElement('div'); drop.className = 'criteria-dropdown';
+        const rect = btn.getBoundingClientRect(); drop.style.top = (rect.bottom + window.scrollY + 5) + 'px'; drop.style.left = (rect.left + window.scrollX) + 'px';
 
-        if (available.length === 0) {
-            drop.innerHTML = `<div class="criteria-dropdown-empty">Cap criteri disponible. (Fixa'n al Bloc 2)</div>`;
-        } else {
-            available.forEach(crit => { 
-                const item = document.createElement('div'); 
-                item.className = 'criteria-dropdown-item'; 
-                item.innerText = crit; 
-                item.onclick = () => { 
-                    addMiniCriteriaTag(crit, actId); 
-                    drop.remove(); 
-                    AppState.activeCriteriaDropdown = null; 
-                }; 
-                drop.appendChild(item); 
-            });
-        }
+        if (available.length === 0) drop.innerHTML = `<div class="criteria-dropdown-empty">Cap criteri disponible. (Fixa'n al Bloc 2)</div>`;
+        else available.forEach(crit => { 
+            const item = document.createElement('div'); item.className = 'criteria-dropdown-item'; item.innerText = crit; 
+            item.onclick = () => { addMiniCriteriaTag(crit, actId); drop.remove(); AppState.activeCriteriaDropdown = null; }; drop.appendChild(item); 
+        });
         
-        document.body.appendChild(drop); 
-        AppState.activeCriteriaDropdown = drop;
-        
+        document.body.appendChild(drop); AppState.activeCriteriaDropdown = drop;
         setTimeout(() => document.addEventListener('click', function closeDrop(e) { 
-            if (!drop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) { 
-                drop.remove(); 
-                AppState.activeCriteriaDropdown = null; 
-                document.removeEventListener('click', closeDrop); 
-            } 
+            if (!drop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) { drop.remove(); AppState.activeCriteriaDropdown = null; document.removeEventListener('click', closeDrop); } 
         }), 10);
     }
 
     function addMiniCriteriaTag(val, actId) {
-        const container = document.getElementById(`criteria-container-${actId}`);
-        const tag = document.createElement('div'); 
-        tag.className = 'mini-criteria-tag'; 
-        tag.title = val;
+        const c = selectEl(`criteria-container-${actId}`);
+        const tag = document.createElement('div'); tag.className = 'mini-criteria-tag'; tag.title = val;
         
-        let shortLabel = val, n = null, match = val.match(/^CA\s*\d+(?:\.\d+)?/i);
-        if(match) { 
-            shortLabel = match[0]; 
-            let m = val.match(/^CA\s*(\d+)/i); 
-            if(m) n = m[1]; 
-        }
+        let shortLabel = val, m1 = val.match(/^CA\s*\d+(?:\.\d+)?/i), m2 = val.match(/^CA\s*(\d+)/i);
+        if(m1) shortLabel = m1[0];
+        if(m2) tag.classList.add(`mini-tag-ce${m2[1]}`); else tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
         
-        if(n) tag.classList.add(`mini-tag-ce${n}`); 
-        else tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
-        
-        tag.innerHTML = `<span>${shortLabel}</span> <i class="fa-solid fa-xmark"></i>`; 
-        tag.onclick = () => tag.remove();
-        container.insertBefore(tag, container.querySelector('.btn-add-criteria'));
+        tag.innerHTML = `<span>${shortLabel}</span> <i class="fa-solid fa-xmark"></i>`; tag.onclick = () => tag.remove();
+        c.insertBefore(tag, c.querySelector('.btn-add-criteria'));
     }
 
     function addSession(stepId) {
-        const div = document.createElement('div'); 
-        div.className = 'session-item'; 
-        div.title = 'Clic per eliminar sessió'; 
+        const div = document.createElement('div'); div.className = 'session-item'; div.title = 'Clic per eliminar sessió'; 
         div.innerHTML = `<span class="session-num-text"></span><div class="session-trash"><i class="fa-solid fa-trash-can"></i></div>`;
-        
-        // El evento de borrado se maneja en el Event Delegation global. Solo falta append.
-        document.getElementById('sessions-' + stepId).appendChild(div); 
-        updateGlobalSessionNumbers();
+        selectEl('sessions-' + stepId).appendChild(div); updateGlobalSessionNumbers();
     }
 
-    function updateGlobalSessionNumbers() { 
-        document.querySelectorAll('.session-num-text').forEach((s, i) => s.innerText = i + 1); 
-    }
-    
-    function updateStepNumbers() { 
-        document.querySelectorAll('.sequence-step').forEach((s, i) => s.querySelector('.step-number').innerText = i + 1); 
-    }
+    function updateGlobalSessionNumbers() { queryAll('.session-num-text').forEach((s, i) => s.innerText = i + 1); }
+    function updateStepNumbers() { queryAll('.sequence-step').forEach((s, i) => s.querySelector('.step-number').innerText = i + 1); }
 
     function makeSequenceSortable() {
-        const c = document.getElementById('sequence-container'); 
-        if (c.dataset.sortableInitialized) return; 
-        c.dataset.sortableInitialized = "true"; 
+        const c = selectEl('sequence-container'); if (c.dataset.sortableInitialized) return; c.dataset.sortableInitialized = "true"; 
         let drg = null;
-        
-        c.addEventListener('dragstart', e => { 
-            if(e.target.classList.contains('sequence-step')) { 
-                drg = e.target; 
-                e.target.classList.add('dragging-step'); 
-                e.dataTransfer.effectAllowed='move'; 
-            } 
-        });
-        
-        c.addEventListener('dragend', e => { 
-            if(e.target.classList.contains('sequence-step')) { 
-                e.target.classList.remove('dragging-step'); 
-                drg = null; 
-                updateStepNumbers(); 
-                updateGlobalSessionNumbers(); 
-            } 
-        });
-        
+        c.addEventListener('dragstart', e => { if(e.target.classList.contains('sequence-step')) { drg = e.target; e.target.classList.add('dragging-step'); e.dataTransfer.effectAllowed='move'; } });
+        c.addEventListener('dragend', e => { if(e.target.classList.contains('sequence-step')) { e.target.classList.remove('dragging-step'); drg = null; updateStepNumbers(); updateGlobalSessionNumbers(); } });
         c.addEventListener('dragover', e => {
-            e.preventDefault();
-            if(!drg || !drg.classList.contains('sequence-step')) return;
+            e.preventDefault(); if(!drg || !drg.classList.contains('sequence-step')) return;
             const after = [...c.querySelectorAll('.sequence-step:not(.dragging-step)')].reduce((closest, child) => {
                 const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
                 return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
@@ -1999,241 +1312,85 @@
         });
     }
 
-    /**
-     * ==========================================
-     * EXPORTACIÓN Y EXTRACCIÓN DE DATOS
-     * ==========================================
-     */
-    function getSelectedText(id) { 
-        const w = document.getElementById(id).nextElementSibling; 
-        return w?.classList.contains('custom-select-wrapper') ? (w.querySelector('span')?.innerText || "-") : (document.getElementById(id).value || "-"); 
-    }
-    
+    /** ==========================================
+     * EXPORT LOGIC
+     * ========================================== */
     function formatPdfTagsWord(id) {
-        const c = document.getElementById(id); 
-        if (!c) return '-'; 
-        
-        const tags = Array.from(c.querySelectorAll('.tag-text')).map(t => t.innerText); 
-        if (tags.length === 0) return '-';
-        
+        const c = selectEl(id); if (!c) return '-'; 
+        const tags = Array.from(c.querySelectorAll('.tag-text')).map(t => t.innerText); if (tags.length === 0) return '-';
         if (id === 'tags-obj-gen') return tags.map(t => t.match(/^[a-z]\)|\./i) ? t.match(/^[a-z]\)|\./i)[0] : t.split(' ')[0]).join(', ');
         if (id === 'tags-ods') return tags.map(t => t.match(/ODS\s*(\d+)/i) ? "ODS " + t.match(/ODS\s*(\d+)/i)[1] : t).join(', ');
-        
-        // Mejorado el espaciado e interlineado de las listas
         return '<ul style="margin: 4px 0; padding-left: 18px; line-height: 1.4;">' + tags.map(t => `<li style="margin-bottom: 6px; text-align: justify;">${t}</li>`).join('') + '</ul>';
     }
 
     function buildExportHTML() {
-        const saNum = document.getElementById('input-sa-num').value || "___";
-        const saTitle = document.getElementById('input-sa-title').value || "Sense títol";
+        const val = id => selectEl(id)?.value || "-", getTags = id => formatPdfTagsWord(id);
+        const saNum = val('input-sa-num') === "-" ? "___" : val('input-sa-num'), saTitle = val('input-sa-title') === "-" ? "Sense títol" : val('input-sa-title');
 
-        const weeks = Array.from(document.querySelectorAll('.week-box'));
-        let weeksHtml = '';
-        weeks.forEach(box => {
-            const isActive = box.classList.contains('active');
-            const bg = isActive ? '#6B9596' : '#FFFFFF';
-            weeksHtml += `<td style="border: 1px solid #D5E0E0; background-color: ${bg}; height: 18px; padding:0;"></td>`;
-        });
-
-        // Tabla contenedora alineada al centro para el Perfil d'Eixida
+        const weeksHtml = Array.from(queryAll('.week-box')).map(box => `<td style="border: 1px solid #D5E0E0; background-color: ${box.classList.contains('active') ? '#6B9596' : '#FFFFFF'}; height: 18px; padding:0;"></td>`).join('');
+        
         let perfilHtml = `<div style="text-align: center; width: 100%;"><table align="center" style="border-collapse: collapse; margin: 0 auto; margin-top: 5px; margin-bottom: 5px;"><tr>`;
-        const tables = document.querySelectorAll('.cc-table');
-        tables.forEach(table => {
+        queryAll('.cc-table').forEach(table => {
             const ccName = table.querySelector('.cc-header').innerText;
-            let cellsHtml = '';
-            table.querySelectorAll('.cc-cell').forEach(cell => {
-                const num = cell.innerText;
-                const isActive = cell.classList.contains('active');
-                const bg = isActive ? '#6B9596' : '#FFFFFF';
-                const color = isActive ? '#FFFFFF' : '#3A4B4C';
-                // Cajitas un poco más amplias
-                cellsHtml += `<td style="border: 1px solid #D5E0E0; background-color: ${bg}; color: ${color}; text-align:center; width:22px; font-size:8pt; padding:4px;">${num}</td>`;
-            });
-            perfilHtml += `
-            <td style="padding:0; border:none; padding-right:12px; vertical-align:top;">
-                <table style="border-collapse: collapse;">
-                    <tr><th colspan="${table.querySelectorAll('.cc-cell').length}" style="background-color:#E6EDED; border: 1px solid #D5E0E0; font-size:8pt; color:#507677; text-align:center; padding:4px;">${ccName}</th></tr>
-                    <tr>${cellsHtml}</tr>
-                </table>
-            </td>`;
+            const cellsHtml = Array.from(table.querySelectorAll('.cc-cell')).map(cell => `<td style="border: 1px solid #D5E0E0; background-color: ${cell.classList.contains('active') ? '#6B9596' : '#FFFFFF'}; color: ${cell.classList.contains('active') ? '#FFFFFF' : '#3A4B4C'}; text-align:center; width:22px; font-size:8pt; padding:4px;">${cell.innerText}</td>`).join('');
+            perfilHtml += `<td style="padding:0; border:none; padding-right:12px; vertical-align:top;"><table style="border-collapse: collapse;"><tr><th colspan="${table.querySelectorAll('.cc-cell').length}" style="background-color:#E6EDED; border: 1px solid #D5E0E0; font-size:8pt; color:#507677; text-align:center; padding:4px;">${ccName}</th></tr><tr>${cellsHtml}</tr></table></td>`;
         });
         perfilHtml += `</tr></table></div>`;
 
-        // Se ha ajustado: font-family a Calibri, tamaño base a 10pt, padding general de celdas a 6px 10px, y line-height a 1.4
         let html = `
             <div style="text-align: center; margin-bottom: 20px;"><h1 style="font-size: 16pt; margin: 0; color: #2B3A3B; text-transform: uppercase; font-family: 'Calibri', 'Arial', sans-serif; letter-spacing: 1px;">SITUACIÓ D'APRENENTATGE</h1></div>
-            
             <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 20px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">1. Identificació i Context</div>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Àrea</th><td style="width: 30%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-area')}</td>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Cicle</th><td style="width: 20%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-cicle')}</td>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Nivell</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-curs')}</td>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Trimestre</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-trimestre')}</td>
-                </tr>
+                <tr><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Àrea</th><td style="width: 30%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-area')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Cicle</th><td style="width: 20%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-cicle')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Nivell</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-curs')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Trimestre</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-trimestre')}</td></tr>
             </table>
-
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 8.5pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
                 <tr><th colspan="40" style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: center; color: #507677; font-size: 9pt; font-weight: bold; letter-spacing: 0.5px;">TEMPORALITZACIÓ</th></tr>
-                <tr>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Set.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Oct.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Nov.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Des.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Gen.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Feb.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Març</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Abr.</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Maig</th>
-                    <th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">Juny</th>
-                </tr>
+                <tr>${['Set.', 'Oct.', 'Nov.', 'Des.', 'Gen.', 'Feb.', 'Març', 'Abr.', 'Maig', 'Juny'].map(m => `<th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">${m}</th>`).join('')}</tr>
                 <tr>${weeksHtml}</tr>
             </table>
-
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">S.A. Nº</th>
-                    <td style="width: 15%; font-weight: bold; color: #507677; border: 1px solid #D5E0E0; padding: 6px 10px;">${saNum}</td>
-                    <th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Títol</th>
-                    <td style="width: 65%; font-weight: bold; border: 1px solid #D5E0E0; padding: 6px 10px; color: #2B3A3B;">${saTitle}</td>
-                </tr>
+                <tr><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">S.A. Nº</th><td style="width: 15%; font-weight: bold; color: #507677; border: 1px solid #D5E0E0; padding: 6px 10px;">${saNum}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Títol</th><td style="width: 65%; font-weight: bold; border: 1px solid #D5E0E0; padding: 6px 10px; color: #2B3A3B;">${saTitle}</td></tr>
             </table>
-            
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Repte / Problema / Necessitat</th>
-                    <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: center; color: #3A4B4C;">ODS</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${(document.getElementById('input-repte').value||"-").replace(/\n/g, '<br>')}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: center; vertical-align: top; line-height: 1.4;" rowspan="3">${formatPdfTagsWord("tags-ods")}</td>
-                </tr>
+                <tr><th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Repte / Problema / Necessitat</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: center; color: #3A4B4C;">ODS</th></tr>
+                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-repte').replace(/\n/g, '<br>')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: center; vertical-align: top; line-height: 1.4;" rowspan="3">${getTags("tags-ods")}</td></tr>
                 <tr><th style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Producte Final</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${(document.getElementById('input-tasca').value||"-").replace(/\n/g, '<br>')}</td></tr>
+                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-tasca').replace(/\n/g, '<br>')}</td></tr>
             </table>
-            
             <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">2. Concreció Curricular</div>
-            
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Objectius Generals d'Etapa</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${formatPdfTagsWord("tags-obj-gen")}</td></tr>
-            </table>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Objectius Generals d'Etapa</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${getTags("tags-obj-gen")}</td></tr></table>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Perfil d'Eixida (Descriptors Operatius)</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 10px 6px;">${perfilHtml}</td></tr></table>`;
 
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Perfil d'Eixida (Descriptors Operatius)</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 10px 6px;">${perfilHtml}</td></tr>
-            </table>`;
+        let ceElements = Array.from(queryAll('#tags-comp-espec .tag-text')).map(t => t.innerText);
+        let caElements = Array.from(queryAll('#tags-criteris .tag-text')).map(t => t.innerText);
 
-        let ceElements = Array.from(document.querySelectorAll('#tags-comp-espec .tag-text')).map(t => t.innerText);
-        let caElements = Array.from(document.querySelectorAll('#tags-criteris .tag-text')).map(t => t.innerText);
-
-        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                 <tr>
-                    <th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Competències Específiques (CE)</th>
-                    <th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Criteris d'Avaluació (CA)</th>
-                 </tr>`;
+        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Competències Específiques (CE)</th><th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Criteris d'Avaluació (CA)</th></tr>`;
         
-        if (ceElements.length === 0) {
-            html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">-</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${formatPdfTagsWord("tags-criteris")}</td></tr>`;
-        } else {
-            ceElements.forEach(ce => {
-                let matchCE = ce.match(/^CE\s*(\d+)/i);
-                let numCE = matchCE ? matchCE[1] : null;
-                let relCAs = caElements.filter(ca => { let matchCA = ca.match(/^CA\s*(\d+)\.\d+/i); return matchCA && matchCA[1] === numCE; });
-                let caText = relCAs.length > 0 ? `<ul style="margin:4px 0; padding-left:18px; line-height: 1.4;">` + relCAs.map(ca => `<li style="margin-bottom:6px; text-align:justify;">${ca}</li>`).join('') + `</ul>` : '-';
-                html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${ce}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${caText}</td></tr>`;
-            });
-        }
+        if (ceElements.length === 0) html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">-</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${getTags("tags-criteris")}</td></tr>`;
+        else ceElements.forEach(ce => {
+            let m = ce.match(/^CE\s*(\d+)/i), relCAs = caElements.filter(ca => (ca.match(/^CA\s*(\d+)\.\d+/i) || [])[1] === (m ? m[1] : null));
+            html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${ce}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${relCAs.length ? `<ul style="margin:4px 0; padding-left:18px; line-height: 1.4;">${relCAs.map(ca => `<li style="margin-bottom:6px; text-align:justify;">${ca}</li>`).join('')}</ul>` : '-'}</td></tr>`;
+        });
         html += `</table>`;
 
-        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                 <tr>
-                    <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Blocs de Continguts</th>
-                    <th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Sabers Bàsics</th>
-                 </tr>
-                 <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-blocs")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-sabers")}</td>
-                 </tr>
-                 </table>`;
-
-        html += `
+        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Blocs de Continguts</th><th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Sabers Bàsics</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-blocs")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-sabers")}</td></tr></table>
             <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">3. Metodologia i Organització</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Metodologia / Model / Estil</th>
-                    <th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Agrupaments</th>
-                    <th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Espais i recursos materials</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-metodologia")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-agrupaments")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${(document.getElementById('input-materials').value || "-").replace(/\n/g, '<br>')}</td>
-                </tr>
-            </table>
-            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Metodologia / Model / Estil</th><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Agrupaments</th><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Espais i recursos materials</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-metodologia")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-agrupaments")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-materials').replace(/\n/g, '<br>')}</td></tr></table>
             <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">4. Avaluació</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Instruments d'Avaluació</th>
-                    <th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Tipus d'Avaluació</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-instruments")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-tipus-avaluacio")}</td>
-                </tr>
-            </table>
-
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Instruments d'Avaluació</th><th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Tipus d'Avaluació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-instruments")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-tipus-avaluacio")}</td></tr></table>
             <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">5. Mesures per a l'atenció educativa</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr>
-                    <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Representació (DUA)</th>
-                    <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Motivació (DUA)</th>
-                    <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Acció (DUA)</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-dua-acces")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-dua-part")}</td>
-                    <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${formatPdfTagsWord("tags-dua-prog")}</td>
-                </tr>
-            </table>`;
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Representació (DUA)</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Motivació (DUA)</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Acció (DUA)</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-acces")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-part")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-prog")}</td></tr></table>`;
 
-        const destItems = document.querySelectorAll('.destinatari-item');
+        const destItems = queryAll('.destinatari-item');
         if (destItems.length > 0) {
             html += `<div class="section-title" style="font-size: 10pt; color:#788F90; margin-top:10px; border-bottom: none; font-weight: bold; text-transform: uppercase; font-family: 'Calibri', 'Arial', sans-serif;">Mesures Específiques de Resposta</div>`;
             destItems.forEach((item, index) => {
-                const getTags = id => formatPdfTagsWord(item.querySelector(`[id^="${id}"]`).id);
-                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                    <tr><th colspan="4" style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #2B3A3B;">Destinatari ${index + 1}: ${getTags('tags-dest-') !== '-' ? getTags('tags-dest-') : '(Sense especificar)'}</th></tr>
-                    <tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL III</th></tr>
-                    <tr>
-                        <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th>
-                        <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th>
-                        <th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;" colspan="2">Participació</th>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n3-acc-')}</td>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n3-apr-')}</td>
-                        <td colspan="2" style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n3-par-')}</td>
-                    </tr>
-                    <tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL IV</th></tr>
-                    <tr>
-                        <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Recursos Personals</th>
-                        <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th>
-                        <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th>
-                        <th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Participació</th>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n4-rec-')}</td>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n4-acc-')}</td>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n4-apr-')}</td>
-                        <td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags('tags-n4-par-')}</td>
-                    </tr>
-                </table>`;
+                const gt = id => getTags(item.querySelector(`[id^="${id}"]`).id);
+                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th colspan="4" style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #2B3A3B;">Destinatari ${index + 1}: ${gt('tags-dest-') !== '-' ? gt('tags-dest-') : '(Sense especificar)'}</th></tr><tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL III</th></tr><tr><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;" colspan="2">Participació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-acc-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-apr-')}</td><td colspan="2" style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-par-')}</td></tr><tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL IV</th></tr><tr><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Recursos Personals</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Participació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-rec-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-acc-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-apr-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-par-')}</td></tr></table>`;
             });
         }
 
-        const steps = document.querySelectorAll('.sequence-step');
+        const steps = queryAll('.sequence-step');
         if (steps.length > 0) {
             html += `<div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #6B9596; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">6. Seqüència Didàctica</div>`;
             steps.forEach((step, index) => {
@@ -2251,74 +1408,37 @@
                     if(txt) actsHTML += `<div style="margin-bottom: 8px; text-align:justify; color: #2B3A3B; line-height: 1.4;">&#8226; ${txt.replace(/\n/g, '<br>')}${critHtml}</div>`;
                 });
                 
-                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                    <tr><th style="background-color: #E6EDED; padding: 8px 10px; text-align: left; border: 1px solid #D5E0E0; color: #2B3A3B; font-size: 10.5pt;">FASE ${index + 1}. ${title}</th></tr>
-                    <tr><td style="padding: 10px 12px; border: 1px solid #D5E0E0;">${actsHTML || '<i style="color:#788F90;">(Sense activitats detallades)</i>'}</td></tr>
-                    <tr><td style="background-color: #F8FAFA; text-align: right; font-weight: bold; color: #788F90; font-size: 9.5pt; border-top: 1px dashed #D5E0E0; border-left: 1px solid #D5E0E0; border-right: 1px solid #D5E0E0; border-bottom: 1px solid #D5E0E0; font-family: 'Calibri', 'Arial', sans-serif; padding: 6px 10px;">Sessions: ${sessionHtml}</td></tr>
-                </table>`;
+                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="background-color: #E6EDED; padding: 8px 10px; text-align: left; border: 1px solid #D5E0E0; color: #2B3A3B; font-size: 10.5pt;">FASE ${index + 1}. ${title}</th></tr><tr><td style="padding: 10px 12px; border: 1px solid #D5E0E0;">${actsHTML || '<i style="color:#788F90;">(Sense activitats detallades)</i>'}</td></tr><tr><td style="background-color: #F8FAFA; text-align: right; font-weight: bold; color: #788F90; font-size: 9.5pt; border-top: 1px dashed #D5E0E0; border: left: 1px solid #D5E0E0; border-right: 1px solid #D5E0E0; border-bottom: 1px solid #D5E0E0; font-family: 'Calibri', 'Arial', sans-serif; padding: 6px 10px;">Sessions: ${sessionHtml}</td></tr></table>`;
             });
         }
         return html;
     }
 
     function generateWord() {
-        const saNum = document.getElementById('input-sa-num').value || "___";
-        const saTitle = document.getElementById('input-sa-title').value || "Sense títol";
-        const htmlContent = buildExportHTML();
-        
-        const docHTML = `
-            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-            <head><meta charset='UTF-8'><title>SA_${saNum}</title>
-            <style>
-                @page Section1 { size:841.9pt 595.3pt; margin:36.0pt 36.0pt 36.0pt 36.0pt; mso-header-margin:18.0pt; mso-footer-margin:18.0pt; mso-page-orientation: landscape; }
-                div.Section1 { page:Section1; }
-            </style></head>
-            <body><div class="Section1">${htmlContent}</div></body></html>`;
-        
-        const blob = new Blob(['\ufeff', docHTML], { type: 'application/msword' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        
-        link.style.display = 'none'; 
-        link.href = url; 
-        link.download = `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.doc`;
-        document.body.appendChild(link); 
-        link.click(); 
-        setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(url); }, 100);
+        const saNum = selectEl('input-sa-num')?.value || "___", saTitle = selectEl('input-sa-title')?.value || "Sense títol";
+        const docHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='UTF-8'><title>SA_${saNum}</title><style>@page Section1 { size:841.9pt 595.3pt; margin:36.0pt 36.0pt 36.0pt 36.0pt; mso-header-margin:18.0pt; mso-footer-margin:18.0pt; mso-page-orientation: landscape; } div.Section1 { page:Section1; }</style></head><body><div class="Section1">${buildExportHTML()}</div></body></html>`;
+        const blob = new Blob(['\ufeff', docHTML], { type: 'application/msword' }), url = URL.createObjectURL(blob);
+        const link = Object.assign(document.createElement('a'), { href: url, download: `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.doc` });
+        document.body.appendChild(link); link.click(); setTimeout(() => { link.remove(); URL.revokeObjectURL(url); }, 100);
     }
 
     function generateJSON() {
-        const saNum = document.getElementById('input-sa-num').value || "___";
-        const saTitle = document.getElementById('input-sa-title').value || "Sense_titol";
-        const state = getStateObject();
-        
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-        const link = document.createElement('a');
-        link.setAttribute("href", dataStr);
-        link.setAttribute("download", `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.json`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const saNum = selectEl('input-sa-num')?.value || "___", saTitle = selectEl('input-sa-title')?.value || "Sense_titol";
+        const link = Object.assign(document.createElement('a'), { href: "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getStateObject(), null, 2)), download: `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.json` });
+        document.body.appendChild(link); link.click(); link.remove();
     }
 
     function importJSON(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
+        if (!e.target.files[0]) return;
         const reader = new FileReader();
-        reader.onload = function(evt) {
+        reader.onload = evt => {
             try {
                 const content = JSON.parse(evt.target.result);
-                if(!content.inputs || !content.selects || !content.tags) throw new Error("Format no vàlid");
-                
-                localStorage.setItem('clickSA_state', JSON.stringify(content));
-                location.reload(); 
-            } catch (err) {
-                alert("❌ El fitxer seleccionat no és un document vàlid de ClickSA.");
-            }
+                if(!content.inputs || !content.selects || !content.tags) throw new Error();
+                localStorage.setItem('clickSA_state', JSON.stringify(content)); location.reload();
+            } catch (err) { alert("❌ El fitxer seleccionat no és un document vàlid de ClickSA."); }
         };
-        reader.readAsText(file);
-        e.target.value = '';
+        reader.readAsText(e.target.files[0]); e.target.value = '';
     }
 </script>
 </body>
