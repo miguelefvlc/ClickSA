@@ -9,7 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
     <style>
         :root {
@@ -507,7 +510,7 @@
                 <i class="fa-solid fa-xmark close-modal" id="close-export-modal"></i>
             </div>
             <div class="modal-body export-grid">
-                <button class="export-btn" id="export-doc"><i class="fa-solid fa-file-word"></i><span>Word (.doc)</span></button>
+                <button class="export-btn" id="export-pdf"><i class="fa-solid fa-file-pdf"></i><span>PDF (.pdf)</span></button>
                 <button class="export-btn" id="export-json"><i class="fa-solid fa-file-code"></i><span>Dades (.json)</span></button>
             </div>
         </div>
@@ -617,7 +620,7 @@
         selectEl('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
         modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('show'); });
         
-        selectEl('export-doc').addEventListener('click', () => { generateWord(); modal.classList.remove('show'); });
+        selectEl('export-pdf').addEventListener('click', () => { generatePDF(); modal.classList.remove('show'); });
         selectEl('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
         
         selectEl('btn-import-trigger').addEventListener('click', () => selectEl('import-json-file').click());
@@ -1462,111 +1465,333 @@
     /** ==========================================
      * EXPORT LOGIC
      * ========================================== */
-    function formatPdfTagsWord(id) {
-        const c = selectEl(id); if (!c) return '-'; 
-        const tags = Array.from(c.querySelectorAll('.tag-text')).map(t => t.dataset.fulltext || t.innerText); if (tags.length === 0) return '-';
-        if (id === 'tags-obj-gen') return tags.map(t => t.match(/^[a-z]\)|\./i) ? t.match(/^[a-z]\)|\./i)[0] : t.split(' ')[0]).join(', ');
-        if (id === 'tags-ods') return tags.map(t => t.match(/ODS\s*(\d+)/i) ? "ODS " + t.match(/ODS\s*(\d+)/i)[1] : t).join(', ');
-        return '<ul style="margin: 4px 0; padding-left: 18px; line-height: 1.4;">' + tags.map(t => `<li style="margin-bottom: 6px; text-align: justify;">${t}</li>`).join('') + '</ul>';
-    }
+    function generatePDF() {
+        const state = getStateObject();
+        const activeCCs = Array.from(document.querySelectorAll('.cc-cell.active')).map(c => c.dataset.desc);
 
-    function buildExportHTML() {
-        const val = id => selectEl(id)?.value || "-", getTags = id => formatPdfTagsWord(id);
-        const saNum = val('input-sa-num') === "-" ? "___" : val('input-sa-num'), saTitle = val('input-sa-title') === "-" ? "Sense títol" : val('input-sa-title');
+        // -- 1. UTILIDADES Y FORMATEO --
+        const formatTagsList = (tagsArray) => tagsArray && tagsArray.length > 0 ? { ul: tagsArray, margin: [0, 4, 0, 4], alignment: 'justify' } : { text: '-', margin: [4, 4, 4, 4], alignment: 'center' };
+        const val = (key) => state.inputs[key] || state.selects[key] || '-';
 
-        const weeksHtml = Array.from(queryAll('.week-box')).map(box => `<td style="border: 1px solid #D5E0E0; background-color: ${box.classList.contains('active') ? '#6B9596' : '#FFFFFF'}; height: 18px; padding:0;"></td>`).join('');
-        
-        let perfilHtml = `<div style="text-align: center; width: 100%;"><table align="center" style="border-collapse: collapse; margin: 0 auto; margin-top: 5px; margin-bottom: 5px;"><tr>`;
-        queryAll('.cc-table').forEach(table => {
-            const ccName = table.querySelector('.cc-header').innerText;
-            const cellsHtml = Array.from(table.querySelectorAll('.cc-cell')).map(cell => `<td style="border: 1px solid #D5E0E0; background-color: ${cell.classList.contains('active') ? '#6B9596' : '#FFFFFF'}; color: ${cell.classList.contains('active') ? '#FFFFFF' : '#3A4B4C'}; text-align:center; width:22px; font-size:8pt; padding:4px;">${cell.innerText}</td>`).join('');
-            perfilHtml += `<td style="padding:0; border:none; padding-right:12px; vertical-align:top;"><table style="border-collapse: collapse;"><tr><th colspan="${table.querySelectorAll('.cc-cell').length}" style="background-color:#E6EDED; border: 1px solid #D5E0E0; font-size:8pt; color:#507677; text-align:center; padding:4px;">${ccName}</th></tr><tr>${cellsHtml}</tr></table></td>`;
-        });
-        perfilHtml += `</tr></table></div>`;
+        // Formateador Inteligente (Detecta códigos al inicio y les aplica NEGRITA)
+        const formatSmartTagsList = (tagsArray, type) => {
+            if (!tagsArray || tagsArray.length === 0) return { text: '-', margin: [4, 4, 4, 4], alignment: 'center' };
+            let ul = tagsArray.map(str => {
+                let boldPart = "";
+                let restPart = str;
 
-        let html = `
-            <div style="text-align: center; margin-bottom: 20px;"><h1 style="font-size: 16pt; margin: 0; color: #2B3A3B; text-transform: uppercase; font-family: 'Calibri', 'Arial', sans-serif; letter-spacing: 1px;">SITUACIÓ D'APRENENTATGE</h1></div>
-            <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 20px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">1. Identificació i Context</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Àrea</th><td style="width: 30%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-area')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Cicle</th><td style="width: 20%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-cicle')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Nivell</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-curs')}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Trimestre</th><td style="width: 10%; border: 1px solid #D5E0E0; padding: 6px 10px;">${getSelectedText('input-trimestre')}</td></tr>
-            </table>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 8.5pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th colspan="40" style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: center; color: #507677; font-size: 9pt; font-weight: bold; letter-spacing: 0.5px;">TEMPORALITZACIÓ</th></tr>
-                <tr>${['Set.', 'Oct.', 'Nov.', 'Des.', 'Gen.', 'Feb.', 'Març', 'Abr.', 'Maig', 'Juny'].map(m => `<th colspan="4" style="border: 1px solid #D5E0E0; background-color: #F8FAFA; font-weight: normal; padding: 4px; color: #3A4B4C;">${m}</th>`).join('')}</tr>
-                <tr>${weeksHtml}</tr>
-            </table>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">S.A. Nº</th><td style="width: 15%; font-weight: bold; color: #507677; border: 1px solid #D5E0E0; padding: 6px 10px;">${saNum}</td><th style="width: 10%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Títol</th><td style="width: 65%; font-weight: bold; border: 1px solid #D5E0E0; padding: 6px 10px; color: #2B3A3B;">${saTitle}</td></tr>
-            </table>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;">
-                <tr><th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Repte / Problema / Necessitat</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: center; color: #3A4B4C;">ODS</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-repte').replace(/\n/g, '<br>')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: center; vertical-align: top; line-height: 1.4;" rowspan="3">${getTags("tags-ods")}</td></tr>
-                <tr><th style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Producte Final</th></tr>
-                <tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-tasca').replace(/\n/g, '<br>')}</td></tr>
-            </table>
-            <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">2. Concreció Curricular</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Objectius Generals d'Etapa</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${getTags("tags-obj-gen")}</td></tr></table>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 100%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Perfil d'Eixida (Descriptors Operatius)</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 10px 6px;">${perfilHtml}</td></tr></table>`;
+                if (type === 'ODS') {
+                    let m = str.match(/^(ODS\s*\d+)(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                } else if (type === 'OBJ') {
+                    let m = str.match(/^([a-z]\))(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                } else if (type === 'CE') {
+                    let m = str.match(/^(CE\s*\d+)(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                } else if (type === 'CA') {
+                    let m = str.match(/^(CA\s*\d+\.\d+)(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                } else if (type === 'BL') {
+                    let m = str.match(/^(BL\s*\d+)(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                } else if (type === 'Saber') {
+                    let m = str.match(/^([A-ZÀ-Ö0-9.\/-]+\s*\d+(?:\.\d+)?)(.*)/i);
+                    if (m) { boldPart = m[1]; restPart = m[2]; }
+                }
 
-        let ceElements = Array.from(queryAll('#tags-comp-espec .tag-text')).map(t => t.dataset.fulltext || t.innerText);
-        let caElements = Array.from(queryAll('#tags-criteris .tag-text')).map(t => t.dataset.fulltext || t.innerText);
-
-        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Competències Específiques (CE)</th><th style="width: 50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Criteris d'Avaluació (CA)</th></tr>`;
-        
-        if (ceElements.length === 0) html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">-</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px;">${getTags("tags-criteris")}</td></tr>`;
-        else ceElements.forEach(ce => {
-            let m = ce.match(/^CE\s*(\d+)/i), relCAs = caElements.filter(ca => (ca.match(/^CA\s*(\d+)\.\d+/i) || [])[1] === (m ? m[1] : null));
-            html += `<tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${ce}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${relCAs.length ? `<ul style="margin:4px 0; padding-left:18px; line-height: 1.4;">${relCAs.map(ca => `<li style="margin-bottom:6px; text-align:justify;">${ca}</li>`).join('')}</ul>` : '-'}</td></tr>`;
-        });
-        html += `</table>`;
-
-        html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Blocs de Continguts</th><th style="width: 75%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Sabers Bàsics</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-blocs")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-sabers")}</td></tr></table>
-            <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">3. Metodologia i Organització</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Metodologia / Model / Estil</th><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Agrupaments</th><th style="width:33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Espais i recursos materials</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-metodologia")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-agrupaments")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${val('input-materials').replace(/\n/g, '<br>')}</td></tr></table>
-            <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">4. Avaluació</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Instruments d'Avaluació</th><th style="width:50%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Tipus d'Avaluació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-instruments")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; text-align: justify; vertical-align: top; line-height: 1.4;">${getTags("tags-tipus-avaluacio")}</td></tr></table>
-            <div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #507677; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">5. Mesures per a l'atenció educativa</div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Representació (DUA)</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Motivació (DUA)</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Acció (DUA)</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-acces")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-part")}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${getTags("tags-dua-prog")}</td></tr></table>`;
-
-        const destItems = queryAll('.destinatari-item');
-        if (destItems.length > 0) {
-            html += `<div class="section-title" style="font-size: 10pt; color:#788F90; margin-top:10px; border-bottom: none; font-weight: bold; text-transform: uppercase; font-family: 'Calibri', 'Arial', sans-serif;">Mesures Específiques de Resposta</div>`;
-            destItems.forEach((item, index) => {
-                const gt = id => getTags(item.querySelector(`[id^="${id}"]`).id);
-                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th colspan="4" style="background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #2B3A3B;">Destinatari ${index + 1}: ${gt('tags-dest-') !== '-' ? gt('tags-dest-') : '(Sense especificar)'}</th></tr><tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL III</th></tr><tr><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th><th style="width: 33.3%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;" colspan="2">Participació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-acc-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-apr-')}</td><td colspan="2" style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n3-par-')}</td></tr><tr><th colspan="4" style="text-align:center; background-color: #E6EDED; font-size: 9pt; border: 1px solid #D5E0E0; padding: 4px 10px; color: #507677;">NIVELL IV</th></tr><tr><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Recursos Personals</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Accés</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Aprenentatge</th><th style="width: 25%; background-color: #F8FAFA; border: 1px solid #D5E0E0; padding: 6px 10px; text-align: left; color: #3A4B4C;">Participació</th></tr><tr><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-rec-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-acc-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-apr-')}</td><td style="border: 1px solid #D5E0E0; padding: 8px 10px; vertical-align: top; line-height: 1.4;">${gt('tags-n4-par-')}</td></tr></table>`;
+                if (boldPart) {
+                    return { text: [ { text: boldPart, bold: true }, restPart ] };
+                } else {
+                    return { text: str };
+                }
             });
-        }
+            return { ul: ul, margin: [0, 4, 0, 4], alignment: 'justify' };
+        };
 
-        const steps = queryAll('.sequence-step');
-        if (steps.length > 0) {
-            html += `<div class="section-title" style="font-size: 11.5pt; font-weight: bold; color: #6B9596; text-transform: uppercase; margin-top: 24px; margin-bottom: 6px; border-bottom: 1.5px solid #6B9596; padding-bottom: 4px; font-family: 'Calibri', 'Arial', sans-serif;">6. Seqüència Didàctica</div>`;
-            steps.forEach((step, index) => {
-                const title = step.querySelector('.step-title-input').value.trim() || "FASE " + (index + 1);
-                const sessionHtml = Array.from(step.querySelectorAll('.session-num-text')).map(s => `<span style="display:inline-block; border:1px solid #D5E0E0; border-radius:4px; padding:2px 6px; margin-left:4px; background:#fff; color:#3A4B4C; font-family: 'Calibri', 'Arial', sans-serif; font-size: 9pt;">${s.innerText}</span>`).join('') || "-";
-                let actsHTML = '';
+        const standardTableLayout = {
+            hLineWidth: () => 0.5, vLineWidth: () => 0.5, 
+            hLineColor: () => '#D5E0E0', vLineColor: () => '#D5E0E0',
+            paddingLeft: () => 6, paddingRight: () => 6, paddingTop: () => 4, paddingBottom: () => 4
+        };
+
+        const buildSectionTitle = (num, title) => {
+            return {
+                table: {
+                    widths: [24, '*'], 
+                    body: [
+                        [
+                            { text: num, fillColor: '#6B9596', color: '#FFFFFF', bold: true, alignment: 'center', margin: [0, 4, 0, 4], fontSize: 12 },
+                            { text: title.toUpperCase(), color: '#2B3A3B', bold: true, margin: [6, 5, 0, 3], fontSize: 10 }
+                        ]
+                    ]
+                },
+                layout: { hLineWidth: (i, node) => (i === node.table.body.length) ? 0.5 : 0, vLineWidth: () => 0, hLineColor: () => '#D5E0E0', paddingBottom: () => 6 },
+                margin: [0, 15, 0, 8] 
+            };
+        };
+
+        // Creador de títulos de Nivel 2 / Subapartados (Celda sombreada, negrita y minúscula)
+        const buildSubSectionTitle = (title) => {
+            return {
+                table: { widths: ['100%'], body: [[ { text: title, style: 'th' } ]] },
+                layout: standardTableLayout, margin: [0, 8, 0, 4]
+            };
+        };
+
+        // -- 2. CONSTRUCTORES DE ELEMENTOS COMPLEJOS --
+        const buildTemporalitzacio = () => {
+            const months = ['SET', 'OCT', 'NOV', 'DES', 'GEN', 'FEB', 'MAR', 'ABR', 'MAI', 'JUN'];
+            const headerRow = months.map(m => ({ text: m, colSpan: 4, style: 'thCenter', fontSize: 7 })).flatMap(m => [m, {}, {}, {}]);
+            const weeksRow = Array.from({length: 40}).map((_, i) => ({
+                text: '', fillColor: state.temporalitzacio && state.temporalitzacio[i] ? '#6B9596' : '#FFFFFF', margin: [0, 4, 0, 4]
+            }));
+            return {
+                table: { widths: Array(40).fill('*'), body: [ headerRow, weeksRow ] },
+                layout: standardTableLayout, margin: [0, 2, 0, 2]
+            };
+        };
+
+        const buildPerfilEixidaSingleTable = () => {
+            const ccGroups = [
+                { id: 'CCL', count: 5 }, { id: 'CP', count: 3 }, { id: 'STEM', count: 5 },
+                { id: 'CD', count: 5 }, { id: 'CPSAA', count: 5 }, { id: 'CC', count: 4 },
+                { id: 'CE', count: 3 }, { id: 'CCEC', count: 4 }
+            ];
+            const headerRow = [];
+            const cellsRow = [];
+
+            ccGroups.forEach(group => {
+                headerRow.push({ text: group.id, colSpan: group.count, style: 'thCenter', fontSize: 7 });
+                for(let i=1; i<group.count; i++) headerRow.push({});
                 
-                step.querySelectorAll('.sequence-activity').forEach(actDiv => {
-                    const txt = actDiv.querySelector('.activity-textarea').value.trim();
-                    let critHtml = '';
-                    if (actDiv.querySelector('.btn-eval-a')?.classList.contains('active')) {
-                        const crits = Array.from(actDiv.querySelectorAll('.mini-criteria-tag span')).map(s => s.innerText);
-                        critHtml = crits.length > 0 ? ` <i style="color:#6B9596;">[Avaluació: ${crits.join(', ')}]</i>` : ` <i style="color:#6B9596;">[Avaluació sense criteri vinculat]</i>`;
-                    }
-                    if(txt) actsHTML += `<div style="margin-bottom: 8px; text-align:justify; color: #2B3A3B; line-height: 1.4;">&#8226; ${txt.replace(/\n/g, '<br>')}${critHtml}</div>`;
+                for(let i=1; i<=group.count; i++) {
+                    const isActive = activeCCs.includes(`${group.id}${i}`);
+                    cellsRow.push({
+                        text: i.toString(), alignment: 'center', fontSize: 7, bold: isActive,
+                        color: isActive ? '#FFFFFF' : '#3A4B4C', fillColor: isActive ? '#6B9596' : '#FFFFFF', margin: [0, 2, 0, 2]
+                    });
+                }
+            });
+
+            return {
+                table: { widths: Array(34).fill('*'), body: [headerRow, cellsRow] },
+                layout: standardTableLayout, margin: [0, 2, 0, 2]
+            };
+        };
+
+        const buildMesuresEspecifiques = () => {
+            let content = [];
+            if (state.mesuresActives && state.destinataris && state.destinataris.length > 0) {
+                state.destinataris.forEach((dest, index) => {
+                    let destName = dest.tags['dest'] && dest.tags['dest'].length > 0 ? dest.tags['dest'].join(', ') : `Destinatari ${index+1}`;
+                    
+                    // Cabecera del destinatario
+                    content.push({
+                        table: { widths: ['100%'], body: [[{ text: `Destinatari ${index+1}: ${destName}`, style: 'th', fillColor: '#E6EDED' }]] },
+                        layout: standardTableLayout, margin: [0, 0, 0, 2]
+                    });
+
+                    // Tabla Nivell III (3 columnas exactamente iguales y centradas)
+                    content.push({
+                        table: {
+                            widths: ['33.3%', '33.3%', '33.4%'],
+                            body: [
+                                [{ text: 'NIVELL III', colSpan: 3, style: 'thCenter', fontSize: 8, fillColor: '#F8FAFA' }, {}, {}],
+                                [{ text: 'Accés', style: 'thCenter' }, { text: 'Aprenentatge', style: 'thCenter' }, { text: 'Participació', style: 'thCenter' }],
+                                [ formatTagsList(dest.tags['n3-acc']), formatTagsList(dest.tags['n3-apr']), formatTagsList(dest.tags['n3-par']) ]
+                            ]
+                        },
+                        layout: standardTableLayout, margin: [0, 0, 0, 2]
+                    });
+
+                    // Tabla Nivell IV (4 columnas)
+                    content.push({
+                        table: {
+                            widths: ['25%', '25%', '25%', '25%'],
+                            body: [
+                                [{ text: 'NIVELL IV', colSpan: 4, style: 'thCenter', fontSize: 8, fillColor: '#F8FAFA' }, {}, {}, {}],
+                                [{ text: 'Recursos Personals', style: 'thCenter' }, { text: 'Accés', style: 'thCenter' }, { text: 'Aprenentatge', style: 'thCenter' }, { text: 'Participació', style: 'thCenter' }],
+                                [ formatTagsList(dest.tags['n4-rec']), formatTagsList(dest.tags['n4-acc']), formatTagsList(dest.tags['n4-apr']), formatTagsList(dest.tags['n4-par']) ]
+                            ]
+                        },
+                        layout: standardTableLayout, margin: [0, 0, 0, 10]
+                    });
+                });
+            } else {
+                content.push({ text: 'No s\'han establert mesures específiques addicionals.', italics: true, color: '#788F90', margin: [0, 4, 0, 10] });
+            }
+            return content;
+        };
+
+        const buildSequenceTableBody = () => {
+            if (!state.sequence || state.sequence.length === 0) return [[{ text: 'Sense dades a la seqüència.', colSpan: 2, color: '#788F90', italics: true, margin: [6,6,6,6], alignment: 'center' }, {}]];
+            let body = [];
+            let globalSessionCount = 1; 
+
+            state.sequence.forEach((step, index) => {
+                body.push([{ text: `FASE ${index + 1}: ${step.title || 'Sense títol'}`, style: 'th', colSpan: 2 }, {}]);
+                
+                let activitiesList = step.activities.map(act => {
+                    let evalText = act.evalActive && act.criteria.length ? ` [Avaluació: ${act.criteria.join(', ')}]` : '';
+                    return { text: [act.text, { text: evalText, color: '#6B9596', italics: true, fontSize: 8 }], alignment: 'justify' };
                 });
                 
-                html += `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; font-family: 'Calibri', 'Arial', sans-serif; table-layout: fixed;"><tr><th style="background-color: #E6EDED; padding: 8px 10px; text-align: left; border: 1px solid #D5E0E0; color: #2B3A3B; font-size: 10.5pt;">FASE ${index + 1}. ${title}</th></tr><tr><td style="padding: 10px 12px; border: 1px solid #D5E0E0;">${actsHTML || '<i style="color:#788F90;">(Sense activitats detallades)</i>'}</td></tr><tr><td style="background-color: #F8FAFA; text-align: right; font-weight: bold; color: #788F90; font-size: 9.5pt; border-top: 1px dashed #D5E0E0; border: left: 1px solid #D5E0E0; border-right: 1px solid #D5E0E0; border-bottom: 1px solid #D5E0E0; font-family: 'Calibri', 'Arial', sans-serif; padding: 6px 10px;">Sessions: ${sessionHtml}</td></tr></table>`;
-            });
-        }
-        return html;
-    }
+                let sessionBoxes = [];
+                if (step.sessions > 0) {
+                    for(let i=1; i<=step.sessions; i++) {
+                        sessionBoxes.push([{ text: (globalSessionCount++).toString(), alignment: 'center', fillColor: '#E6EDED', color: '#2B3A3B', bold: true, margin: [0,2,0,2] }]);
+                    }
+                } else {
+                    sessionBoxes.push([{ text: '-', alignment: 'center', color: '#788F90' }]);
+                }
 
-    function generateWord() {
-        const saNum = selectEl('input-sa-num')?.value || "___", saTitle = selectEl('input-sa-title')?.value || "Sense títol";
-        const docHTML = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='UTF-8'><title>SA_${saNum}</title><style>@page Section1 { size:841.9pt 595.3pt; margin:36.0pt 36.0pt 36.0pt 36.0pt; mso-header-margin:18.0pt; mso-footer-margin:18.0pt; mso-page-orientation: landscape; } div.Section1 { page:Section1; }</style></head><body><div class="Section1">${buildExportHTML()}</div></body></html>`;
-        const blob = new Blob(['\ufeff', docHTML], { type: 'application/msword' }), url = URL.createObjectURL(blob);
-        const link = Object.assign(document.createElement('a'), { href: url, download: `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.doc` });
-        document.body.appendChild(link); link.click(); setTimeout(() => { link.remove(); URL.revokeObjectURL(url); }, 100);
+                let sessionTable = {
+                    table: { widths: ['*'], body: [ [{ text: 'Sessió', style: 'thCenter', fontSize: 7 }] ].concat(sessionBoxes) },
+                    layout: standardTableLayout, alignment: 'center', margin: [0, 2, 0, 2]
+                };
+
+                body.push([
+                    { ul: activitiesList.length > 0 ? activitiesList : ['Sense activitats'], margin: [6, 6, 6, 6], fontSize: 9 },
+                    sessionTable
+                ]);
+            });
+            return body;
+        };
+
+        // -- 3. DEFINICIÓN FINAL DEL DOCUMENTO PDF --
+        const docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'landscape',
+            pageMargins: [30, 30, 30, 30],
+            defaultStyle: { font: 'Roboto', fontSize: 9, color: '#3A4B4C', alignment: 'justify' }, 
+            styles: {
+                header: { fontSize: 13, bold: true, alignment: 'center', margin: [0, 0, 0, 10], color: '#2B3A3B' },
+                th: { bold: true, fillColor: '#F2F5F5', color: '#2B3A3B' },            
+                thCenter: { bold: true, fillColor: '#F2F5F5', color: '#2B3A3B', alignment: 'center' } 
+            },
+            content: [
+                // TÍTULO
+                { text: `SITUACIÓ D'APRENENTATGE Nº ${val('input-sa-num')}: ${val('input-sa-title').toUpperCase()}`, style: 'header' },
+
+                // --- BLOQUE 1 ---
+                buildSectionTitle('1', 'Identificació i Context'),
+                {
+                    table: {
+                        widths: ['10%', '25%', '10%', '15%', '10%', '10%', '10%', '10%'],
+                        body: [[{text:'Àrea', style:'th'}, val('input-area'), {text:'Cicle', style:'th'}, val('input-cicle'), {text:'Nivell', style:'th'}, val('input-curs'), {text:'Trim.', style:'th'}, val('input-trimestre')]]
+                    },
+                    layout: standardTableLayout, margin: [0, 0, 0, 8]
+                },
+                {
+                    table: { widths: ['100%'], body: [[{text: 'TEMPORALITZACIÓ', style: 'thCenter'}], [buildTemporalitzacio()]] },
+                    layout: standardTableLayout, margin: [0, 0, 0, 8]
+                },
+                {
+                    table: {
+                        widths: ['75%', '25%'], 
+                        body: [
+                            [{text: 'Repte, Problema, Necessitat', style: 'th'}, {text: 'ODS', style: 'thCenter'}],
+                            [{text: val('input-repte'), margin: [4,4,4,4]}, Object.assign({}, formatSmartTagsList(state.tags['tags-ods'], 'ODS'), { rowSpan: 3 })],
+                            [{text: 'Producte Final', style: 'th'}, ''],
+                            [{text: val('input-tasca'), margin: [4,4,4,4]}, '']
+                        ]
+                    },
+                    layout: standardTableLayout
+                },
+
+                // --- BLOQUE 2 ---
+                buildSectionTitle('2', 'Concreció Curricular'),
+                {
+                    table: { widths: ['100%'], body: [[{text:'Objectius Generals d\'Etapa', style:'th'}], [formatSmartTagsList(state.tags['tags-obj-gen'], 'OBJ')]] },
+                    layout: standardTableLayout, margin: [0, 0, 0, 8]
+                },
+                {
+                    table: { widths: ['100%'], body: [[{text:'Perfil d\'Eixida (Descriptors Operatius)', style:'thCenter'}], [buildPerfilEixidaSingleTable()]] },
+                    layout: standardTableLayout, margin: [0, 0, 0, 8]
+                },
+                {
+                    table: {
+                        widths: ['50%', '50%'],
+                        body: [
+                            [{text:'Competències Específiques', style:'th'}, {text:'Criteris d\'Avaluació', style:'th'}],
+                            [formatSmartTagsList(state.tags['tags-comp-espec'], 'CE'), formatSmartTagsList(state.tags['tags-criteris'], 'CA')]
+                        ]
+                    },
+                    layout: standardTableLayout, margin: [0, 0, 0, 8]
+                },
+                {
+                    table: {
+                        widths: ['25%', '75%'], 
+                        body: [
+                            [{text:'Blocs de Continguts', style:'th'}, {text:'Sabers Bàsics', style:'th'}],
+                            [formatSmartTagsList(state.tags['tags-blocs'], 'BL'), formatSmartTagsList(state.tags['tags-sabers'], 'Saber')]
+                        ]
+                    },
+                    layout: standardTableLayout
+                },
+
+                // --- BLOQUE 3 ---
+                buildSectionTitle('3', 'Metodologia i Organització'),
+                {
+                    table: {
+                        widths: ['33%', '33%', '34%'],
+                        body: [
+                            [{text:'Metodologia / Model / Estil', style:'th'}, {text:'Agrupaments', style:'th'}, {text:'Espais i Recursos Materials', style:'th'}],
+                            [formatTagsList(state.tags['tags-metodologia']), formatTagsList(state.tags['tags-agrupaments']), { text: val('input-materials'), margin: [4,4,4,4], alignment: 'justify' }]
+                        ]
+                    },
+                    layout: standardTableLayout
+                },
+
+                // --- BLOQUE 4 ---
+                buildSectionTitle('4', 'Avaluació'),
+                {
+                    table: {
+                        widths: ['50%', '50%'],
+                        body: [
+                            [{text:'Instruments d\'Avaluació', style:'th'}, {text:'Tipus d\'Avaluació', style:'th'}],
+                            [formatTagsList(state.tags['tags-instruments']), formatTagsList(state.tags['tags-tipus-avaluacio'])]
+                        ]
+                    },
+                    layout: standardTableLayout
+                },
+
+                // --- BLOQUE 5 ---
+                buildSectionTitle('5', 'Mesures per a l\'atenció educativa'),
+                
+                buildSubSectionTitle('Disseny universal per a l\'aprenentatge (DUA)'),
+                {
+                    table: {
+                        widths: ['33%', '33%', '34%'],
+                        body: [
+                            [{text:'Representació', style:'thCenter'}, {text:'Motivació', style:'thCenter'}, {text:'Acció', style:'thCenter'}],
+                            [formatTagsList(state.tags['tags-dua-acces']), formatTagsList(state.tags['tags-dua-part']), formatTagsList(state.tags['tags-dua-prog'])]
+                        ]
+                    },
+                    layout: standardTableLayout, margin: [0, 0, 0, 10]
+                },
+
+                buildSubSectionTitle('Mesures específiques de resposta'),
+                buildMesuresEspecifiques(),
+
+                // --- BLOQUE 6 ---
+                buildSectionTitle('6', 'Seqüència Didàctica'),
+                {
+                    table: {
+                        widths: ['*', 40],
+                        body: buildSequenceTableBody()
+                    },
+                    layout: standardTableLayout
+                }
+            ]
+        };
+
+        const saNum = val('input-sa-num') === "-" ? "___" : val('input-sa-num');
+        const saTitle = val('input-sa-title') === "-" ? "Sense_titol" : val('input-sa-title');
+        const fileName = `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.pdf`;
+        
+        pdfMake.createPdf(docDefinition).download(fileName);
     }
 
     function generateJSON() {
