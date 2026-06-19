@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ClickSA - Dissenyador de Situacions d'Aprenentatge</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <style>
+        /* =========================================================
+           VARIABLES GLOBALES Y TEMA
+        ========================================================= */
+        :root {
+            --primary: #2B3A3B; --accent: #6B9596; --accent-hover: #507677; 
+            --bg: #F2F5F5; --card-bg: #FFFFFF; --text-main: #3A4B4C; 
+            --text-muted: #788F90; --border: #D5E0E0; --radius: 12px; 
+            --shadow: 0 4px 6px -1px rgba(43, 58, 59, 0.06); 
+            --tag-bg: #E6EDED; --tag-border: #CDDCDC; --tag-border-left: #90A9A9; 
+            --tag-text: #3A4B4C; --tag-icon: #90A9A9; --tag-icon-hover: #C68B87; 
+        }
+
+        body.dark-mode {
+            --primary: #F0F4F4; --accent: #9EC2C3; --accent-hover: #B8D7D8;
+            --bg: #1C2324; --card-bg: #263031; --text-main: #E8EEEE; 
+            --text-muted: #92A8A9; --border: #374849;
+            --tag-bg: #303E3F; --tag-border: #405354; --tag-border-left: #85A7A8; 
+            --tag-text: #E8EEEE; --tag-icon: #92A8A9; --tag-icon-hover: #D69793;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg); color: var(--text-main); margin: 0; 
+            padding: 40px 20px; transition: background-color 0.4s ease, color 0.4s ease; 
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* =========================================================
+           CABECERA (HEADER)
+        ========================================================= */
+        header { 
+            position: relative; background: var(--card-bg); padding: 40px 30px; 
+            border-radius: var(--radius); text-align: center; margin-bottom: 20px; 
+            box-shadow: var(--shadow); border-top: 5px solid var(--accent); 
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; 
+        }
+        header h1 { color: var(--primary); font-size: 3.8rem; margin: 0; font-weight: 900; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; cursor: default; }
+        header h1 span { color: var(--accent); }
+        header h1 i { font-size: 2.2rem; color: var(--accent); margin-left: 8px; transform: rotate(-15deg) translateY(5px); transition: transform 0.3s ease; }
+        header h1:hover i { transform: rotate(0deg) translateY(0) scale(1.1); }
+        header h2 { color: var(--text-muted); font-size: 1rem; margin: 5px 0 0 0; font-weight: 600; }
+
+        .header-icon-btn { 
+            position: absolute; width: 32px; height: 32px; background: transparent; 
+            border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.9rem; 
+            cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7;
+        }
+        .header-icon-btn:hover { opacity: 1; transform: scale(1.1); background: var(--bg); border-color: var(--accent); }
+        #btn-dark-mode { top: 15px; right: 15px; }
+        #btn-import-trigger { bottom: 15px; right: 15px; }
+
+        /* =========================================================
+           ESTRUCTURA DE SECCIONES Y GRIDS
+        ========================================================= */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin: 50px 0 20px 0; padding: 12px 15px; border-bottom: 2px solid var(--border); cursor: pointer; border-radius: 8px 8px 0 0; transition: background-color 0.2s ease; user-select: none; }
+        .section-header:hover { background-color: rgba(107, 149, 150, 0.05); }
+        .section-header-left { display: flex; align-items: center; gap: 15px; }
+        
+        .section-number { background: var(--accent); color: var(--card-bg); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 1.2rem; flex-shrink: 0; }
+        body.dark-mode .section-number { color: #1C2324; }
+        .section-title-text { font-size: 1.3rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .toggle-icon { font-size: 1.3rem; color: var(--primary); transition: transform 0.3s ease; }
+
+        .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .grid-1-col { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
+        .grid-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .grid-row-4-equal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        .split-header-row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; margin-bottom: 15px; }
+        .mesures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .mesures-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        
+        .block1-custom-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .b1-repte, .b1-producte { grid-column: 1 / 2; }
+        .b1-ods { grid-column: 2 / 3; grid-row: 1 / 3; }
+
+        .block-content { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================================
+           TARJETAS Y FORMULARIOS
+        ========================================================= */
+        .card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; transition: all 0.3s ease; min-width: 0; }
+        .card-title { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
+        .card-title-left { display: flex; align-items: center; gap: 10px; }
+        .card-title i { color: var(--accent); font-size: 1.1rem; width: 24px; text-align: center; }
+
+        input, textarea, select { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); transition: all 0.2s ease; resize: vertical; max-width: 100%; }
+        textarea { min-height: 80px; line-height: 1.5; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(107, 149, 150, 0.15); }
+        body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus { box-shadow: 0 0 0 3px rgba(158, 194, 195, 0.15); }
+        
+        #input-sa-num { font-weight: 800; font-size: 1.2rem; text-align: center; color: var(--accent); }
+        #input-sa-title { font-weight: 600; font-size: 1.1rem; }
+        .sub-label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; }
+
+        /* =========================================================
+           COMPONENTES ESPECIALES (TEMPORALITZACIO Y PERFIL EIXIDA)
+        ========================================================= */
+        .temporalitzacio-wrapper, .perfil-wrapper-scroll { overflow-x: auto; padding-bottom: 8px; border-radius: 8px; width: 100%; -webkit-overflow-scrolling: touch; }
+        .temporalitzacio-wrapper::-webkit-scrollbar, .perfil-wrapper-scroll::-webkit-scrollbar { height: 6px; }
+        .temporalitzacio-wrapper::-webkit-scrollbar-thumb, .perfil-wrapper-scroll::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
+        
+        .temporalitzacio-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; min-width: 600px; width: 100%; }
+        .month-col { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+        .month-name { background: var(--tag-bg); color: var(--text-muted); text-align: center; font-size: 0.7rem; font-weight: 800; padding: 6px 0; border-bottom: 1px solid var(--border); text-transform: uppercase; user-select: none;}
+        .weeks-row { display: grid; grid-template-columns: repeat(4, 1fr); flex-grow: 1; }
+        .week-box { border-right: 1px solid var(--border); min-height: 26px; cursor: pointer; transition: all 0.2s ease; background-color: var(--card-bg); }
+        .week-box:last-child { border-right: none; }
+        .week-box:hover { background-color: var(--bg); }
+        .week-box.active { background-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+
+        .perfil-eixida-wrapper { display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 10px; margin-top: 5px; min-width: 700px; width: 100%; }
+        .cc-table { border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; background: var(--card-bg); flex-shrink: 0; }
+        .cc-header { background: var(--tag-bg); color: var(--text-muted); font-size: 0.75rem; font-weight: 800; text-align: center; padding: 5px 8px; border-bottom: 1.5px solid var(--border); letter-spacing: 0.05em; user-select: none;}
+        .cc-body { display: flex; flex-direction: row; }
+        .cc-cell { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border-right: 1px solid var(--border); color: var(--text-main); cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .cc-cell:last-child { border-right: none; }
+        .cc-cell:hover { background: var(--bg); }
+        .cc-cell.active { background: var(--accent); color: var(--card-bg); font-weight: 800; border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);}
+
+        /* =========================================================
+           TOOLTIPS Y CUSTOM SELECTS
+        ========================================================= */
+        #custom-tooltip { position: absolute; top: 0; left: 0; background: var(--primary); color: #E8EEEE; padding: 12px; border-radius: 8px; font-size: 0.85rem; max-width: 280px; z-index: 999999; box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3); pointer-events: none; line-height: 1.4; opacity: 0; visibility: hidden; transition: opacity 0.15s ease; white-space: normal; word-wrap: break-word; }
+        #custom-tooltip.show { opacity: 1; visibility: visible; }
+        body.dark-mode #custom-tooltip { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.6); }
+
+        .custom-select-wrapper { position: relative; width: 100%; z-index: 1; }
+        .custom-select-trigger { width: 100%; min-height: 48px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .custom-select-trigger:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .custom-select-trigger:hover { border-color: var(--accent); }
+        .custom-options { position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 8px; box-shadow: 0 10px 25px -3px rgba(43, 58, 59, 0.15); max-height: 250px; overflow-y: auto; display: none; margin-top: 5px; scrollbar-width: thin; z-index: 9999; }
+        .custom-options.open { display: block; animation: slideDown 0.2s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .custom-option { padding: 12px 16px; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid var(--border); cursor: pointer; transition: background-color 0.2s ease; white-space: normal; line-height: 1.4; text-align: justify; word-break: break-word;}
+        .custom-option:focus { background-color: var(--bg); outline: none; border-left: 3px solid var(--accent); }
+        .custom-option:last-child { border-bottom: none; }
+        .custom-option:hover { background-color: var(--bg); }
+        body.dark-mode .custom-options { border-color: var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4); }
+
+        /* =========================================================
+           SISTEMA DE ETIQUETAS (TAGS) Y COLORES SEMÁNTICOS
+        ========================================================= */
+        .opt-ce1, .tag-ce1 { background-color: #E2D6F0 !important; color: #533E6D !important; } .opt-ce1 { border-left: 4px solid #9D85C0 !important; } .tag-ce1 { border-color: #D0BCE3 !important; border-left-color: #9D85C0 !important; } .tag-ce1 .remove-x { color: #533E6D !important; }
+        .opt-ce2, .tag-ce2 { background-color: #D3EDEE !important; color: #32676A !important; } .opt-ce2 { border-left: 4px solid #78B5B9 !important; } .tag-ce2 { border-color: #B5DEDF !important; border-left-color: #78B5B9 !important; } .tag-ce2 .remove-x { color: #32676A !important; }
+        .opt-ce3, .tag-ce3 { background-color: #D6E4F6 !important; color: #395079 !important; } .opt-ce3 { border-left: 4px solid #789AD1 !important; } .tag-ce3 { border-color: #B9CDE9 !important; border-left-color: #789AD1 !important; } .tag-ce3 .remove-x { color: #395079 !important; }
+        .opt-ce4, .tag-ce4 { background-color: #DDF0D6 !important; color: #436339 !important; } .opt-ce4 { border-left: 4px solid #89BA77 !important; } .tag-ce4 { border-color: #C0E3B6 !important; border-left-color: #89BA77 !important; } .tag-ce4 .remove-x { color: #436339 !important; }
+        .opt-ce5, .tag-ce5 { background-color: #F8EFCE !important; color: #7B622B !important; } .opt-ce5 { border-left: 4px solid #CCAA54 !important; } .tag-ce5 { border-color: #EADEA4 !important; border-left-color: #CCAA54 !important; } .tag-ce5 .remove-x { color: #7B622B !important; }
+        .opt-ce6, .tag-ce6 { background-color: #FADCDC !important; color: #873E3E !important; } .opt-ce6 { border-left: 4px solid #D27979 !important; } .tag-ce6 { border-color: #EEBDBD !important; border-left-color: #D27979 !important; } .tag-ce6 .remove-x { color: #873E3E !important; }
+        .opt-ce1:hover, .opt-ce2:hover, .opt-ce3:hover, .opt-ce4:hover, .opt-ce5:hover, .opt-ce6:hover { filter: brightness(0.95); }
+
+        .selection-area { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; min-height: 10px; }
+        .tag { width: 100%; background: var(--tag-bg); border: 1px solid var(--tag-border); border-left: 4px solid var(--tag-border-left); padding: 12px 32px 12px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; color: var(--tag-text); display: flex; justify-content: space-between; align-items: center; animation: slideIn 0.2s ease-out; transition: transform 0.1s ease, box-shadow 0.1s ease; text-align: justify; cursor: grab; position: relative; word-break: break-word; }
+        .tag:active { cursor: grabbing; }
+        .tag.dragging { opacity: 0.4; box-shadow: 0 10px 15px -3px rgba(43, 58, 59, 0.15); transform: scale(1.02); z-index: 10; animation: none !important; }
+        
+        .remove-x, .btn-remove-absolute { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); cursor: pointer; color: var(--tag-icon); font-weight: 700; font-size: 0.75rem; transition: filter 0.2s, color 0.2s; padding: 4px; z-index: 5; }
+        .btn-remove-absolute { top: 12px; right: 12px; transform: none; font-size: 1rem; color: var(--text-muted); }
+        .remove-x:hover, .btn-remove-absolute:hover { color: var(--tag-icon-hover) !important; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Contenedor de Saberes Transversales */
+        .transversals-wrapper { display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 12px 12px 12px; margin-top: 10px; margin-bottom: 4px; background: rgba(107, 149, 150, 0.05); border: 1px dashed var(--accent); border-radius: 8px; position: relative; animation: fadeIn 0.3s ease; }
+        body.dark-mode .transversals-wrapper { background: rgba(158, 194, 195, 0.05); }
+        .transversals-wrapper::before { content: "SABERS TRANSVERSALS (T)"; position: absolute; top: -8px; left: 10px; background: var(--card-bg); padding: 0 6px; font-size: 0.65rem; font-weight: 800; color: var(--accent); letter-spacing: 0.05em; }
+        .mini-saber-tag { font-size: 0.75rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: space-between; width: 90px; box-sizing: border-box; gap: 4px; cursor: help; border: 1px solid; transition: all 0.2s ease; }
+        .mini-saber-tag .tag-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; text-align: center; }
+        .mini-saber-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .remove-x-mini { font-size: 0.7rem; opacity: 0.6; cursor: pointer; transition: opacity 0.2s, color 0.2s; flex-shrink: 0; }
+        .mini-saber-tag:hover .remove-x-mini { opacity: 1; }
+        .remove-x-mini:hover { color: var(--tag-icon-hover) !important; }
+
+        /* =========================================================
+           MESURES / ATENCIÓN EDUCATIVA (DESTINATARIS)
+        ========================================================= */
+        .toggle-group { display: flex; gap: 6px; }
+        .btn-toggle { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; }
+        .btn-toggle:hover { background: var(--border); color: var(--text-main); }
+        .btn-toggle.active { background: var(--text-muted); color: var(--card-bg); border-color: var(--text-muted); }
+        
+        .destinatari-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; width: 100%; }
+        .nivell-box { transition: all 0.3s ease; position: relative; border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: var(--card-bg); margin-bottom: 10px; }
+        .minimize-icon { position: absolute; top: 12px; right: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.85rem; padding: 4px; transition: color 0.2s; z-index: 10; }
+        .minimize-icon:hover { color: var(--accent); }
+        .nivell-box.minimized .mesures-grid, .nivell-box.minimized .mesures-grid-4 { display: none !important; }
+        .nivell-box.minimized .sub-label { margin-bottom: 0 !important; }
+
+        /* =========================================================
+           SECUENCIA DIDÁCTICA (FASES Y ACTIVIDADES)
+        ========================================================= */
+        .sequence-step { position: relative; background: var(--card-bg); border: 1px solid var(--border); padding: 12px 16px 36px 12px; border-radius: var(--radius); margin-bottom: 15px; animation: fadeIn 0.3s ease; }
+        .sequence-step-grid { display: grid; grid-template-columns: 1fr 90px; gap: 20px; }
+        .sequence-step:not(:last-child)::after { content: '\f103'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; bottom: 12px; left: 25px; transform: translateX(-50%); color: var(--text-muted); font-size: 1.1rem; opacity: 0.5; }
+        .sequence-step:last-child::after { content: '\f52c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; bottom: 12px; left: 25px; transform: translateX(-50%); color: var(--text-muted); font-size: 1.1rem; opacity: 0.5; }
+        .sequence-step.dragging-step { opacity: 0.5; box-shadow: 0 10px 15px -3px rgba(43, 58, 59, 0.15); transform: scale(1.01); z-index: 10; animation: none !important; }
+        
+        .phase-main { display: flex; flex-direction: column; gap: 12px; }
+        .step-header { display: flex; align-items: center; gap: 12px; padding-right: 25px; }
+        .step-number { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); min-width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; cursor: grab; }
+        .step-number:hover { background: var(--accent); color: var(--card-bg); border-color: var(--accent); }
+        .step-title-input { flex-grow: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; color: var(--text-main); background: var(--bg); }
+        .step-body { display: flex; flex-direction: column; gap: 8px; }
+        
+        .sequence-activity { position: relative; display: flex; align-items: flex-start; gap: 8px; margin-left: 36px; margin-top: 4px; border-left: 2px solid var(--border); padding: 4px 24px 4px 10px; animation: slideIn 0.2s ease-out; }
+        .sequence-activity:hover { border-left-color: var(--accent); }
+        .activity-bullet { color: var(--text-muted); font-size: 0.65rem; margin-top: 5px; opacity: 0.6; }
+        .activity-textarea { flex-grow: 1; min-height: 70px; font-size: 0.85rem; font-weight: 400; padding: 0; background: transparent; color: var(--text-muted); border: none; resize: vertical; line-height: 1.5; }
+        .activity-textarea:focus { background: transparent; box-shadow: none; outline: none; color: var(--text-main); border-bottom: 1px dashed var(--accent); border-radius: 0; }
+        .sequence-activity .remove-x { right: 0px; font-size: 0.75rem; color: var(--border); opacity: 0; }
+        .sequence-activity:hover .remove-x { opacity: 1; }
+        .sequence-activity .remove-x:hover { color: var(--tag-icon-hover) !important; }
+        .btn-add-activity { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; margin-left: 36px; border-radius: 6px; margin-top: 4px; align-self: flex-start; opacity: 0.8; }
+        .btn-add-activity:hover { background-color: var(--bg); color: var(--accent); opacity: 1; }
+        
+        .phase-sessions { display: flex; flex-direction: column; align-items: center; border-left: 2px dashed var(--border); padding-left: 15px; }
+        .session-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+        .sessions-list { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+        .session-item { background: var(--tag-bg); border: 1px solid var(--tag-border); color: var(--tag-text); width: 100%; text-align: center; padding: 6px 0; border-radius: 6px; font-weight: 700; font-size: 0.9rem; position: relative; cursor: pointer; overflow: hidden; }
+        .session-num-text { transition: opacity 0.2s ease; display: inline-block; width: 100%; }
+        .session-trash { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; background: rgba(198, 139, 135, 0.9); color: white; opacity: 0; transition: opacity 0.2s ease; }
+        .session-item:hover .session-trash { opacity: 1; }
+        .session-item:hover .session-num-text { opacity: 0; }
+        .btn-add-session { background: transparent; color: var(--text-muted); border: 2px dashed var(--border); width: 100%; padding: 6px 0; border-radius: 6px; cursor: pointer; margin-top: 6px; display: flex; justify-content: center; align-items: center; }
+        .btn-add-session:hover { background: var(--card-bg); color: var(--accent); border-color: var(--accent); border-style: solid; }
+        .btn-add-step { background: transparent; color: var(--text-muted); border: 2px dashed var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .btn-add-step:hover { background: var(--card-bg); color: var(--accent); border-color: var(--accent); border-style: solid; }
+
+        .eval-tools { display: flex; align-items: center; flex-direction: row; flex-wrap: wrap; gap: 8px; margin-top: 4px; padding-bottom: 4px; }
+        .btn-eval-a { width: 22px; height: 22px; border: 1.5px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .btn-eval-a:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-eval-a.active { border-color: var(--accent); background: var(--accent); color: var(--card-bg); box-shadow: 0 0 5px rgba(107, 149, 150, 0.4); }
+        body.dark-mode .btn-eval-a.active { box-shadow: 0 0 5px rgba(158, 194, 195, 0.4); }
+        .btn-add-criteria { width: 22px; height: 22px; border: 1.5px dashed var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
+        .btn-add-criteria:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
+        
+        .mini-criteria-tag { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: 1px solid; white-space: nowrap; width: max-content; }
+        .mini-criteria-tag i { font-size: 0.6rem; opacity: 0.5; transition: opacity 0.2s; }
+        .mini-criteria-tag:hover i { opacity: 1; color: var(--tag-icon-hover); }
+        .mini-tag-ce1 { background-color: #E6D8F2; border-color: #CDB7E0; color: #5B4377; }
+        .mini-tag-ce2 { background-color: #D2EDEE; border-color: #B7DEE0; color: #356D70; }
+        .mini-tag-ce3 { background-color: #D5E5F7; border-color: #BAD0EC; color: #385380; }
+        .mini-tag-ce4 { background-color: #DAEED2; border-color: #BCDFA0; color: #456839; }
+        .mini-tag-ce5 { background-color: #F8EECB; border-color: #EBDD9F; color: #7E652E; }
+        .mini-tag-ce6 { background-color: #F8D9D9; border-color: #EFBABA; color: #883B3B; }
+
+        .criteria-dropdown { position: absolute; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 8px; box-shadow: 0 10px 25px -3px rgba(43, 58, 59, 0.15); max-height: 250px; overflow-y: auto; display: block; margin-top: 5px; scrollbar-width: thin; z-index: 9999; width: 300px; animation: slideDown 0.2s ease; }
+        body.dark-mode .criteria-dropdown { border-color: var(--accent); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4); }
+        .criteria-dropdown-empty { padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); font-style: italic; background: var(--card-bg); border-radius: 8px; }
+
+        /* =========================================================
+           BOTONERA INFERIOR Y MODALES
+        ========================================================= */
+        .bottom-actions-bar { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20px;}
+        .btn-container { display: flex; gap: 12px; }
+        .action-btn { background: var(--card-bg); border: 1.5px solid; width: 48px; height: 48px; font-size: 1.25rem; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: var(--shadow); }
+        .btn-download { border-color: var(--accent); color: var(--accent); }
+        .btn-download:hover { background: var(--accent); color: var(--card-bg); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(107, 149, 150, 0.25); }
+        .btn-clear { border-color: #C68B87; color: #C68B87; }
+        .btn-clear:hover { background: #C68B87; color: #FFF; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(198, 139, 135, 0.25); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 58, 59, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 480px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); transform: translateY(20px); transition: transform 0.2s ease; overflow: hidden; }
+        .modal-prompt { max-width: 400px; padding: 25px; }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg);}
+        .modal-header h3 { margin: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        .close-modal { cursor: pointer; color: var(--text-muted); font-size: 1.3rem; transition: color 0.2s; }
+        .close-modal:hover { color: var(--accent); }
+        
+        .export-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 30px 25px; }
+        .export-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 25px 10px; cursor: pointer; transition: all 0.2s ease; color: var(--text-main); }
+        .export-btn i { font-size: 2.2rem; color: var(--accent); transition: transform 0.2s ease; }
+        .export-btn span { font-size: 0.85rem; font-weight: 700; }
+        .export-btn:hover { border-color: var(--accent); background: var(--card-bg); transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(107, 149, 150, 0.15); }
+        .export-btn:hover i { transform: scale(1.1); }
+
+        #inline-save-indicator { font-size: 0.75rem; color: var(--text-muted); font-style: italic; display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s ease, color 0.3s ease; user-select: none; pointer-events: none; padding-bottom: 5px; }
+        #inline-save-indicator.saving { color: var(--accent); opacity: 1; }
+        #inline-save-indicator.visible { opacity: 0.6; }
+
+        /* =========================================================
+           RESPONSIVE DESIGN (MÓVILES Y TABLETS)
+        ========================================================= */
+        @media (max-width: 1024px) {
+            body { padding: 15px 10px; }
+            .container { padding: 0; max-width: 100%; }
+            header { padding: 30px 15px 60px 15px; margin-bottom: 20px;}
+            header h1 { font-size: 2.8rem; letter-spacing: -0.02em; }
+            header h1 i { font-size: 1.8rem; }
+            header h2 { font-size: 0.95rem; }
+            .grid-row, .grid-1-col, .grid-row-3, .grid-row-4-equal, .split-header-row, .mesures-grid, .mesures-grid-4, .block1-custom-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .b1-ods { grid-column: 1 / 2; grid-row: auto; }
+            .card { padding: 18px; }
+            .card-title { font-size: 0.8rem; margin-bottom: 10px; }
+            input, textarea, select, .custom-select-trigger { font-size: 0.95rem; padding: 10px 12px; }
+            .tag { padding: 10px 28px 10px 12px; font-size: 0.85rem; }
+            .remove-x { right: 5px; }
+            .section-header { margin: 30px 0 15px 0; padding: 10px; }
+            .section-title-text { font-size: 1.1rem; }
+            .section-number { width: 32px; height: 32px; font-size: 1rem; }
+            .sequence-step-grid { grid-template-columns: 1fr; gap: 15px; }
+            .phase-sessions { border-left: none; border-top: 1px dashed var(--border); padding-left: 0; padding-top: 15px; }
+            .sessions-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px;}
+            .session-item { width: 45px; }
+            .btn-add-session { width: auto; padding: 6px 15px; }
+            .header-icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+            .bottom-actions-bar { flex-direction: column-reverse; align-items: center; gap: 20px; }
+            .btn-container { width: 100%; justify-content: center; }
+            .export-grid { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
+            .export-btn { flex-direction: row; justify-content: flex-start; padding: 15px 20px; gap: 20px;}
+            .export-btn i { font-size: 1.8rem; }
+            .criteria-dropdown { width: 260px; left: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<main class="container">
+    <header>
+        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        <button class="header-icon-btn" id="btn-import-trigger" title="Importar fitxer JSON previ"><i class="fa-solid fa-file-import"></i></button>
+        <h1>Click<span>SA</span><i class="fa-solid fa-arrow-pointer"></i></h1>
+        <h2>Dissenyador de situacions d'aprenentatge</h2>
+        <div id="loading-msg" style="color:var(--accent); font-weight:bold; margin-top:10px;"></div>
+    </header>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-1">
+            <div class="section-header-left">
+                <div class="section-number">1</div>
+                <div class="section-title-text">Identificació i Context</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-1" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-1" class="block-content" style="display: none;">
+            <div class="grid-row-4-equal">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book"></i> ÀREA</div></div><select id="input-area"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-shapes"></i> CICLE</div></div><select id="input-cicle"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-graduation-cap"></i> NIVELL</div></div><select id="input-curs"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-calendar-week"></i> TRIMESTRE</div></div><select id="input-trimestre"></select></div>
+            </div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-regular fa-calendar-days"></i> TEMPORALITZACIÓ</div></div>
+                    <div class="temporalitzacio-wrapper" id="temporalitzacio-container">
+                        <div class="temporalitzacio-grid">
+                            <div class="month-col"><div class="month-name">SETEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">OCTUBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">NOVEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">DESEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">GENER</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">FEBRER</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">MARÇ</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">ABRIL</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">MAIG</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">JUNY</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="split-header-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-hashtag"></i> Nº</div></div><input type="text" id="input-sa-num"></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book-open"></i> TÍTOL</div></div><input type="text" id="input-sa-title"></div>
+            </div>
+            <div class="block1-custom-grid">
+                <div class="card b1-repte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag"></i> REPTE, PROBLEMA, NECESSITAT</div></div><textarea id="input-repte" rows="2" placeholder="Quin és el repte a superar? Detalla'l..."></textarea></div>
+                <div class="card b1-ods"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-earth-europe"></i> ODS</div></div><select id="select-ods"></select><div class="selection-area" id="tags-ods"></div></div>
+                <div class="card b1-producte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag-checkered"></i> PRODUCTE FINAL</div></div><textarea id="input-tasca" rows="2" placeholder="Què crearan o faran al final? Descriu-ho..."></textarea></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-2">
+            <div class="section-header-left"><div class="section-number">2</div><div class="section-title-text">Concreció Curricular</div></div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-2" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-2" class="block-content" style="display: none;">
+            <div class="grid-1-col"><div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-stairs"></i> OBJ. GENERALS D'ETAPA</div></div><select id="select-obj-gen"></select><div class="selection-area" id="tags-obj-gen"></div></div></div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-key"></i> PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)</div></div>
+                    <div class="perfil-wrapper-scroll">
+                        <div class="perfil-eixida-wrapper" id="perfil-eixida-container">
+                            <div class="cc-table" data-cc="CCL"><div class="cc-header">CCL</div><div class="cc-body"><div class="cc-cell" data-desc="CCL1">1</div><div class="cc-cell" data-desc="CCL2">2</div><div class="cc-cell" data-desc="CCL3">3</div><div class="cc-cell" data-desc="CCL4">4</div><div class="cc-cell" data-desc="CCL5">5</div></div></div>
+                            <div class="cc-table" data-cc="CP"><div class="cc-header">CP</div><div class="cc-body"><div class="cc-cell" data-desc="CP1">1</div><div class="cc-cell" data-desc="CP2">2</div><div class="cc-cell" data-desc="CP3">3</div></div></div>
+                            <div class="cc-table" data-cc="STEM"><div class="cc-header">STEM</div><div class="cc-body"><div class="cc-cell" data-desc="STEM1">1</div><div class="cc-cell" data-desc="STEM2">2</div><div class="cc-cell" data-desc="STEM3">3</div><div class="cc-cell" data-desc="STEM4">4</div><div class="cc-cell" data-desc="STEM5">5</div></div></div>
+                            <div class="cc-table" data-cc="CD"><div class="cc-header">CD</div><div class="cc-body"><div class="cc-cell" data-desc="CD1">1</div><div class="cc-cell" data-desc="CD2">2</div><div class="cc-cell" data-desc="CD3">3</div><div class="cc-cell" data-desc="CD4">4</div><div class="cc-cell" data-desc="CD5">5</div></div></div>
+                            <div class="cc-table" data-cc="CPSAA"><div class="cc-header">CPSAA</div><div class="cc-body"><div class="cc-cell" data-desc="CPSAA1">1</div><div class="cc-cell" data-desc="CPSAA2">2</div><div class="cc-cell" data-desc="CPSAA3">3</div><div class="cc-cell" data-desc="CPSAA4">4</div><div class="cc-cell" data-desc="CPSAA5">5</div></div></div>
+                            <div class="cc-table" data-cc="CC"><div class="cc-header">CC</div><div class="cc-body"><div class="cc-cell" data-desc="CC1">1</div><div class="cc-cell" data-desc="CC2">2</div><div class="cc-cell" data-desc="CC3">3</div><div class="cc-cell" data-desc="CC4">4</div></div></div>
+                            <div class="cc-table" data-cc="CE"><div class="cc-header">CE</div><div class="cc-body"><div class="cc-cell" data-desc="CE1">1</div><div class="cc-cell" data-desc="CE2">2</div><div class="cc-cell" data-desc="CE3">3</div></div></div>
+                            <div class="cc-table" data-cc="CCEC"><div class="cc-header">CCEC</div><div class="cc-body"><div class="cc-cell" data-desc="CCEC1">1</div><div class="cc-cell" data-desc="CCEC2">2</div><div class="cc-cell" data-desc="CCEC3">3</div><div class="cc-cell" data-desc="CCEC4">4</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> COMPETÈNCIES ESPECÍFIQUES</div></div><select id="select-comp-espec"></select><div class="selection-area" id="tags-comp-espec"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-list-ol"></i> CRITERIS D'AVALUACIÓ</div></div><select id="select-criteris"></select><div class="selection-area" id="tags-criteris"></div></div>
+            </div>
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-layer-group"></i> BLOCS DE CONTINGUTS</div></div><select id="select-blocs"></select><div class="selection-area" id="tags-blocs"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-lightbulb"></i> SABERS BÀSICS</div><div id="btn-toggle-t" class="btn-eval-a" title="Seleccionar/Deseleccionar Sabers Transversals (T)">T</div></div><select id="select-sabers"></select><div class="selection-area" id="tags-sabers"></div></div>
+            </div>
+            
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> OBJECTIUS DIDÀCTICS</div></div>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; background: var(--bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap;">
+                        <input type="text" id="input-od-text" placeholder="Escriu l'objectiu didàctic ací..." style="flex-grow: 1; height: 48px; min-width: 200px; margin: 0;">
+                        
+                        <div id="criteria-container-od-new" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 48px;">
+                            <div class="btn-add-criteria btn-add-crit" title="Vincular Criteri d'Avaluació" style="width: 48px; height: 48px; margin: 0; border-radius: 8px; font-size: 1.1rem; border: 1px dashed var(--accent); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        
+                        <button class="btn-toggle active" id="btn-add-od" style="height: 48px; margin: 0; flex-shrink: 0; padding: 0 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; border-radius: 8px;"><i class="fa-solid fa-check"></i> Afegir</button>
+                    </div>
+                    
+                    <div class="selection-area" id="tags-od" style="min-height: 10px; margin-top: 5px;"></div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-3">
+            <div class="section-header-left"><div class="section-number">3</div><div class="section-title-text">Metodologia i Organització</div></div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-3" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-3" class="block-content" style="display: none;">
+            <div class="grid-row-3">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-person-running"></i> METODOLOGIA / MODEL / ESTIL</div></div><select id="select-metodologia"></select><div class="selection-area" id="tags-metodologia"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-users"></i> AGRUPAMENTS</div></div><select id="select-agrupaments"></select><div class="selection-area" id="tags-agrupaments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-box-open"></i> ESPAIS I RECURSOS MATERIALS</div></div><textarea id="input-materials" rows="3" placeholder="Escriu els materials necessaris..."></textarea></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-4">
+            <div class="section-header-left"><div class="section-number">4</div><div class="section-title-text">Avaluació</div></div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-4" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-4" class="block-content" style="display: none;">
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-clipboard-check"></i> INSTRUMENTS D'AVALUACIÓ</div></div><select id="select-instruments"></select><div class="selection-area" id="tags-instruments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-chart-pie"></i> TIPUS D'AVALUACIÓ</div></div><select id="select-tipus-avaluacio"></select><div class="selection-area" id="tags-tipus-avaluacio"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-5">
+            <div class="section-header-left"><div class="section-number">5</div><div class="section-title-text">Mesures per a l'atenció educativa</div></div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-5" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-5" class="block-content" style="display: none;">
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title" style="border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;">
+                        <div class="card-title-left"><i class="fa-solid fa-universal-access"></i> Disseny Universal per a l'Aprenentatge (DUA)</div>
+                    </div>
+                    <div class="grid-row-3">
+                        <div><span class="sub-label"><i class="fa-solid fa-eye"></i> REPRESENTACIÓ</span><select id="select-dua-acces"></select><div class="selection-area" id="tags-dua-acces"></div></div>
+                        <div><span class="sub-label"><i class="fa-solid fa-heart"></i> MOTIVACIÓ</span><select id="select-dua-part"></select><div class="selection-area" id="tags-dua-part"></div></div>
+                        <div><span class="sub-label"><i class="fa-solid fa-pen-ruler"></i> ACCIÓ</span><select id="select-dua-prog"></select><div class="selection-area" id="tags-dua-prog"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-user-plus"></i> Mesures Específiques de Resposta</div></div>
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px;">
+                        <span style="font-weight: 500; font-size: 0.85rem; color: var(--text-muted);">Requerix algun alumne mesures específiques addicionals?</span>
+                        <div class="toggle-group" id="toggle-mesures">
+                            <button class="btn-toggle active" id="btn-mesures-no">No</button>
+                            <button class="btn-toggle" id="btn-mesures-si">Sí</button>
+                        </div>
+                    </div>
+                    <div id="mesures-addicionals-container" style="display: none; padding-top: 10px;">
+                        <div id="destinataris-list"></div>
+                        <button class="btn-add-activity" id="btn-add-destinatari" style="margin-left: 0; align-self: flex-start; margin-top: 10px;"><i class="fa-solid fa-plus"></i> Afegir Destinatari</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container">
+        <div class="section-header toggle-section" data-target="block-6">
+            <div class="section-header-left"><div class="section-number">6</div><div class="section-title-text">Seqüència Didàctica</div></div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-6" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-6" class="block-content" style="display: none;">
+            <div id="sequence-container"></div>
+            <div style="margin-top: 20px;"><button class="btn-add-step" id="btn-add-step" title="Afegir FASE"><i class="fa-solid fa-plus fa-xl"></i></button></div>
+        </div>
+    </section>
+
+    <div class="bottom-actions-bar">
+        <div id="inline-save-indicator">
+            <i class="fa-solid fa-floppy-disk" id="save-icon"></i><span id="save-text"></span>
+        </div>
+        <div class="btn-container">
+            <button class="action-btn btn-clear" id="btn-clear" title="Esborrar dades i començar una nova SA"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="action-btn btn-download" id="btn-open-export" title="Exportar Situació d'Aprenentatge"><i class="fa-solid fa-download"></i></button>
+            <input type="file" id="import-json-file" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <div id="export-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-export"></i> Opcions d'Exportació</h3>
+                <i class="fa-solid fa-xmark close-modal" id="close-export-modal"></i>
+            </div>
+            <div class="modal-body export-grid">
+                <button class="export-btn" id="export-pdf"><i class="fa-solid fa-file-pdf"></i><span>PDF (.pdf)</span></button>
+                <button class="export-btn" id="export-json"><i class="fa-solid fa-file-code"></i><span>Dades (.json)</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-prompt-modal" class="modal-overlay">
+        <div class="modal-content modal-prompt">
+            <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem; margin-bottom: 15px;">Escriu la teva opció personalitzada:</h3>
+            <input type="text" id="custom-prompt-input" style="margin-bottom: 20px;" placeholder="La teva opció...">
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="custom-prompt-cancel" class="btn-toggle">Cancel·lar</button>
+                <button id="custom-prompt-ok" class="btn-toggle active">Acceptar</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    /** ==========================================
+     * CONSTANTS & STATE
+     * ========================================== */
+    const CONSTANTES_GLOBALES = Object.freeze({
+        llistaAreas: ["Coneixement del Medi Natural, Social i Cultural", "Educació Artística: Música i Dansa", "Educació Artística: Plàstica i Visual", "Educació Física", "Llengua i Literatura Valenciana", "Llengua i Literatura Castellana", "Llengua Estrangera: Anglès", "Matemàtiques", "Educació en Valors Cívics i Ètics"],
+        urlsData: {
+            "Educació Física": {
+                "Primer Cicle": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVbYbOlXgfL6mgnyygS9Gn_ojrwmIjw5z69RpC5b8722GhhS8pQam4-wq4cWR6y4yTldO2oqIVWaf_/pub?gid=0&single=true&output=csv",
+                "Segon Cicle": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVbYbOlXgfL6mgnyygS9Gn_ojrwmIjw5z69RpC5b8722GhhS8pQam4-wq4cWR6y4yTldO2oqIVWaf_/pub?gid=25915718&single=true&output=csv",
+                "Tercer Cicle": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVbYbOlXgfL6mgnyygS9Gn_ojrwmIjw5z69RpC5b8722GhhS8pQam4-wq4cWR6y4yTldO2oqIVWaf_/pub?gid=1841581466&single=true&output=csv"
+            }
+        },
+        urlDiversitat: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSPWZz2fXSfsQwfDDbtsNMPNGYC2xIeGRKrB9qhNulHcWGVwRZ3blGtQD7ZBfRcVTyB3TFx58veXtWO/pub?gid=0&single=true&output=csv"
+    });
+
+    const SELECTS_TO_RESET = ['input-curs', 'input-trimestre', 'select-obj-gen', 'select-ods', 'select-comp-espec', 'select-criteris', 'select-blocs', 'select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'];
+
+    const AppState = {
+        isRestoring: true,
+        destinatariCount: 0,
+        cacheDadesCurriculars: {},
+        dadesDiversitat: { destinataris: [], n3_acces: [], n3_apr: [], n3_par: [], n4_rec: [], n4_acces: [], n4_apr: [], n4_par: [] },
+        sabersColors: {},
+        mapaCEs: {},
+        itemsAmbEstrella: new Set(),
+        activeCriteriaDropdown: null
+    };
+
+    /** ==========================================
+     * UTILITIES
+     * ========================================== */
+    const selectEl = id => document.getElementById(id);
+    const queryAll = sel => document.querySelectorAll(sel);
+    
+    const debounce = (func, wait) => {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    };
+
+    const normalizeTextForKeys = str => !str ? "" : str.replace(/\[.*?\]/g, '').replace(/\(.*?\)$/g, '').replace(/[\.\,\;\:]+$/, '').replace(/\s+/g, ' ').trim().toUpperCase();
+
+    const getSelectedText = id => {
+        const w = selectEl(id)?.nextElementSibling;
+        return w?.classList.contains('custom-select-wrapper') ? (w.querySelector('span')?.innerText || "-") : (selectEl(id)?.value || "-");
+    };
+
+    const toggleCustomOptionVisibility = (text, isVisible, selectId) => {
+        const wrapper = selectEl(selectId)?.nextElementSibling;
+        if (!wrapper || !wrapper.classList.contains('custom-select-wrapper')) return;
+        wrapper.querySelectorAll('.custom-option').forEach(opt => {
+            if (opt.textContent.replace(' ★', '').trim() === text) opt.style.display = isVisible ? 'block' : 'none';
+        });
+    };
+
+    /** ==========================================
+     * INITIALIZATION & EVENT LISTENERS
+     * ========================================== */
+    document.addEventListener('DOMContentLoaded', async () => {
+        setupGlobalListeners();
+        setupTooltipListeners();
+        
+        const loadingMsg = selectEl('loading-msg');
+        loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
+        
+        try {
+            await fetchDiversitat();
+            loadingMsg.innerHTML = '';
+            inicialitzarDesplegablesIncials();
+            await restoreState();
+            AppState.isRestoring = false;
+
+            const saveDebounced = debounce(saveState, 1000);
+            ['input', 'change', 'click', 'dragend'].forEach(evt => document.addEventListener(evt, saveDebounced));
+        } catch (error) {
+            loadingMsg.innerHTML = '❌ No hem pogut connectar a la base de dades.';
+        }
+    });
+
+    function setupGlobalListeners() {
+        selectEl('btn-dark-mode').addEventListener('click', toggleDarkMode);
+        
+        document.body.addEventListener('click', e => {
+            const header = e.target.closest('.toggle-section');
+            if (header) toggleBlock(header.dataset.target);
+        });
+
+        selectEl('btn-mesures-no').addEventListener('click', () => setMesures(false));
+        selectEl('btn-mesures-si').addEventListener('click', () => setMesures(true));
+        selectEl('btn-add-destinatari').addEventListener('click', addDestinatari);
+        selectEl('btn-add-step').addEventListener('click', addSequenceStep);
+        selectEl('btn-clear').addEventListener('click', clearState);
+
+        const modal = selectEl('export-modal');
+        selectEl('btn-open-export').addEventListener('click', () => modal.classList.add('show'));
+        selectEl('close-export-modal').addEventListener('click', () => modal.classList.remove('show'));
+        modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('show'); });
+        
+        selectEl('export-pdf').addEventListener('click', () => { generatePDF(); modal.classList.remove('show'); });
+        selectEl('export-json').addEventListener('click', () => { generateJSON(); modal.classList.remove('show'); });
+        
+        selectEl('btn-import-trigger').addEventListener('click', () => selectEl('import-json-file').click());
+        selectEl('import-json-file').addEventListener('change', importJSON);
+
+        const btnToggleT = selectEl('btn-toggle-t');
+        if (btnToggleT) {
+            btnToggleT.addEventListener('click', function() {
+                if (AppState.isRestoring) return;
+                const area = getAreaActiva();
+                const cicle = getCicleActiu();
+                const dades = AppState.cacheDadesCurriculars[area]?.[cicle];
+                
+                if (!dades || !dades.sabersTransversals) return;
+
+                this.classList.toggle('active');
+                const isSelecting = this.classList.contains('active');
+
+                if (isSelecting) {
+                    dades.sabersTransversals.forEach(saberText => addTag(saberText, 'tags-sabers'));
+                } else {
+                    dades.sabersTransversals.forEach(saberText => {
+                        const tags = Array.from(selectEl('tags-sabers').querySelectorAll('.tag, .mini-saber-tag'));
+                        tags.forEach(tag => {
+                            const tagTextEl = tag.querySelector('.tag-text');
+                            if (tagTextEl && (tagTextEl.dataset.fulltext || tagTextEl.innerText) === saberText) {
+                                const closeBtn = tag.querySelector('.remove-x, .remove-x-mini');
+                                if (closeBtn) closeBtn.click();
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        selectEl('temporalitzacio-container').addEventListener('click', e => {
+            if (e.target.classList.contains('week-box')) e.target.classList.toggle('active');
+        });
+
+        selectEl('sequence-container').addEventListener('click', e => {
+            if (e.target.closest('.criteria-dropdown')) return; 
+
+            const btnRemoveStep = e.target.closest('.btn-remove-step');
+            const btnRemoveAct = e.target.closest('.btn-remove-act');
+            const btnAddAct = e.target.closest('.btn-add-act');
+            const btnAddSess = e.target.closest('.btn-add-sess');
+            const btnEval = e.target.closest('.btn-eval');
+            const btnAddCrit = e.target.closest('.btn-add-crit');
+
+            if (btnRemoveStep) {
+                btnRemoveStep.closest('.sequence-step').remove();
+                updateStepNumbers();
+                updateGlobalSessionNumbers();
+            } else if (btnRemoveAct) {
+                btnRemoveAct.closest('.sequence-activity').remove();
+            } else if (btnAddAct) {
+                addActivity(btnAddAct.closest('.sequence-step').id);
+            } else if (btnAddSess) {
+                addSession(btnAddSess.closest('.sequence-step').id);
+            } else if (btnEval) {
+                const actId = btnEval.closest('.sequence-activity').querySelector('[id^="criteria-container-"]').id.replace('criteria-container-', '');
+                toggleEval(btnEval, actId);
+            } else if (btnAddCrit) {
+                showCriteriaDropdown(btnAddCrit, btnAddCrit.closest('[id^="criteria-container-"]').id.replace('criteria-container-', ''));
+            }
+        });
+
+        document.addEventListener('click', e => { 
+            // Manejador global per al botó afegir criteri d'Objectius Didàctics
+            if (e.target.closest('.btn-add-crit') && e.target.closest('#criteria-container-od-new')) {
+                const btnAddCrit = e.target.closest('.btn-add-crit');
+                showCriteriaDropdown(btnAddCrit, 'od-new');
+            }
+
+            if (!e.target.closest('.custom-select-wrapper')) {
+                queryAll('.custom-options').forEach(el => { 
+                    el.classList.remove('open'); 
+                    if(el.parentElement) el.parentElement.style.zIndex = '1'; 
+                }); 
+            }
+        });
+
+        // Eventos para Objectius Didàctics
+        const btnAddOD = selectEl('btn-add-od');
+        if(btnAddOD) {
+            btnAddOD.addEventListener('click', function() {
+                const text = selectEl('input-od-text').value.trim();
+                if (!text) return; // Evitar vacíos
+
+                // Recopilar los Criterios vinculados (mini-tags)
+                const critContainer = selectEl('criteria-container-od-new');
+                const criteria = Array.from(critContainer.querySelectorAll('.mini-criteria-tag span')).map(s => s.innerText);
+
+                // Construir la visualización y el texto completo
+                let displayHTML = text;
+                let tagFullText = text;
+
+                if (criteria.length > 0) {
+                    const critString = `[${criteria.join(', ')}]`;
+                    displayHTML += ` <span style="color:var(--accent); font-size:0.8rem; font-weight:bold; margin-left: 6px;">${critString}</span>`;
+                    tagFullText += ` ${critString}`;
+                }
+
+                // Generar Tag neutro
+                const c = selectEl('tags-od');
+                const tag = document.createElement('div');
+                tag.className = 'tag'; tag.draggable = true;
+                tag.innerHTML = `<span class="tag-text" data-fulltext="${tagFullText.replace(/"/g, '&quot;')}">${displayHTML}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
+                
+                // Evento para eliminar
+                tag.querySelector('.remove-x').onclick = () => { tag.remove(); saveState(); };
+                
+                c.appendChild(tag);
+                makeTagsSortable(c); // Habilitar Drag & Drop
+
+                // Limpiar inputs
+                selectEl('input-od-text').value = '';
+                critContainer.querySelectorAll('.mini-criteria-tag').forEach(t => t.remove());
+                saveState();
+            });
+
+            // Permitir añadir con la tecla "Enter"
+            selectEl('input-od-text').addEventListener('keydown', e => { if(e.key === 'Enter') { e.preventDefault(); btnAddOD.click(); } });
+        }
+    }
+
+    function setupTooltipListeners() {
+        const tooltip = document.createElement('div');
+        tooltip.id = 'custom-tooltip';
+        document.body.appendChild(tooltip);
+
+        const container = selectEl('perfil-eixida-container');
+        if (!container) return;
+
+        container.addEventListener('mouseover', e => {
+            const cell = e.target.closest('.cc-cell');
+            if (cell && cell.dataset.fulltext) {
+                tooltip.innerHTML = `<strong>${cell.dataset.desc}</strong><br><span style="font-weight:normal; font-size:0.8rem; display:block; margin-top:4px;">${cell.dataset.fulltext}</span>`;
+                tooltip.classList.add('show');
+            }
+        });
+
+        container.addEventListener('mousemove', e => {
+            if (tooltip.classList.contains('show')) {
+                let x = e.pageX + 15, y = e.pageY + 15;
+                if (x + 280 > window.innerWidth) x = e.pageX - 295;
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
+            }
+        });
+
+        container.addEventListener('mouseout', e => { if (e.target.closest('.cc-cell')) tooltip.classList.remove('show'); });
+        
+        container.addEventListener('click', e => {
+            const cell = e.target.closest('.cc-cell');
+            if (cell) { cell.classList.toggle('manual-active'); updateCellVisual(cell); }
+        });
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode'); 
+        selectEl('dark-icon').className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    function toggleBlock(id) { 
+        const block = selectEl(id);
+        const icon = selectEl('icon-' + id); 
+        if(!block || !icon) return;
+        const isHidden = block.style.display === 'none' || block.style.display === ''; 
+        block.style.display = isHidden ? 'block' : 'none'; 
+        icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)'; 
+    }
+
+    /** ==========================================
+     * STATE MANAGEMENT
+     * ========================================== */
+    function getStateObject() {
+        const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [], darkMode: document.body.classList.contains('dark-mode') };
+        
+        ['input-sa-num', 'input-sa-title', 'input-repte', 'input-tasca', 'input-materials'].forEach(id => state.inputs[id] = selectEl(id)?.value || "");
+        ['input-area', 'input-cicle', 'input-curs', 'input-trimestre'].forEach(id => {
+            const text = getSelectedText(id);
+            state.selects[id] = text !== '-' ? text : '';
+        });
+        
+        const tagContainers = SELECTS_TO_RESET.map(id => id.replace('select-', 'tags-')).filter(id => selectEl(id));
+        tagContainers.forEach(id => state.tags[id] = Array.from(selectEl(id)?.querySelectorAll('.tag-text') || []).map(t => t.dataset.fulltext || t.innerText));
+        
+        state.temporalitzacio = Array.from(queryAll('.week-box')).map(box => box.classList.contains('active'));
+        state.perfilEixida = Array.from(queryAll('.cc-cell.manual-active')).map(c => c.dataset.desc);
+        state.mesuresActives = selectEl('btn-mesures-si')?.classList.contains('active');
+        
+        queryAll('.destinatari-item').forEach(dest => {
+            const destData = { tags: {} };
+            ['dest', 'n3-acc', 'n3-apr', 'n3-par', 'n4-rec', 'n4-acc', 'n4-apr', 'n4-par'].forEach(prefix => {
+                const tagArea = dest.querySelector(`[id^="tags-${prefix}-"]`);
+                if (tagArea) destData.tags[prefix] = Array.from(tagArea.querySelectorAll('.tag-text')).map(t => t.dataset.fulltext || t.innerText);
+            });
+            state.destinataris.push(destData);
+        });
+        
+        queryAll('.sequence-step').forEach(step => {
+            const stepData = { title: step.querySelector('.step-title-input').value, sessions: step.querySelectorAll('.session-item').length, activities: [] };
+            step.querySelectorAll('.sequence-activity').forEach(act => {
+                stepData.activities.push({
+                    text: act.querySelector('.activity-textarea').value,
+                    evalActive: act.querySelector('.btn-eval-a').classList.contains('active'),
+                    criteria: Array.from(act.querySelectorAll('.mini-criteria-tag span')).map(s => s.innerText)
+                });
+            });
+            state.sequence.push(stepData);
+        });
+
+        state.objectiusDidactics = Array.from(selectEl('tags-od')?.querySelectorAll('.tag') || []).map(t => {
+            const textEl = t.querySelector('.tag-text');
+            return { html: textEl.innerHTML, fulltext: textEl.dataset.fulltext };
+        });
+
+        return state;
+    }
+
+    function saveState() {
+        if (AppState.isRestoring || !selectEl('input-cicle')) return;
+        
+        const ind = selectEl('inline-save-indicator');
+        const icon = selectEl('save-icon');
+        const text = selectEl('save-text');
+        
+        ind.classList.add('visible', 'saving');
+        icon.className = 'fa-solid fa-arrows-rotate fa-spin';
+        text.innerText = 'Desant...';
+
+        localStorage.setItem('clickSA_state', JSON.stringify(getStateObject()));
+
+        setTimeout(() => {
+            ind.classList.remove('saving');
+            icon.className = 'fa-solid fa-floppy-disk';
+            text.innerText = 'Desat ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 500);
+    }
+
+    async function restoreState() {
+        const savedStr = localStorage.getItem('clickSA_state');
+        if (!savedStr) return;
+        
+        try {
+            const state = JSON.parse(savedStr);
+            if (state.darkMode && !document.body.classList.contains('dark-mode')) toggleDarkMode();
+            
+            Object.keys(state.inputs).forEach(id => { if (selectEl(id)) selectEl(id).value = state.inputs[id]; });
+            
+            const [savedArea, savedCicle] = [state.selects['input-area'], state.selects['input-cicle']];
+            if (savedArea) setCustomSelectValue('input-area', savedArea);
+            if (savedCicle) setCustomSelectValue('input-cicle', savedCicle);
+            
+            if (savedArea && savedCicle) {
+                if (!AppState.cacheDadesCurriculars[savedArea]) AppState.cacheDadesCurriculars[savedArea] = {};
+                if (!AppState.cacheDadesCurriculars[savedArea][savedCicle]) {
+                    const url = CONSTANTES_GLOBALES.urlsData[savedArea]?.[savedCicle];
+                    if (url) {
+                        selectEl('loading-msg').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
+                        await fetchCsvData(savedArea, savedCicle, url);
+                        selectEl('loading-msg').innerHTML = '';
+                    }
+                }
+                if (AppState.cacheDadesCurriculars[savedArea][savedCicle]) actualitzarDesplegablesCurriculars(savedArea, savedCicle);
+            }
+            
+            if (state.selects['input-curs']) setCustomSelectValue('input-curs', state.selects['input-curs']);
+            if (state.selects['input-trimestre']) setCustomSelectValue('input-trimestre', state.selects['input-trimestre']);
+            
+            Object.keys(state.tags).forEach(id => state.tags[id]?.forEach(val => addTag(val, id)));
+
+            // Restaurar Objectius Didàctics
+            if (state.objectiusDidactics) {
+                const c_od = selectEl('tags-od');
+                state.objectiusDidactics.forEach(od => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag'; tag.draggable = true;
+                    tag.innerHTML = `<span class="tag-text" data-fulltext="${od.fulltext.replace(/"/g, '&quot;')}">${od.html}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
+                    tag.querySelector('.remove-x').onclick = () => { tag.remove(); saveState(); };
+                    c_od.appendChild(tag);
+                });
+                if(c_od) makeTagsSortable(c_od);
+            }
+            
+            if (state.temporalitzacio?.length === 40) queryAll('.week-box').forEach((box, index) => box.classList.toggle('active', !!state.temporalitzacio[index]));
+
+            state.perfilEixida?.forEach(desc => {
+                const cell = document.querySelector(`.cc-cell[data-desc="${desc}"]`);
+                if (cell) { cell.classList.add('manual-active'); updateCellVisual(cell); }
+            });
+
+            if (state.mesuresActives) {
+                setMesures(true);
+                selectEl('destinataris-list').innerHTML = ''; 
+                state.destinataris.forEach(dest => {
+                    addDestinatari();
+                    const destId = `dest-${AppState.destinatariCount}`;
+                    Object.keys(dest.tags).forEach(prefix => dest.tags[prefix].forEach(val => addTag(val, `tags-${prefix}-${destId}`)));
+                });
+            }
+            
+            if (state.sequence?.length > 0) {
+                selectEl('sequence-container').innerHTML = '';
+                state.sequence.forEach(stepData => {
+                    addSequenceStep();
+                    const newStep = queryAll('.sequence-step')[queryAll('.sequence-step').length - 1];
+                    const stepId = newStep.id;
+                    
+                    newStep.querySelector('.step-title-input').value = stepData.title || '';
+                    selectEl('sessions-' + stepId).innerHTML = ''; 
+                    for(let i=0; i<stepData.sessions; i++) addSession(stepId);
+                    
+                    stepData.activities.forEach(actData => {
+                        addActivity(stepId);
+                        const acts = newStep.querySelectorAll('.sequence-activity');
+                        const newAct = acts[acts.length - 1];
+                        newAct.querySelector('.activity-textarea').value = actData.text || '';
+                        
+                        if (actData.evalActive) {
+                            const evalBtn = newAct.querySelector('.btn-eval-a');
+                            const actDOMId = newAct.querySelector('.btn-add-criteria').closest('[id^="criteria-container-"]').id.replace('criteria-container-', '');
+                            toggleEval(evalBtn, actDOMId);
+                            actData.criteria.forEach(crit => addMiniCriteriaTag(crit, actDOMId));
+                        }
+                    });
+                });
+            }
+
+            recalcularTotaLaCadena(); 
+            selectEl('inline-save-indicator').classList.add('visible');
+            selectEl('save-icon').className = 'fa-solid fa-floppy-disk';
+            selectEl('save-text').innerText = 'Recuperat';
+        } catch (e) {
+            // Silently fail restore on broken JSON to avoid crashing the app
+        }
+    }
+
+    function clearState() {
+        if(confirm("Estàs segur que vols esborrar totes les dades i començar una nova Situació d'Aprenentatge? Aquesta acció no es pot desfer.")) {
+            localStorage.removeItem('clickSA_state');
+            location.reload();
+        }
+    }
+
+    /** ==========================================
+     * API & DATA PARSING
+     * ========================================== */
+    async function fetchCsvData(area, nomCicle, url) {
+        const response = await fetch(url); 
+        const csvText = await response.text();
+        
+        return new Promise(resolve => {
+            Papa.parse(csvText, {
+                header: true, skipEmptyLines: true,
+                complete: results => {
+                    if (!AppState.cacheDadesCurriculars[area]) AppState.cacheDadesCurriculars[area] = {};
+                    const d = { descriptoresMap: {}, curs: [], trimestre: [], objectiusGenerals: [], ods: [], competenciesEspecifiques: [], criterisAvaluacio: [], blocsContinguts: [], sabersBasics: [], sabersTransversals: [], metodologia: [], agrupaments: [], instrumentsAvaluacio: [], tipusAvaluacio: [], representacio: [], motivacio: [], accio: [] };
+                    const addUnic = (arr, val) => { if (val && !arr.includes(val)) arr.push(val); };
+                    
+                    results.data.forEach(row => {
+                        let r = {}; 
+                        for (let k in row) r[k.trim().toUpperCase()] = row[k] ? row[k].trim() : "";
+                        
+                        addUnic(d.curs, r['NIVELL']); addUnic(d.trimestre, r['TRIMESTRE']);
+                        
+                        const processStarred = (text, targetArr) => {
+                            if (!text) return;
+                            const isStarred = text.trim().endsWith('*'); 
+                            const cleanText = isStarred ? text.replace(/\*$/, '').trim() : text.trim(); 
+                            addUnic(targetArr, cleanText); 
+                            if (isStarred) AppState.itemsAmbEstrella.add(cleanText);
+                        };
+                        processStarred(r['OBJ. GENERALS'], d.objectiusGenerals);
+                        processStarred(r['ODS'], d.ods);
+                        
+                        let textCC = r['COMPETÈNCIES CLAU'] || r["PERFIL D'EIXIDA"] || r["PERFIL DE SORTIDA"] || r["PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)"] || r["DESCRIPTORS OPERATIUS"];
+                        if (!textCC) for (let k in r) if (k.includes('PERFIL') || k.includes('DESCRIPTOR') || k.includes('CLAU')) { textCC = r[k]; break; }
+                        if (textCC) textCC.split('\n').forEach(line => {
+                            let match = line.match(/\b(CCL|CP|STEM|CD|CPSAA|CC|CE|CCEC)\s*(\d+)\b/i);
+                            if (match) d.descriptoresMap[match[1].toUpperCase() + match[2]] = line.trim();
+                        });
+
+                        if (r['COMPETÈNCIES ESPECÍFIQUES']) {
+                            let match = r['COMPETÈNCIES ESPECÍFIQUES'].match(/\s*[\(\[](.*?)[\)\]][.\s]*$/);
+                            let textCENet = match ? r['COMPETÈNCIES ESPECÍFIQUES'].replace(match[0], '').trim() : r['COMPETÈNCIES ESPECÍFIQUES'];
+                            addUnic(d.competenciesEspecifiques, textCENet); 
+                            if (match) AppState.mapaCEs[normalizeTextForKeys(textCENet)] = match[1].split(/[\/,]/).map(c => c.trim().toUpperCase());
+                        }
+
+                        addUnic(d.criterisAvaluacio, r["CRITERIS D'AVALUACIÓ"] || r["CRITERIS D’AVALUACIÓ"] || r["CRITERIS D´AVALUACIÓ"]);
+                        addUnic(d.blocsContinguts, r['BLOCS']);
+                        
+                        if (r['SABERS BÀSICS']) { 
+                            let rawSaber = r['SABERS BÀSICS'];
+                            let isTransversal = /\(T\)/i.test(rawSaber);
+                            let cleanSaber = rawSaber.replace(/\s*\(T\)/i, '').trim();
+                            
+                            addUnic(d.sabersBasics, cleanSaber); 
+                            
+                            let fullyClean = cleanSaber.replace(/\s*\([^)]*(?:1ER|2ON|3ER)[^)]*\)/gi, '').trim();
+                            if (isTransversal) addUnic(d.sabersTransversals, fullyClean);
+                        
+                            let m = cleanSaber.match(/CA\s*(\d+)/i);
+                            if (m) AppState.sabersColors[fullyClean] = m[1]; 
+                        }
+                        
+                        addUnic(d.metodologia, r['MODEL, METODOLOGIA, ESTIL'] || r['METODOLOGIA, MODEL, ESTIL']); 
+                        addUnic(d.agrupaments, r['AGRUPAMENTS']);
+                        addUnic(d.instrumentsAvaluacio, r["INSTRUMENTS D'AVALUACIÓ"] || r["INSTRUMENTS D’AVALUACIÓ"] || r["INSTRUMENTS D´AVALUACIÓ"] || r["INSSTRUMENTS D'AVALUACIÓ"]);
+                        addUnic(d.tipusAvaluacio, r["TIPUS D'AVALUACIÓ"] || r["TIPUS D’AVALUACIÓ"] || r["TIPUS D´AVALUACIÓ"]);
+                        addUnic(d.representacio, r['DUA REPRESENTACIÓ']); addUnic(d.motivacio, r['DUA MOTIVACIÓ']); addUnic(d.accio, r['DUA ACCIÓ']);
+                    });
+                    
+                    AppState.cacheDadesCurriculars[area][nomCicle] = d;
+                    resolve();
+                }
+            });
+        });
+    }
+
+    async function fetchDiversitat() {
+        const response = await fetch(CONSTANTES_GLOBALES.urlDiversitat); 
+        const csvText = await response.text();
+        return new Promise(resolve => {
+            Papa.parse(csvText, {
+                header: true, skipEmptyLines: true,
+                complete: results => {
+                    const addUnic = (arr, val) => { if(val && !arr.includes(val)) arr.push(val); };
+                    results.data.forEach(row => {
+                        for (let k in row) {
+                            let val = row[k]?.trim(); if (!val) continue; 
+                            let key = k.toUpperCase();
+                            if (key.includes('DESTINATARI')) addUnic(AppState.dadesDiversitat.destinataris, val);
+                            else if (key.includes('3') && (key.includes('ACC') || key.includes('ACCESS') || key.includes('ACCÉS'))) addUnic(AppState.dadesDiversitat.n3_acces, val);
+                            else if (key.includes('3') && (key.includes('APRE') || key.includes('APRENENTATGE'))) addUnic(AppState.dadesDiversitat.n3_apr, val);
+                            else if (key.includes('3') && (key.includes('PART') || key.includes('PARTICIPACIÓ'))) addUnic(AppState.dadesDiversitat.n3_par, val);
+                            else if (key.includes('REC') || key.includes('PERSONAL') || key.includes('RECURSOS')) addUnic(AppState.dadesDiversitat.n4_rec, val);
+                            else if (key.includes('4') && (key.includes('ACC') || key.includes('ACCESS') || key.includes('ACCÉS'))) addUnic(AppState.dadesDiversitat.n4_acces, val);
+                            else if (key.includes('4') && (key.includes('APRE') || key.includes('APRENENTATGE'))) addUnic(AppState.dadesDiversitat.n4_apr, val);
+                            else if (key.includes('4') && (key.includes('PART') || key.includes('PARTICIPACIÓ'))) addUnic(AppState.dadesDiversitat.n4_par, val);
+                        }
+                    });
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /** ==========================================
+     * UI & DOM MANIPULATION
+     * ========================================== */
+    function inicialitzarDesplegablesIncials() {
+        buildCustomSelect('input-area', CONSTANTES_GLOBALES.llistaAreas, null);
+        buildCustomSelect('input-cicle', ["Primer Cicle", "Segon Cicle", "Tercer Cicle"], null);
+        SELECTS_TO_RESET.forEach(id => buildCustomSelect(id, [], null));
+        makeSequenceSortable();
+    }
+
+    const getAreaActiva = () => getSelectedText('input-area');
+    const getCicleActiu = () => getSelectedText('input-cicle');
+
+    async function handleAreaCicleChange() {
+        if (AppState.isRestoring) return;
+        const area = getAreaActiva(), cicle = getCicleActiu();
+        if (!area || area === '-' || !cicle || cicle === '-') return;
+
+        const loadingMsg = selectEl('loading-msg');
+        if (!AppState.cacheDadesCurriculars[area]) AppState.cacheDadesCurriculars[area] = {};
+        
+        if (AppState.cacheDadesCurriculars[area][cicle]) return actualitzarDesplegablesCurriculars(area, cicle);
+
+        const url = CONSTANTES_GLOBALES.urlsData[area]?.[cicle];
+        if (!url) {
+            alert("En construcció");
+            return actualitzarDesplegablesCurricularsVuit();
+        }
+
+        loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connectant amb la base de dades.';
+        try {
+            await fetchCsvData(area, cicle, url);
+            loadingMsg.innerHTML = '';
+            actualitzarDesplegablesCurriculars(area, cicle);
+        } catch (e) {
+            loadingMsg.innerHTML = '❌ No hem pogut connectar a la base de dades.';
+        }
+    }
+
+    function actualitzarDesplegablesCurricularsVuit() {
+        if (selectEl('btn-toggle-t')) selectEl('btn-toggle-t').classList.remove('active');
+        queryAll('.selection-area').forEach(el => { if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4') && el.id !== 'tags-od') el.innerHTML = ''; });
+        SELECTS_TO_RESET.forEach(id => buildCustomSelect(id, [], null));
+        queryAll('.cc-cell').forEach(cell => { cell.setAttribute('data-fulltext', cell.dataset.desc); cell.classList.remove('auto-active'); updateCellVisual(cell); });
+    }
+
+    function actualitzarDesplegablesCurriculars(area, cicle) {
+        if (selectEl('btn-toggle-t')) selectEl('btn-toggle-t').classList.remove('active');
+        const d = AppState.cacheDadesCurriculars[area][cicle]; 
+        if (!d) return;
+        
+        queryAll('.selection-area').forEach(el => { if(!el.id.startsWith('tags-dest') && !el.id.startsWith('tags-n3') && !el.id.startsWith('tags-n4') && el.id !== 'tags-od') el.innerHTML = ''; });
+        
+        [
+            ['input-curs', d.curs], ['input-trimestre', d.trimestre], ['select-obj-gen', d.objectiusGenerals, 'tags-obj-gen'], ['select-ods', d.ods, 'tags-ods'],
+            ['select-comp-espec', d.competenciesEspecifiques, 'tags-comp-espec'], ['select-criteris', d.criterisAvaluacio, 'tags-criteris'], ['select-blocs', d.blocsContinguts, 'tags-blocs'],
+            ['select-sabers', d.sabersBasics, 'tags-sabers'], ['select-metodologia', d.metodologia, 'tags-metodologia'], ['select-agrupaments', d.agrupaments, 'tags-agrupaments'],
+            ['select-instruments', d.instrumentsAvaluacio, 'tags-instruments'], ['select-tipus-avaluacio', d.tipusAvaluacio, 'tags-tipus-avaluacio'],
+            ['select-dua-acces', d.representacio, 'tags-dua-acces'], ['select-dua-part', d.motivacio, 'tags-dua-part'], ['select-dua-prog', d.accio, 'tags-dua-prog']
+        ].forEach(m => buildCustomSelect(m[0], m[1], m[2]));
+
+        queryAll('.cc-cell').forEach(cell => cell.setAttribute('data-fulltext', d.descriptoresMap?.[cell.dataset.desc] || cell.dataset.desc));
+        recalcularTotaLaCadena();
+    }
+
+    function setCustomSelectValue(selectId, value) {
+        const sel = selectEl(selectId); if (!sel) return; sel.value = value;
+        const w = sel.nextElementSibling;
+        if (w?.classList.contains('custom-select-wrapper')) w.querySelector('.custom-select-trigger span').textContent = value;
+    }
+
+    function buildCustomSelect(selectId, opciones, containerId) {
+        const ori = selectEl(selectId); if(!ori) return;
+        if (ori.nextElementSibling?.classList.contains('custom-select-wrapper')) ori.nextElementSibling.remove();
+        
+        const wrap = document.createElement('div'); wrap.className = 'custom-select-wrapper';
+        const trig = document.createElement('div'); trig.className = 'custom-select-trigger'; 
+        trig.innerHTML = '<span></span><i class="fa-solid fa-chevron-down"></i>'; trig.setAttribute('tabindex', '0');
+        trig.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trig.click(); } });
+        ori.value = "";
+
+        const optsDiv = document.createElement('div'); optsDiv.className = 'custom-options';
+        let ops = [...opciones];
+        
+        if (['select-sabers', 'select-metodologia', 'select-agrupaments', 'select-instruments', 'select-tipus-avaluacio', 'select-dua-acces', 'select-dua-part', 'select-dua-prog'].includes(selectId) || selectId.startsWith('select-dest-') || selectId.startsWith('select-n3-') || selectId.startsWith('select-n4-')) ops.push("Altre...");
+
+        if (ops.length === 0) {
+            optsDiv.innerHTML = '<div class="custom-option" style="color:var(--text-muted);font-style:italic;">Sense dades / Tria Cicle</div>';
+        } else {
+            ops.forEach(o => {
+                const opt = document.createElement('div'); opt.className = 'custom-option'; 
+                let displayText = o, finalValue = o, isShaded = false;
+
+                if (selectId === 'select-sabers' && o !== "Altre...") {
+                    const cicle = getCicleActiu(), upperO = o.toUpperCase();
+                    if ((cicle === 'Primer Cicle' && !upperO.includes('1ER')) || (cicle === 'Segon Cicle' && !upperO.includes('2ON')) || (cicle === 'Tercer Cicle' && !upperO.includes('3ER'))) isShaded = true;
+                    displayText = o.replace(/\s*\([^)]*(?:1ER|2ON|3ER)[^)]*\)/gi, '').trim();
+                    finalValue = displayText;
+                }
+
+                opt.textContent = displayText; opt.setAttribute('tabindex', '0');
+                if (isShaded) opt.style.opacity = '0.4';
+                opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); } });
+
+                if (o === "Altre...") { 
+                    opt.style.cssText = "color:var(--accent);font-weight:bold;font-style:italic;"; 
+                } else { 
+                    assignColorClass(opt, finalValue, containerId || 'tags-' + selectId.replace('select-', '')); 
+                    if (AppState.itemsAmbEstrella.has(o)) opt.innerHTML = displayText + ' <i class="fa-solid fa-star" style="color: var(--text-muted); opacity: 0.6; float: right; margin-top: 3px;" title="Destacat"></i>'; 
+                }
+                
+                opt.onclick = () => {
+                    const finalize = v => {
+                        if(containerId) addTag(v, containerId); 
+                        else { trig.querySelector('span').textContent = v; ori.value = v; if (selectId === 'input-area' || selectId === 'input-cicle') handleAreaCicleChange(); }
+                        optsDiv.classList.remove('open'); wrap.style.zIndex = '1'; trig.focus();
+                    };
+                    if (o === "Altre...") showCustomPrompt(v => { if (v) finalize(v); }); else finalize(finalValue);
+                };
+                optsDiv.appendChild(opt);
+            });
+        }
+        
+        trig.onclick = e => { 
+            e.stopPropagation(); 
+            queryAll('.custom-options').forEach(el => { if(el !== optsDiv) { el.classList.remove('open'); if(el.parentElement) el.parentElement.style.zIndex = '1'; } }); 
+            optsDiv.classList.toggle('open'); wrap.style.zIndex = optsDiv.classList.contains('open') ? '9999' : '1'; 
+        };
+        wrap.append(trig, optsDiv); ori.style.display = 'none'; ori.parentNode.insertBefore(wrap, ori.nextSibling);
+    }
+
+    function addTag(val, containerId) {
+        const c = selectEl(containerId);
+        if (!val || Array.from(c.querySelectorAll('.tag-text')).some(s => (s.dataset.fulltext || s.innerText) === val)) return;
+        
+        const selectId = containerId.replace('tags-', 'select-');
+        let isTransversal = false;
+        let displayText = val;
+        
+        if (containerId === 'tags-sabers') {
+            const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()];
+            if (dades && dades.sabersTransversals && dades.sabersTransversals.includes(val)) {
+                isTransversal = true;
+                const codeMatch = val.match(/^([A-Z0-9.\/-]+)/i);
+                displayText = codeMatch ? codeMatch[1] : 'Saber(T)';
+            }
+        }
+
+        const tag = document.createElement('div');
+        
+        if (isTransversal) {
+            tag.className = 'mini-saber-tag';
+            tag.title = val; 
+            
+            let n = AppState.sabersColors[val];
+            if(n && n >= 1 && n <= 6) tag.classList.add(`mini-tag-ce${n}`);
+            else tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
+
+            tag.innerHTML = `<span class="tag-text" data-fulltext="${val.replace(/"/g, '&quot;')}">${displayText}</span> <i class="fa-solid fa-xmark remove-x-mini"></i>`;
+            
+            let wrapper = c.querySelector('.transversals-wrapper');
+            if (!wrapper) {
+                wrapper = document.createElement('div');
+                wrapper.className = 'transversals-wrapper';
+                c.insertBefore(wrapper, c.firstChild);
+            }
+            
+            tag.querySelector('.remove-x-mini').onclick = (e) => {
+                e.stopPropagation();
+                tag.remove();
+                if (wrapper.children.length === 0) wrapper.remove(); 
+                toggleCustomOptionVisibility(val, true, selectId);
+                recalcularTotaLaCadena();
+            };
+            
+            wrapper.appendChild(tag);
+
+        } else {
+            tag.className = 'tag'; tag.draggable = true;
+            assignColorClass(tag, val, containerId);
+            tag.innerHTML = `<span class="tag-text" data-fulltext="${val.replace(/"/g, '&quot;')}">${displayText}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
+            
+            tag.querySelector('.remove-x').onclick = () => {
+                tag.remove();
+                toggleCustomOptionVisibility(val, true, selectId);
+                if (['tags-sabers', 'tags-comp-espec', 'tags-criteris'].includes(containerId)) recalcularTotaLaCadena();
+            };
+            
+            c.appendChild(tag); makeTagsSortable(c);
+        }
+        
+        toggleCustomOptionVisibility(val, false, selectId);
+        
+        if (containerId === 'tags-sabers') establecerConexionesSaber(val); 
+        if (containerId === 'tags-comp-espec') establecerConexionesCE();
+        if (containerId === 'tags-criteris') establecerConexionesCA(val);
+    }
+
+    function makeTagsSortable(container) {
+        if (container.dataset.sortableInitialized) return; container.dataset.sortableInitialized = "true";
+        let drg = null;
+        container.addEventListener('dragstart', e => { if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } });
+        container.addEventListener('dragend', e => { if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; } });
+        container.addEventListener('dragover', e => {
+            e.preventDefault(); if(!drg || !drg.classList.contains('tag')) return;
+            const after = [...container.querySelectorAll('.tag:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
+                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            if (drg.nextElementSibling !== after) {
+                after == null ? container.appendChild(drg) : container.insertBefore(drg, after);
+            }
+        });
+    }
+
+    function assignColorClass(el, val, cId) {
+        let n = null, m;
+        if (cId === 'tags-comp-espec' && (m = val.match(/^CE\s*(\d+)/i))) n = m[1];
+        else if (cId === 'tags-criteris' && (m = val.match(/^CA\s*(\d+)/i))) n = m[1];
+        else if (cId === 'tags-sabers') n = AppState.sabersColors[val];
+        if(n && n >= 1 && n <= 6) el.classList.add((el.classList.contains('tag') ? 'tag-ce' : 'opt-ce') + n);
+    }
+
+    function showCustomPrompt(callback) {
+        const modal = selectEl('custom-prompt-modal'), input = selectEl('custom-prompt-input');
+        input.value = ''; modal.classList.add('show'); setTimeout(() => input.focus(), 50); 
+        const cleanup = () => { selectEl('custom-prompt-ok').onclick = selectEl('custom-prompt-cancel').onclick = input.onkeydown = null; };
+        const action = cb => () => { modal.classList.remove('show'); cleanup(); callback(cb ? input.value.trim() : null); };
+        selectEl('custom-prompt-ok').onclick = action(true); selectEl('custom-prompt-cancel').onclick = action(false);
+        input.onkeydown = e => { if(e.key === 'Enter') action(true)(); else if(e.key === 'Escape') action(false)(); };
+    }
+
+    /** ==========================================
+     * BUSINESS LOGIC / CURRICULAR CONNECTIONS
+     * ========================================== */
+    function establecerConexionesSaber(textSaber) {
+        if (AppState.isRestoring) return; 
+        const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]; if (!dades) return;
+        
+        [...textSaber.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => {
+            const fCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${m[1]}\\.${m[2]}\\b`, 'i').test(c)); if (fCA) addTag(fCA, 'tags-criteris');
+            const fCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${m[1]}\\b`, 'i').test(c)); if (fCE) addTag(fCE, 'tags-comp-espec');
+        });
+        [...textSaber.matchAll(/BL\s*(\d+)/gi)].forEach(m => {
+            const fBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${m[1]}\\b`, 'i').test(b)); if (fBL) addTag(fBL, 'tags-blocs');
+        });
+    }
+
+    function establecerConexionesCA(textCA) {
+        if (AppState.isRestoring) return;
+        const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()];
+        if (!dades) return;
+
+        const match = textCA.match(/^CA\s*(\d+)/i);
+        if (match) {
+            const ceNum = match[1];
+            const fCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${ceNum}\\b`, 'i').test(c));
+            if (fCE) addTag(fCE, 'tags-comp-espec');
+        }
+    }
+
+    function establecerConexionesCE() { if (!AppState.isRestoring) recalcularTotaLaCadena(); }
+
+    function recalcularTotaLaCadena() {
+        if (!AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]) return;
+        let reqCC = new Set();
+        
+        queryAll('#tags-comp-espec .tag-text').forEach(s => {
+            let txt = s.dataset.fulltext || s.innerText;
+            (AppState.mapaCEs[normalizeTextForKeys(txt)] || []).forEach(cc => reqCC.add(cc.replace(/[\s-]/g, '').toUpperCase()));
+        });
+        queryAll('.cc-cell').forEach(cell => { cell.classList.toggle('auto-active', reqCC.has(cell.dataset.desc)); updateCellVisual(cell); });
+    }
+
+    function updateCellVisual(cell) { cell.classList.toggle('active', cell.classList.contains('auto-active') || cell.classList.contains('manual-active')); }
+
+    /** ==========================================
+     * DIVERSITY & SEQUENCING
+     * ========================================== */
+    function setMesures(isYes) {
+        const c = selectEl('mesures-addicionals-container'), btnNo = selectEl('btn-mesures-no'), btnSi = selectEl('btn-mesures-si');
+        btnNo.classList.toggle('active', !isYes); btnSi.classList.toggle('active', isYes);
+        c.style.display = isYes ? 'flex' : 'none'; c.style.flexDirection = isYes ? 'column' : '';
+        if (isYes && selectEl('destinataris-list').children.length === 0) addDestinatari();
+    }
+
+    function addDestinatari() {
+        const id = 'dest-' + (++AppState.destinatariCount); 
+        const div = document.createElement('div'); div.className = 'destinatari-item';
+        
+        div.innerHTML = `
+            <div class="btn-remove-absolute btn-remove-dest" title="Eliminar Destinatari"><i class="fa-solid fa-xmark"></i></div>
+            <div style="margin-bottom: 5px; width: 100%;"><span class="sub-label">Destinatari</span><select id="select-dest-${id}"></select><div class="selection-area" id="tags-dest-${id}" style="margin-top: 8px; min-height: 0;"></div></div>
+            <div class="nivell-box minimized">
+                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i><span class="sub-label" style="color: var(--accent);">MESURES NIVELL III</span>
+                <div class="mesures-grid">
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Accés</span><select id="select-n3-acc-${id}"></select><div class="selection-area" id="tags-n3-acc-${id}"></div></div>
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Aprenentatge</span><select id="select-n3-apr-${id}"></select><div class="selection-area" id="tags-n3-apr-${id}"></div></div>
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Participació</span><select id="select-n3-par-${id}"></select><div class="selection-area" id="tags-n3-par-${id}"></div></div>
+                </div>
+            </div>
+            <div class="nivell-box minimized">
+                <i class="fa-solid fa-plus minimize-icon" title="Minimitzar/Maximitzar"></i><span class="sub-label" style="color: var(--accent);">MESURES NIVELL IV</span>
+                <div class="mesures-grid-4">
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Recursos Personals</span><select id="select-n4-rec-${id}"></select><div class="selection-area" id="tags-n4-rec-${id}"></div></div>
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Accés</span><select id="select-n4-acc-${id}"></select><div class="selection-area" id="tags-n4-acc-${id}"></div></div>
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Aprenentatge</span><select id="select-n4-apr-${id}"></select><div class="selection-area" id="tags-n4-apr-${id}"></div></div>
+                    <div><span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom:6px; display:block;">Participació</span><select id="select-n4-par-${id}"></select><div class="selection-area" id="tags-n4-par-${id}"></div></div>
+                </div>
+            </div>`;
+        
+        selectEl('destinataris-list').appendChild(div);
+        div.querySelector('.btn-remove-dest').addEventListener('click', () => div.remove());
+        div.querySelectorAll('.minimize-icon').forEach(icon => { 
+            icon.addEventListener('click', () => {
+                const box = icon.closest('.nivell-box'); box.classList.toggle('minimized');
+                icon.classList.toggle('fa-plus', box.classList.contains('minimized')); icon.classList.toggle('fa-minus', !box.classList.contains('minimized'));
+            }); 
+        });
+
+        const dd = AppState.dadesDiversitat;
+        [['dest', dd.destinataris], ['n3-acc', dd.n3_acces], ['n3-apr', dd.n3_apr], ['n3-par', dd.n3_par], ['n4-rec', dd.n4_rec], ['n4-acc', dd.n4_acces], ['n4-apr', dd.n4_apr], ['n4-par', dd.n4_par]]
+            .forEach(s => buildCustomSelect(`select-${s[0]}-${id}`, s[1], `tags-${s[0]}-${id}`));
+    }
+
+    function addSequenceStep() {
+        const id = 'step-' + Date.now();
+        const div = document.createElement('div'); div.className = 'sequence-step'; div.id = id; div.draggable = true;
+        
+        div.innerHTML = `
+            <div class="btn-remove-absolute btn-remove-step" title="Eliminar Fase"><i class="fa-solid fa-xmark"></i></div>
+            <div class="sequence-step-grid">
+                <div class="phase-main">
+                    <div class="step-header"><div class="step-number" title="Arrossega per moure"></div><input type="text" class="step-title-input" placeholder="Nom del pas o fase"></div>
+                    <div class="step-body"><div class="activities-container" id="activities-${id}"></div><button class="btn-add-activity btn-add-act" title="Afegir nova activitat"><i class="fa-solid fa-plus"></i> Afegir activitat</button></div>
+                </div>
+                <div class="phase-sessions"><div class="session-title">Sessió</div><div class="sessions-list" id="sessions-${id}"></div><button class="btn-add-session btn-add-sess" title="Afegir Sessió"><i class="fa-solid fa-plus"></i></button></div>
+            </div>`;
+        
+        selectEl('sequence-container').appendChild(div); 
+        updateStepNumbers(); if(!AppState.isRestoring) addSession(id); 
+    }
+
+    function addActivity(stepId) {
+        const actId = 'act-' + Date.now() + Math.floor(Math.random()*1000);
+        const div = document.createElement('div'); div.className = 'sequence-activity';
+        div.innerHTML = `
+            <div class="remove-x btn-remove-act" title="Eliminar Activitat"><i class="fa-solid fa-xmark"></i></div><div class="activity-bullet"><i class="fa-solid fa-angle-right"></i></div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column;">
+                <textarea class="activity-textarea" placeholder="Descripció de l'activitat..." rows="1"></textarea>
+                <div class="eval-tools">
+                    <div class="btn-eval-a btn-eval" title="Marcar com Avaluable">A</div>
+                    <div id="criteria-container-${actId}" style="display: none; align-items: center; flex-direction: row; gap: 6px; flex-wrap: wrap; position: relative;">
+                        <div class="btn-add-criteria btn-add-crit" title="Vincular Criteri d'Avaluació"><i class="fa-solid fa-plus"></i></div>
+                    </div>
+                </div>
+            </div>`;
+        selectEl('activities-' + stepId).appendChild(div);
+    }
+
+    function toggleEval(btn, actId) { 
+        btn.classList.toggle('active'); selectEl(`criteria-container-${actId}`).style.display = btn.classList.contains('active') ? 'inline-flex' : 'none'; 
+    }
+
+    function showCriteriaDropdown(btn, actId) {
+        if (AppState.activeCriteriaDropdown) AppState.activeCriteriaDropdown.remove();
+        
+        const c = selectEl(`criteria-container-${actId}`);
+        const added = Array.from(c.querySelectorAll('.mini-criteria-tag')).map(s => s.title);
+        const available = Array.from(queryAll('#tags-criteris .tag-text')).map(s => s.dataset.fulltext || s.innerText).filter(crit => !added.includes(crit));
+
+        const drop = document.createElement('div'); drop.className = 'criteria-dropdown';
+        
+        drop.style.top = (btn.offsetTop + btn.offsetHeight + 5) + 'px';
+        drop.style.left = btn.offsetLeft + 'px';
+
+        if (available.length === 0) {
+            drop.innerHTML = `<div class="criteria-dropdown-empty">Cap criteri disponible. (Fixa'n al Bloc 2)</div>`;
+        } else {
+            available.forEach(crit => { 
+                const item = document.createElement('div'); 
+                item.className = 'custom-option'; 
+                item.innerText = crit; 
+                assignColorClass(item, crit, 'tags-criteris');
+                item.onclick = (e) => { 
+                    e.stopPropagation(); 
+                    addMiniCriteriaTag(crit, actId); 
+                    drop.remove(); 
+                    AppState.activeCriteriaDropdown = null; 
+                }; 
+                drop.appendChild(item); 
+            });
+        }
+        
+        c.appendChild(drop); AppState.activeCriteriaDropdown = drop;
+        setTimeout(() => document.addEventListener('click', function closeDrop(e) { 
+            if (!drop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) { 
+                drop.remove(); AppState.activeCriteriaDropdown = null; document.removeEventListener('click', closeDrop); 
+            } 
+        }), 10);
+    }
+
+    function addMiniCriteriaTag(val, actId) {
+        const c = selectEl(`criteria-container-${actId}`);
+        const tag = document.createElement('div'); tag.className = 'mini-criteria-tag'; tag.title = val;
+        
+        let shortLabel = val, m1 = val.match(/^CA\s*\d+(?:\.\d+)?/i), m2 = val.match(/^CA\s*(\d+)/i);
+        if(m1) shortLabel = m1[0];
+        if(m2) tag.classList.add(`mini-tag-ce${m2[1]}`); else tag.style.cssText = 'background:var(--tag-bg);color:var(--tag-text);border-color:var(--tag-border);';
+        
+        tag.innerHTML = `<span>${shortLabel}</span> <i class="fa-solid fa-xmark"></i>`; tag.onclick = () => tag.remove();
+        c.insertBefore(tag, c.querySelector('.btn-add-criteria'));
+    }
+
+    function addSession(stepId) {
+        const div = document.createElement('div'); div.className = 'session-item'; div.title = 'Clic per eliminar sessió'; 
+        div.innerHTML = `<span class="session-num-text"></span><div class="session-trash"><i class="fa-solid fa-trash-can"></i></div>`;
+        selectEl('sessions-' + stepId).appendChild(div); updateGlobalSessionNumbers();
+    }
+
+    function updateGlobalSessionNumbers() { queryAll('.session-num-text').forEach((s, i) => s.innerText = i + 1); }
+    function updateStepNumbers() { queryAll('.sequence-step').forEach((s, i) => s.querySelector('.step-number').innerText = i + 1); }
+
+    function makeSequenceSortable() {
+        const c = selectEl('sequence-container'); if (c.dataset.sortableInitialized) return; c.dataset.sortableInitialized = "true"; 
+        let drg = null;
+        c.addEventListener('dragstart', e => { if(e.target.classList.contains('sequence-step')) { drg = e.target; e.target.classList.add('dragging-step'); e.dataTransfer.effectAllowed='move'; } });
+        c.addEventListener('dragend', e => { if(e.target.classList.contains('sequence-step')) { e.target.classList.remove('dragging-step'); drg = null; updateStepNumbers(); updateGlobalSessionNumbers(); } });
+        c.addEventListener('dragover', e => {
+            e.preventDefault(); if(!drg || !drg.classList.contains('sequence-step')) return;
+            const after = [...c.querySelectorAll('.sequence-step:not(.dragging-step)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
+                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            if (drg.nextElementSibling !== after) {
+                after == null ? c.appendChild(drg) : c.insertBefore(drg, after);
+            }
+        });
+    }
+
+    /** ==========================================
+     * EXPORT LOGIC (PDF & JSON ONLY)
+     * ========================================== */
+    function generatePDF() {
+        const state = getStateObject();
+        const activeCCs = Array.from(queryAll('.cc-cell.active')).map(c => c.dataset.desc);
+
+        const formatTagsList = (tagsArray) => tagsArray && tagsArray.length > 0 ? { ul: tagsArray, margin: [0, 4, 0, 4], alignment: 'justify' } : { text: '-', margin: [4, 4, 4, 4], alignment: 'center' };
+        const val = (key) => state.inputs[key] || state.selects[key] || '-';
+
+        const formatSmartTagsList = (tagsArray, type) => {
+            if (!tagsArray || tagsArray.length === 0) return { text: '-', margin: [4, 4, 4, 4], alignment: 'center' };
+            let ul = tagsArray.map(str => {
+                let boldPart = "", restPart = str;
+                const regMap = {
+                    'ODS': /^(ODS\s*\d+)(.*)/i, 'OBJ': /^([a-z]\))(.*)/i, 'CE': /^(CE\s*\d+)(.*)/i,
+                    'CA': /^(CA\s*\d+\.\d+)(.*)/i, 'BL': /^(BL\s*\d+)(.*)/i, 'Saber': /^([A-ZÀ-Ö0-9.\/-]+\s*\d+(?:\.\d+)?)(.*)/i
+                };
+                let m = regMap[type] ? str.match(regMap[type]) : null;
+                if (m) { boldPart = m[1]; restPart = m[2]; }
+                return boldPart ? { text: [ { text: boldPart, bold: true }, restPart ] } : { text: str };
+            });
+            return { ul: ul, margin: [0, 4, 0, 4], alignment: 'justify' };
+        };
+
+        const standardTableLayout = {
+            hLineWidth: () => 0.5, vLineWidth: () => 0.5, hLineColor: () => '#D5E0E0', vLineColor: () => '#D5E0E0',
+            paddingLeft: () => 6, paddingRight: () => 6, paddingTop: () => 4, paddingBottom: () => 4
+        };
+
+        const buildSectionTitle = (num, title) => ({
+            table: {
+                widths: [24, '*'], 
+                body: [
+                    [
+                        { text: num, fillColor: '#6B9596', color: '#FFFFFF', bold: true, alignment: 'center', margin: [0, 4, 0, 4], fontSize: 12 },
+                        { text: title.toUpperCase(), color: '#2B3A3B', bold: true, margin: [6, 5, 0, 3], fontSize: 10 }
+                    ]
+                ]
+            },
+            layout: { hLineWidth: (i, node) => (i === node.table.body.length) ? 0.5 : 0, vLineWidth: () => 0, hLineColor: () => '#D5E0E0', paddingBottom: () => 6 },
+            margin: [0, 15, 0, 8] 
+        });
+
+        const buildSubSectionTitle = (title) => ({
+            table: { widths: ['100%'], body: [[ { text: title, style: 'th' } ]] },
+            layout: standardTableLayout, margin: [0, 8, 0, 4]
+        });
+
+        const buildTemporalitzacio = () => {
+            const headerRow = ['SET', 'OCT', 'NOV', 'DES', 'GEN', 'FEB', 'MAR', 'ABR', 'MAI', 'JUN'].map(m => ({ text: m, colSpan: 4, style: 'thCenter', fontSize: 7 })).flatMap(m => [m, {}, {}, {}]);
+            const weeksRow = Array.from({length: 40}).map((_, i) => ({ text: '', fillColor: state.temporalitzacio && state.temporalitzacio[i] ? '#6B9596' : '#FFFFFF', margin: [0, 4, 0, 4] }));
+            return { table: { widths: Array(40).fill('*'), body: [ headerRow, weeksRow ] }, layout: standardTableLayout, margin: [0, 2, 0, 2] };
+        };
+
+        const buildPerfilEixidaSingleTable = () => {
+            const ccGroups = [ { id: 'CCL', count: 5 }, { id: 'CP', count: 3 }, { id: 'STEM', count: 5 }, { id: 'CD', count: 5 }, { id: 'CPSAA', count: 5 }, { id: 'CC', count: 4 }, { id: 'CE', count: 3 }, { id: 'CCEC', count: 4 } ];
+            const headerRow = [], cellsRow = [];
+            ccGroups.forEach(group => {
+                headerRow.push({ text: group.id, colSpan: group.count, style: 'thCenter', fontSize: 7 });
+                for(let i=1; i<group.count; i++) headerRow.push({});
+                for(let i=1; i<=group.count; i++) {
+                    const isActive = activeCCs.includes(`${group.id}${i}`);
+                    cellsRow.push({ text: i.toString(), alignment: 'center', fontSize: 7, bold: isActive, color: isActive ? '#FFFFFF' : '#3A4B4C', fillColor: isActive ? '#6B9596' : '#FFFFFF', margin: [0, 2, 0, 2] });
+                }
+            });
+            return { table: { widths: Array(34).fill('*'), body: [headerRow, cellsRow] }, layout: standardTableLayout, margin: [0, 2, 0, 2] };
+        };
+
+        const buildMesuresEspecifiques = () => {
+            let content = [];
+            if (state.mesuresActives && state.destinataris && state.destinataris.length > 0) {
+                state.destinataris.forEach((dest, index) => {
+                    let destName = dest.tags['dest'] && dest.tags['dest'].length > 0 ? dest.tags['dest'].join(', ') : `Destinatari ${index+1}`;
+                    content.push({ table: { widths: ['100%'], body: [[{ text: `Destinatari ${index+1}: ${destName}`, style: 'th', fillColor: '#E6EDED' }]] }, layout: standardTableLayout, margin: [0, 0, 0, 2] });
+                    content.push({
+                        table: {
+                            widths: ['33.3%', '33.3%', '33.4%'],
+                            body: [
+                                [{ text: 'NIVELL III', colSpan: 3, style: 'thCenter', fontSize: 8, fillColor: '#F8FAFA' }, {}, {}],
+                                [{ text: 'Accés', style: 'thCenter' }, { text: 'Aprenentatge', style: 'thCenter' }, { text: 'Participació', style: 'thCenter' }],
+                                [ formatTagsList(dest.tags['n3-acc']), formatTagsList(dest.tags['n3-apr']), formatTagsList(dest.tags['n3-par']) ]
+                            ]
+                        },
+                        layout: standardTableLayout, margin: [0, 0, 0, 2]
+                    });
+                    content.push({
+                        table: {
+                            widths: ['25%', '25%', '25%', '25%'],
+                            body: [
+                                [{ text: 'NIVELL IV', colSpan: 4, style: 'thCenter', fontSize: 8, fillColor: '#F8FAFA' }, {}, {}, {}],
+                                [{ text: 'Recursos Personals', style: 'thCenter' }, { text: 'Accés', style: 'thCenter' }, { text: 'Aprenentatge', style: 'thCenter' }, { text: 'Participació', style: 'thCenter' }],
+                                [ formatTagsList(dest.tags['n4-rec']), formatTagsList(dest.tags['n4-acc']), formatTagsList(dest.tags['n4-apr']), formatTagsList(dest.tags['n4-par']) ]
+                            ]
+                        },
+                        layout: standardTableLayout, margin: [0, 0, 0, 10]
+                    });
+                });
+            } else {
+                content.push({ text: 'No s\'han establert mesures específiques addicionals.', italics: true, color: '#788F90', margin: [0, 4, 0, 10] });
+            }
+            return content;
+        };
+
+        const buildSequenceTableBody = () => {
+            if (!state.sequence || state.sequence.length === 0) return [[{ text: 'Sense dades a la seqüència.', colSpan: 2, color: '#788F90', italics: true, margin: [6,6,6,6], alignment: 'center' }, {}]];
+            let body = [], globalSessionCount = 1; 
+
+            state.sequence.forEach((step, index) => {
+                body.push([{ text: `FASE ${index + 1}: ${step.title || 'Sense títol'}`, style: 'th', colSpan: 2 }, {}]);
+                let activitiesList = step.activities.map(act => ({ text: [act.text, { text: act.evalActive && act.criteria.length ? ` [Avaluació: ${act.criteria.join(', ')}]` : '', color: '#6B9596', italics: true, fontSize: 8 }], alignment: 'justify' }));
+                
+                let sessionBoxes = step.sessions > 0 ? Array.from({length: step.sessions}).map(() => [{ text: (globalSessionCount++).toString(), alignment: 'center', fillColor: '#E6EDED', color: '#2B3A3B', bold: true, margin: [0,2,0,2] }]) : [[{ text: '-', alignment: 'center', color: '#788F90' }]];
+
+                body.push([
+                    { ul: activitiesList.length > 0 ? activitiesList : ['Sense activitats'], margin: [6, 6, 6, 6], fontSize: 9 },
+                    { table: { widths: ['*'], body: [ [{ text: 'Sessió', style: 'thCenter', fontSize: 7 }] ].concat(sessionBoxes) }, layout: standardTableLayout, alignment: 'center', margin: [0, 2, 0, 2] }
+                ]);
+            });
+            return body;
+        };
+
+        const docDefinition = {
+            pageSize: 'A4', pageOrientation: 'landscape', pageMargins: [30, 30, 30, 30],
+            defaultStyle: { font: 'Roboto', fontSize: 9, color: '#3A4B4C', alignment: 'justify' }, 
+            styles: { header: { fontSize: 13, bold: true, alignment: 'center', margin: [0, 0, 0, 10], color: '#2B3A3B' }, th: { bold: true, fillColor: '#F2F5F5', color: '#2B3A3B' }, thCenter: { bold: true, fillColor: '#F2F5F5', color: '#2B3A3B', alignment: 'center' } },
+            content: [
+                { text: `SITUACIÓ D'APRENENTATGE Nº ${val('input-sa-num')}: ${val('input-sa-title').toUpperCase()}`, style: 'header' },
+                buildSectionTitle('1', 'Identificació i Context'),
+                { table: { widths: ['10%', '25%', '10%', '15%', '10%', '10%', '10%', '10%'], body: [[{text:'Àrea', style:'th'}, val('input-area'), {text:'Cicle', style:'th'}, val('input-cicle'), {text:'Nivell', style:'th'}, val('input-curs'), {text:'Trim.', style:'th'}, val('input-trimestre')]] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['100%'], body: [[{text: 'TEMPORALITZACIÓ', style: 'thCenter'}], [buildTemporalitzacio()]] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['75%', '25%'], body: [ [{text: 'Repte, Problema, Necessitat', style: 'th'}, {text: 'ODS', style: 'thCenter'}], [{text: val('input-repte'), margin: [4,4,4,4]}, Object.assign({}, formatSmartTagsList(state.tags['tags-ods'], 'ODS'), { rowSpan: 3 })], [{text: 'Producte Final', style: 'th'}, ''], [{text: val('input-tasca'), margin: [4,4,4,4]}, ''] ] }, layout: standardTableLayout },
+                
+                buildSectionTitle('2', 'Concreció Curricular'),
+                { table: { widths: ['100%'], body: [[{text:'Objectius Generals d\'Etapa', style:'th'}], [formatSmartTagsList(state.tags['tags-obj-gen'], 'OBJ')]] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['100%'], body: [[{text:'Perfil d\'Eixida (Descriptors Operatius)', style:'thCenter'}], [buildPerfilEixidaSingleTable()]] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['50%', '50%'], body: [ [{text:'Competències Específiques', style:'th'}, {text:'Criteris d\'Avaluació', style:'th'}], [formatSmartTagsList(state.tags['tags-comp-espec'], 'CE'), formatSmartTagsList(state.tags['tags-criteris'], 'CA')] ] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['25%', '75%'], body: [ [{text:'Blocs de Continguts', style:'th'}, {text:'Sabers Bàsics', style:'th'}], [formatSmartTagsList(state.tags['tags-blocs'], 'BL'), formatSmartTagsList(state.tags['tags-sabers'], 'Saber')] ] }, layout: standardTableLayout, margin: [0, 0, 0, 8] },
+                { table: { widths: ['100%'], body: [[{text:'Objectius Didàctics', style:'th'}], [ 
+                    state.objectiusDidactics && state.objectiusDidactics.length > 0 
+                    ? { ul: state.objectiusDidactics.map(od => ({ text: od.fulltext })), margin: [0, 4, 0, 4], alignment: 'justify' }
+                    : { text: '-', margin: [4, 4, 4, 4], alignment: 'center' } 
+                ]] }, layout: standardTableLayout },
+
+                buildSectionTitle('3', 'Metodologia i Organització'),
+                { table: { widths: ['33%', '33%', '34%'], body: [ [{text:'Metodologia / Model / Estil', style:'th'}, {text:'Agrupaments', style:'th'}, {text:'Espais i Recursos Materials', style:'th'}], [formatTagsList(state.tags['tags-metodologia']), formatTagsList(state.tags['tags-agrupaments']), { text: val('input-materials'), margin: [4,4,4,4], alignment: 'justify' }] ] }, layout: standardTableLayout },
+
+                buildSectionTitle('4', 'Avaluació'),
+                { table: { widths: ['50%', '50%'], body: [ [{text:'Instruments d\'Avaluació', style:'th'}, {text:'Tipus d\'Avaluació', style:'th'}], [formatTagsList(state.tags['tags-instruments']), formatTagsList(state.tags['tags-tipus-avaluacio'])] ] }, layout: standardTableLayout },
+
+                buildSectionTitle('5', 'Mesures per a l\'atenció educativa'),
+                buildSubSectionTitle('Disseny universal per a l\'aprenentatge (DUA)'),
+                { table: { widths: ['33%', '33%', '34%'], body: [ [{text:'Representació', style:'thCenter'}, {text:'Motivació', style:'thCenter'}, {text:'Acció', style:'thCenter'}], [formatTagsList(state.tags['tags-dua-acces']), formatTagsList(state.tags['tags-dua-part']), formatTagsList(state.tags['tags-dua-prog'])] ] }, layout: standardTableLayout, margin: [0, 0, 0, 10] },
+                buildSubSectionTitle('Mesures específiques de resposta'),
+                buildMesuresEspecifiques(),
+
+                buildSectionTitle('6', 'Seqüència Didàctica'),
+                { table: { widths: ['*', 40], body: buildSequenceTableBody() }, layout: standardTableLayout }
+            ]
+        };
+
+        const saNum = val('input-sa-num') === "-" ? "___" : val('input-sa-num');
+        const saTitle = val('input-sa-title') === "-" ? "Sense_titol" : val('input-sa-title');
+        
+        pdfMake.createPdf(docDefinition).download(`SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.pdf`);
+    }
+
+    function generateJSON() {
+        const saNum = selectEl('input-sa-num')?.value || "___", saTitle = selectEl('input-sa-title')?.value || "Sense_titol";
+        const link = Object.assign(document.createElement('a'), { href: "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getStateObject(), null, 2)), download: `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.json` });
+        document.body.appendChild(link); link.click(); link.remove();
+    }
+
+    function importJSON(e) {
+        if (!e.target.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+            try {
+                const content = JSON.parse(evt.target.result);
+                if(!content.inputs || !content.selects || !content.tags) throw new Error();
+                localStorage.setItem('clickSA_state', JSON.stringify(content)); location.reload();
+            } catch (err) { alert("❌ El fitxer seleccionat no és un document vàlid de ClickSA."); }
+        };
+        reader.readAsText(e.target.files[0]); e.target.value = '';
+    }
+</script>
+</body>
+</html>
