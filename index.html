@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ClickSA - Dissenyador de Situacions d'Aprenentatge</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<main class="container">
+    <header>
+        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        <button class="header-icon-btn" id="btn-import-trigger" title="Importar fitxer JSON previ"><i class="fa-solid fa-file-import"></i></button>
+        <h1>Click<span>SA</span><i class="fa-solid fa-arrow-pointer"></i></h1>
+        <h2>Dissenyador de situacions d'aprenentatge</h2>
+        <div id="loading-msg" style="color:var(--accent); font-weight:bold; margin-top:10px;"></div>
+    </header>
+
+    <section class="section-container" id="container-block-1">
+        <div class="section-header toggle-section" data-target="block-1">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">1</div>
+                    <button class="btn-toggle-block" data-block="block-1" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Identificació i Context</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-1" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-1" class="block-content" style="display: none;">
+            <div class="grid-row-4-equal">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book"></i> ÀREA</div></div><select id="input-area"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-shapes"></i> CICLE</div></div><select id="input-cicle"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-graduation-cap"></i> NIVELL</div></div><select id="input-curs"></select></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-calendar-week"></i> TRIMESTRE</div></div><select id="input-trimestre"></select></div>
+            </div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-regular fa-calendar-days"></i> TEMPORALITZACIÓ</div></div>
+                    <div class="temporalitzacio-wrapper" id="temporalitzacio-container">
+                        <div class="temporalitzacio-grid">
+                            <div class="month-col"><div class="month-name">SETEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">OCTUBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">NOVEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">DESEMBRE</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">GENER</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">FEBRER</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">MARÇ</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">ABRIL</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">MAIG</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                            <div class="month-col"><div class="month-name">JUNY</div><div class="weeks-row"><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div><div class="week-box"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="split-header-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-hashtag"></i> Nº</div></div><input type="text" id="input-sa-num"></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-book-open"></i> TÍTOL</div></div><input type="text" id="input-sa-title"></div>
+            </div>
+            <div class="block1-custom-grid">
+                <div class="card b1-repte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag"></i> REPTE, PROBLEMA, NECESSITAT</div></div><textarea id="input-repte" rows="2" placeholder="Quin és el repte a superar? Detalla'l..."></textarea></div>
+                <div class="card b1-ods"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-earth-europe"></i> ODS</div></div><select id="select-ods"></select><div class="selection-area" id="tags-ods"></div></div>
+                <div class="card b1-producte"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-flag-checkered"></i> PRODUCTE FINAL</div></div><textarea id="input-tasca" rows="2" placeholder="Què crearan o faran al final? Descriu-ho..."></textarea></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="container-block-2">
+        <div class="section-header toggle-section" data-target="block-2">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">2</div>
+                    <button class="btn-toggle-block" data-block="block-2" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Concreció Curricular</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-2" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-2" class="block-content" style="display: none;">
+            <div class="grid-1-col"><div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-stairs"></i> OBJ. GENERALS D'ETAPA</div></div><select id="select-obj-gen"></select><div class="selection-area" id="tags-obj-gen"></div></div></div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-key"></i> PERFIL D'EIXIDA (DESCRIPTORS OPERATIUS)</div></div>
+                    <div class="perfil-wrapper-scroll">
+                        <div class="perfil-eixida-wrapper" id="perfil-eixida-container">
+                            <div class="cc-table" data-cc="CCL"><div class="cc-header">CCL</div><div class="cc-body"><div class="cc-cell" data-desc="CCL1">1</div><div class="cc-cell" data-desc="CCL2">2</div><div class="cc-cell" data-desc="CCL3">3</div><div class="cc-cell" data-desc="CCL4">4</div><div class="cc-cell" data-desc="CCL5">5</div></div></div>
+                            <div class="cc-table" data-cc="CP"><div class="cc-header">CP</div><div class="cc-body"><div class="cc-cell" data-desc="CP1">1</div><div class="cc-cell" data-desc="CP2">2</div><div class="cc-cell" data-desc="CP3">3</div></div></div>
+                            <div class="cc-table" data-cc="STEM"><div class="cc-header">STEM</div><div class="cc-body"><div class="cc-cell" data-desc="STEM1">1</div><div class="cc-cell" data-desc="STEM2">2</div><div class="cc-cell" data-desc="STEM3">3</div><div class="cc-cell" data-desc="STEM4">4</div><div class="cc-cell" data-desc="STEM5">5</div></div></div>
+                            <div class="cc-table" data-cc="CD"><div class="cc-header">CD</div><div class="cc-body"><div class="cc-cell" data-desc="CD1">1</div><div class="cc-cell" data-desc="CD2">2</div><div class="cc-cell" data-desc="CD3">3</div><div class="cc-cell" data-desc="CD4">4</div><div class="cc-cell" data-desc="CD5">5</div></div></div>
+                            <div class="cc-table" data-cc="CPSAA"><div class="cc-header">CPSAA</div><div class="cc-body"><div class="cc-cell" data-desc="CPSAA1">1</div><div class="cc-cell" data-desc="CPSAA2">2</div><div class="cc-cell" data-desc="CPSAA3">3</div><div class="cc-cell" data-desc="CPSAA4">4</div><div class="cc-cell" data-desc="CPSAA5">5</div></div></div>
+                            <div class="cc-table" data-cc="CC"><div class="cc-header">CC</div><div class="cc-body"><div class="cc-cell" data-desc="CC1">1</div><div class="cc-cell" data-desc="CC2">2</div><div class="cc-cell" data-desc="CC3">3</div><div class="cc-cell" data-desc="CC4">4</div></div></div>
+                            <div class="cc-table" data-cc="CE"><div class="cc-header">CE</div><div class="cc-body"><div class="cc-cell" data-desc="CE1">1</div><div class="cc-cell" data-desc="CE2">2</div><div class="cc-cell" data-desc="CE3">3</div></div></div>
+                            <div class="cc-table" data-cc="CCEC"><div class="cc-header">CCEC</div><div class="cc-body"><div class="cc-cell" data-desc="CCEC1">1</div><div class="cc-cell" data-desc="CCEC2">2</div><div class="cc-cell" data-desc="CCEC3">3</div><div class="cc-cell" data-desc="CCEC4">4</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> COMPETÈNCIES ESPECÍFIQUES</div></div><select id="select-comp-espec"></select><div class="selection-area" id="tags-comp-espec"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-list-ol"></i> CRITERIS D'AVALUACIÓ</div></div><select id="select-criteris"></select><div class="selection-area" id="tags-criteris"></div></div>
+            </div>
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-layer-group"></i> BLOCS DE CONTINGUTS</div></div><select id="select-blocs"></select><div class="selection-area" id="tags-blocs"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-lightbulb"></i> SABERS BÀSICS</div><div id="btn-toggle-t" class="btn-eval-a" title="Seleccionar/Deseleccionar Sabers Transversals (T)">T</div></div><select id="select-sabers"></select><div class="selection-area" id="tags-sabers"></div></div>
+            </div>
+            <div class="grid-1-col">
+                <div class="card" id="card-od">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-bullseye"></i> OBJECTIUS DIDÀCTICS</div></div>
+                    <div style="display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap;">
+                        <input type="text" id="input-od-code" placeholder="Codi (ex: OD1)" style="width: 120px;">
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px;">
+                             <input type="text" id="input-od-desc" placeholder="Descripció de l'objectiu didàctic...">
+                             <div class="eval-tools" style="margin-top: 0; padding-bottom: 0;">
+                                  <div id="od-criteria-container" style="display: inline-flex; align-items: center; flex-direction: row; gap: 6px; flex-wrap: wrap; position: relative;">
+                                      <div class="btn-add-criteria btn-add-crit-od" title="Vincular Criteri d'Avaluació (CA)"><i class="fa-solid fa-plus"></i></div>
+                                  </div>
+                             </div>
+                        </div>
+                        <button class="btn-toggle active" id="btn-add-od" style="height: 48px; padding: 0 20px; align-self: flex-start;">Afegir</button>
+                    </div>
+                    <div class="selection-area" id="tags-od" style="margin-top: 15px; min-height: 0;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="container-block-3">
+        <div class="section-header toggle-section" data-target="block-3">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">3</div>
+                    <button class="btn-toggle-block" data-block="block-3" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Metodologia i Organització</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-3" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-3" class="block-content" style="display: none;">
+            <div class="grid-row-3">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-person-running"></i> METODOLOGIA / MODEL / ESTIL</div></div><select id="select-metodologia"></select><div class="selection-area" id="tags-metodologia"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-users"></i> AGRUPAMENTS</div></div><select id="select-agrupaments"></select><div class="selection-area" id="tags-agrupaments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-box-open"></i> ESPAIS I RECURSOS MATERIALS</div></div><textarea id="input-materials" rows="3" placeholder="Escriu els materials necessaris..."></textarea></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="container-block-4">
+        <div class="section-header toggle-section" data-target="block-4">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">4</div>
+                    <button class="btn-toggle-block" data-block="block-4" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Avaluació</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-4" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-4" class="block-content" style="display: none;">
+            <div class="grid-row">
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-clipboard-check"></i> INSTRUMENTS D'AVALUACIÓ</div></div><select id="select-instruments"></select><div class="selection-area" id="tags-instruments"></div></div>
+                <div class="card"><div class="card-title"><div class="card-title-left"><i class="fa-solid fa-chart-pie"></i> TIPUS D'AVALUACIÓ</div></div><select id="select-tipus-avaluacio"></select><div class="selection-area" id="tags-tipus-avaluacio"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="container-block-5">
+        <div class="section-header toggle-section" data-target="block-5">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">5</div>
+                    <button class="btn-toggle-block" data-block="block-5" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Mesures per a l'atenció educativa</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-5" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-5" class="block-content" style="display: none;">
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title" style="border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;">
+                        <div class="card-title-left"><i class="fa-solid fa-universal-access"></i> Disseny Universal per a l'Aprenentatge (DUA)</div>
+                    </div>
+                    <div class="grid-row-3">
+                        <div><span class="sub-label"><i class="fa-solid fa-eye"></i> REPRESENTACIÓ</span><select id="select-dua-acces"></select><div class="selection-area" id="tags-dua-acces"></div></div>
+                        <div><span class="sub-label"><i class="fa-solid fa-heart"></i> MOTIVACIÓ</span><select id="select-dua-part"></select><div class="selection-area" id="tags-dua-part"></div></div>
+                        <div><span class="sub-label"><i class="fa-solid fa-pen-ruler"></i> ACCIÓ</span><select id="select-dua-prog"></select><div class="selection-area" id="tags-dua-prog"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-1-col">
+                <div class="card">
+                    <div class="card-title"><div class="card-title-left"><i class="fa-solid fa-user-plus"></i> Mesures Específiques de Resposta</div></div>
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px;">
+                        <span style="font-weight: 500; font-size: 0.85rem; color: var(--text-muted);">Requerix algun alumne mesures específiques addicionals?</span>
+                        <div class="toggle-group" id="toggle-mesures">
+                            <button class="btn-toggle active" id="btn-mesures-no">No</button>
+                            <button class="btn-toggle" id="btn-mesures-si">Sí</button>
+                        </div>
+                    </div>
+                    <div id="mesures-addicionals-container" style="display: none; padding-top: 10px;">
+                        <div id="destinataris-list"></div>
+                        <button class="btn-add-activity" id="btn-add-destinatari" style="margin-left: 0; align-self: flex-start; margin-top: 10px;"><i class="fa-solid fa-plus"></i> Afegir Destinatari</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="container-block-6">
+        <div class="section-header toggle-section" data-target="block-6">
+            <div class="section-header-left">
+                <div class="section-number-wrapper">
+                    <div class="section-number">6</div>
+                    <button class="btn-toggle-block" data-block="block-6" title="Activar/Desactivar apartat"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="section-title-text">Seqüència Didàctica</div>
+            </div>
+            <i class="fa-solid fa-chevron-up toggle-icon" id="icon-block-6" style="transform: rotate(180deg);"></i>
+        </div>
+        <div id="block-6" class="block-content" style="display: none;">
+            <div id="sequence-container"></div>
+            <div style="margin-top: 20px;"><button class="btn-add-step" id="btn-add-step" title="Afegir FASE"><i class="fa-solid fa-plus fa-xl"></i></button></div>
+        </div>
+    </section>
+
+    <div class="bottom-actions-bar">
+        <div id="inline-save-indicator">
+            <i class="fa-solid fa-floppy-disk" id="save-icon"></i><span id="save-text"></span>
+        </div>
+        <div class="btn-container">
+            <button class="action-btn btn-clear" id="btn-clear" title="Esborrar dades i començar una nova SA"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="action-btn btn-download" id="btn-open-export" title="Exportar Situació d'Aprenentatge"><i class="fa-solid fa-download"></i></button>
+            <input type="file" id="file-import" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <div id="export-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-export"></i> Opcions d'Exportació</h3>
+                <i class="fa-solid fa-xmark close-modal" id="btn-close-export"></i>
+            </div>
+            <div class="modal-body export-grid">
+                <button class="export-btn" id="btn-export-pdf"><i class="fa-solid fa-file-pdf"></i><span>PDF (.pdf)</span></button>
+                <button class="export-btn" id="btn-export-json"><i class="fa-solid fa-file-code"></i><span>Dades (.json)</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-prompt-modal" class="modal-overlay">
+        <div class="modal-content modal-prompt">
+            <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem; margin-bottom: 15px;">Escriu la teva opció personalitzada:</h3>
+            <input type="text" id="custom-prompt-input" style="margin-bottom: 20px;" placeholder="La teva opció...">
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="custom-prompt-cancel" class="btn-toggle">Cancel·lar</button>
+                <button id="custom-prompt-ok" class="btn-toggle active">Acceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="construction-modal" class="modal-overlay">
+        <div class="modal-content construction-content">
+            <div class="construction-body">
+                <div class="construction-icon-wrapper">
+                    <i class="fa-solid fa-person-digging construction-icon"></i>
+                </div>
+                <div class="construction-text">EN CONSTRUCCIÓ</div>
+            </div>
+            <i class="fa-solid fa-xmark close-construction-modal" id="btn-close-construction" title="Tancar"></i>
+        </div>
+    </div>
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

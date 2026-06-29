@@ -1,0 +1,83 @@
+/* =========================================================
+   CABECERA (HEADER)
+========================================================= */
+header { 
+    position: relative; background: var(--card-bg); padding: 40px 30px; 
+    border-radius: var(--radius); text-align: center; margin-bottom: 20px; 
+    box-shadow: var(--shadow); border-top: 5px solid var(--accent); 
+    transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; 
+}
+header h1 { color: var(--primary); font-size: 3.8rem; margin: 0; font-weight: 900; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; cursor: default; }
+header h1 span { color: var(--accent); }
+header h1 i { font-size: 2.2rem; color: var(--accent); margin-left: 8px; transform: rotate(-15deg) translateY(5px); transition: transform 0.3s ease; }
+header h1:hover i { transform: rotate(0deg) translateY(0) scale(1.1); }
+header h2 { color: var(--text-muted); font-size: 1rem; margin: 5px 0 0 0; font-weight: 600; }
+
+.header-icon-btn { 
+    position: absolute; width: 32px; height: 32px; background: transparent; 
+    border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; font-size: 0.9rem; 
+    cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7;
+}
+.header-icon-btn:hover { opacity: 1; transform: scale(1.1); background: var(--bg); border-color: var(--accent); }
+#btn-dark-mode { top: 15px; right: 15px; }
+#btn-import-trigger { bottom: 15px; right: 15px; }
+
+/* =========================================================
+   ESTRUCTURA DE SECCIONES Y GRIDS
+========================================================= */
+.section-container { transition: opacity 0.3s ease; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin: 50px 0 20px 0; padding: 12px 15px; border-bottom: 2px solid var(--border); cursor: pointer; border-radius: 8px 8px 0 0; transition: background-color 0.2s ease, filter 0.3s ease; user-select: none; }
+.section-header:hover { background-color: rgba(107, 149, 150, 0.05); }
+.section-header-left { display: flex; align-items: center; gap: 15px; }
+
+/* Sistema Visual Toggles Bloques */
+.section-number-wrapper { position: relative; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex-shrink: 0; }
+.section-number { background: var(--accent); color: var(--card-bg); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 800; font-size: 1.2rem; transition: opacity 0.3s; }
+body.dark-mode .section-number { color: #1C2324; }
+.btn-toggle-block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 58, 59, 0.9); color: #FFF; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; opacity: 0; transition: all 0.2s ease; z-index: 2; outline: none; }
+.section-header-left:hover .btn-toggle-block { opacity: 1; }
+@media (hover: none) { .btn-toggle-block { opacity: 0.35; } }
+
+.section-container.disabled-block { opacity: 0.5; filter: grayscale(100%); }
+.section-container.disabled-block .section-header { background-color: transparent; }
+.section-container.disabled-block .btn-toggle-block { opacity: 1; background: #C68B87; }
+.section-container.disabled-block .block-content { display: none !important; }
+
+.section-title-text { font-size: 1.3rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.3s ease; }
+.toggle-icon { font-size: 1.3rem; color: var(--primary); transition: transform 0.3s ease; }
+
+.grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+.grid-1-col { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
+.grid-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+.grid-row-4-equal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+.split-header-row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; margin-bottom: 15px; }
+.mesures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mesures-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+.block1-custom-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 15px; margin-bottom: 15px; }
+.b1-repte, .b1-producte { grid-column: 1 / 2; }
+.b1-ods { grid-column: 2 / 3; grid-row: 1 / 3; }
+
+.block-content { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    body { padding: 15px 10px; }
+    .container { padding: 0; max-width: 100%; }
+    header { padding: 30px 15px 60px 15px; margin-bottom: 20px;}
+    header h1 { font-size: 2.8rem; letter-spacing: -0.02em; }
+    header h1 i { font-size: 1.8rem; }
+    header h2 { font-size: 0.95rem; }
+    .header-icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+    
+    .grid-row, .grid-1-col, .grid-row-3, .grid-row-4-equal, .split-header-row, .mesures-grid, .mesures-grid-4, .block1-custom-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+    .b1-ods { grid-column: 1 / 2; grid-row: auto; }
+    
+    .section-header { margin: 30px 0 15px 0; padding: 10px; }
+    .section-title-text { font-size: 1.1rem; }
+    .section-number-wrapper { width: 32px; height: 32px; }
+    .section-number { font-size: 1rem; }
+    .btn-toggle-block { font-size: 0.9rem; }
+}

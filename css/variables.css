@@ -1,0 +1,28 @@
+/* =========================================================
+   VARIABLES GLOBALES Y TEMA
+========================================================= */
+:root {
+    --primary: #2B3A3B; --accent: #6B9596; --accent-hover: #507677; 
+    --bg: #F2F5F5; --card-bg: #FFFFFF; --text-main: #3A4B4C; 
+    --text-muted: #788F90; --border: #D5E0E0; --radius: 12px; 
+    --shadow: 0 4px 6px -1px rgba(43, 58, 59, 0.06); 
+    --tag-bg: #E6EDED; --tag-border: #CDDCDC; --tag-border-left: #90A9A9; 
+    --tag-text: #3A4B4C; --tag-icon: #90A9A9; --tag-icon-hover: #C68B87; 
+}
+
+body.dark-mode {
+    --primary: #F0F4F4; --accent: #9EC2C3; --accent-hover: #B8D7D8;
+    --bg: #1C2324; --card-bg: #263031; --text-main: #E8EEEE; 
+    --text-muted: #92A8A9; --border: #374849;
+    --tag-bg: #303E3F; --tag-border: #405354; --tag-border-left: #85A7A8; 
+    --tag-text: #E8EEEE; --tag-icon: #92A8A9; --tag-icon-hover: #D69793;
+}
+
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body { 
+    background-color: var(--bg); color: var(--text-main); margin: 0; 
+    padding: 40px 20px; transition: background-color 0.4s ease, color 0.4s ease; 
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
