@@ -163,7 +163,7 @@ export function generatePDF() {
         docContent.push({ table: { widths: ['100%'], body: [[{text:'Perfil d\'Eixida (Descriptors Operatius)', style:'thCenter'}], [buildPerfilEixidaSingleTable()]] }, layout: standardTableLayout, margin: [0, 0, 0, 8] });
         docContent.push({ table: { widths: ['50%', '50%'], body: [ [{text:'Competències Específiques', style:'th'}, {text:'Criteris d\'Avaluació', style:'th'}], [formatSmartTagsList(state.tags['tags-comp-espec'], 'CE'), formatSmartTagsList(state.tags['tags-criteris'], 'CA')] ] }, layout: standardTableLayout, margin: [0, 0, 0, 8] });
         docContent.push({ table: { widths: ['25%', '75%'], body: [ [{text:'Blocs de Continguts', style:'th'}, {text:'Sabers Bàsics', style:'th'}], [formatSmartTagsList(state.tags['tags-blocs'], 'BL'), formatSmartTagsList(state.tags['tags-sabers'], 'Saber')] ] }, layout: standardTableLayout, margin: [0, 0, 0, 8] });
-        docContent.push({ table: { widths: ['100%'], body: [[{text:'Indicadors d\\'Assoliment', style:'thCenter'}], [formatSmartTagsList(state.tags['tags-od'], 'OD')]] }, layout: standardTableLayout });
+        docContent.push({ table: { widths: ['100%'], body: [[{text:"Indicadors d'Assoliment", style:'thCenter'}], [formatSmartTagsList(state.tags['tags-od'], 'OD')]] }, layout: standardTableLayout });
         sectionNum++;
     }
 
