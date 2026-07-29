@@ -91,12 +91,12 @@ export async function restoreState() {
     
     try {
         AppState.isRestoring = true;
-        const state = JSON.parse(savedStr);
+        const state = JSON.parse(savedStr) || {};
         if (state.darkMode && !document.body.classList.contains('dark-mode')) toggleDarkMode();
         
-        Object.keys(state.inputs).forEach(id => { if (selectEl(id)) selectEl(id).value = state.inputs[id]; });
+        Object.keys(state.inputs || {}).forEach(id => { if (selectEl(id)) selectEl(id).value = state.inputs[id]; });
         
-        const [savedArea, savedCicle] = [state.selects['input-area'], state.selects['input-cicle']];
+        const [savedArea, savedCicle] = [state.selects?.['input-area'], state.selects?.['input-cicle']];
         if (savedArea) setCustomSelectValue('input-area', savedArea);
         if (savedCicle) setCustomSelectValue('input-cicle', savedCicle);
         
@@ -117,10 +117,10 @@ export async function restoreState() {
             }
         }
         
-        if (state.selects['input-curs']) setCustomSelectValue('input-curs', state.selects['input-curs']);
-        if (state.selects['input-trimestre']) setCustomSelectValue('input-trimestre', state.selects['input-trimestre']);
+        if (state.selects?.['input-curs']) setCustomSelectValue('input-curs', state.selects['input-curs']);
+        if (state.selects?.['input-trimestre']) setCustomSelectValue('input-trimestre', state.selects['input-trimestre']);
         
-        Object.keys(state.tags).forEach(id => state.tags[id]?.forEach(val => addTag(val, id)));
+        Object.keys(state.tags || {}).forEach(id => state.tags[id]?.forEach(val => addTag(val, id)));
         
         if (state.temporalitzacio?.length === 40) queryAll('.week-box').forEach((box, index) => box.classList.toggle('active', !!state.temporalitzacio[index]));
 
@@ -132,10 +132,10 @@ export async function restoreState() {
         if (state.mesuresActives) {
             setMesures(true);
             selectEl('destinataris-list').innerHTML = ''; 
-            state.destinataris.forEach(dest => {
+            (state.destinataris || []).forEach(dest => {
                 addDestinatari();
                 const destId = `dest-${AppState.destinatariCount}`;
-                Object.keys(dest.tags).forEach(prefix => dest.tags[prefix].forEach(val => addTag(val, `tags-${prefix}-${destId}`)));
+                Object.keys(dest.tags || {}).forEach(prefix => dest.tags[prefix]?.forEach(val => addTag(val, `tags-${prefix}-${destId}`)));
             });
         }
         
