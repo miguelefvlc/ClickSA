@@ -23,6 +23,39 @@ export function establecerConexionesSaber(textSaber) {
     });
 }
 
+export function desvincularConexionesSaber(textSaberDesactivado, removeTagFn) {
+    if (AppState.isRestoring) return;
+    const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]; if (!dades) return;
+    
+    const activeSabers = Array.from(document.querySelectorAll('#tags-sabers .tag-text')).map(s => s.dataset.fulltext || s.innerText);
+    
+    [...textSaberDesactivado.matchAll(/CA\s*(\d+)\.(\d+)/gi)].forEach(m => {
+        const ceNum = m[1];
+        const caSub = m[2];
+        
+        const isCaStillLinked = activeSabers.some(s => new RegExp(`CA\\s*${ceNum}\\.${caSub}\\b`, 'i').test(s));
+        if (!isCaStillLinked) {
+            const fCA = dades.criterisAvaluacio.find(c => new RegExp(`^CA\\s*${ceNum}\\.${caSub}\\b`, 'i').test(c));
+            if (fCA) removeTagFn(fCA, 'tags-criteris');
+        }
+        
+        const isCeStillLinked = activeSabers.some(s => new RegExp(`CA\\s*${ceNum}\\.\\d+\\b`, 'i').test(s));
+        if (!isCeStillLinked) {
+            const fCE = dades.competenciesEspecifiques.find(c => new RegExp(`^CE\\s*${ceNum}\\b`, 'i').test(c));
+            if (fCE) removeTagFn(fCE, 'tags-comp-espec');
+        }
+    });
+
+    [...textSaberDesactivado.matchAll(/BL\s*(\d+)/gi)].forEach(m => {
+        const blNum = m[1];
+        const isBlStillLinked = activeSabers.some(s => new RegExp(`BL\\s*${blNum}\\b`, 'i').test(s));
+        if (!isBlStillLinked) {
+            const fBL = dades.blocsContinguts.find(b => new RegExp(`^BL\\s*${blNum}\\b`, 'i').test(b));
+            if (fBL) removeTagFn(fBL, 'tags-blocs');
+        }
+    });
+}
+
 export function establecerConexionesCA(textCA) {
     if (AppState.isRestoring) return;
     const dades = AppState.cacheDadesCurriculars[getAreaActiva()]?.[getCicleActiu()]; if (!dades) return;

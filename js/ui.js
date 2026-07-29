@@ -2,7 +2,7 @@ import { selectEl, queryAll, getSelectedText, toggleCustomOptionVisibility } fro
 import { AppState, saveState } from './state.js';
 import { CONSTANTES_GLOBALES, SELECTS_TO_RESET } from './constants.js';
 import { fetchCsvData } from './api.js';
-import { getAreaActiva, getCicleActiu, establecerConexionesSaber, establecerConexionesCA, establecerConexionesCE, recalcularTotaLaCadena, updateCellVisual } from './curriculum.js';
+import { getAreaActiva, getCicleActiu, establecerConexionesSaber, establecerConexionesCA, establecerConexionesCE, recalcularTotaLaCadena, updateCellVisual, desvincularConexionesSaber } from './curriculum.js';
 
 export function toggleDarkMode() {
     document.body.classList.toggle('dark-mode'); 
@@ -200,6 +200,11 @@ export function addTag(val, containerId) {
             toggleCustomOptionVisibility(val, true, selectId);
             const btnT = selectEl('btn-toggle-t');
             if (btnT) btnT.classList.remove('active');
+            
+            if (containerId === 'tags-sabers') {
+                desvincularConexionesSaber(val, removeTagByValue);
+            }
+            
             recalcularTotaLaCadena();
         };
         
@@ -213,6 +218,11 @@ export function addTag(val, containerId) {
         tag.querySelector('.remove-x').onclick = () => {
             tag.remove();
             toggleCustomOptionVisibility(val, true, selectId);
+            
+            if (containerId === 'tags-sabers') {
+                desvincularConexionesSaber(val, removeTagByValue);
+            }
+            
             if (['tags-sabers', 'tags-comp-espec', 'tags-criteris'].includes(containerId)) recalcularTotaLaCadena();
             saveState();
         };
@@ -235,7 +245,7 @@ export function makeTagsSortable(container) {
     container.addEventListener('dragstart', e => { if(e.target.classList.contains('tag')) { drg = e.target; e.target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } });
     container.addEventListener('dragend', e => { if(e.target.classList.contains('tag')) { e.target.classList.remove('dragging'); drg = null; saveState(); } });
     container.addEventListener('dragover', e => {
-        e.preventDefault(); if(!drg || !drg.classList.contains('tag')) return;
+        e.preventDefault();    if(!drg || !drg.classList.contains('tag')) return;
         const after = [...container.querySelectorAll('.tag:not(.dragging)')].reduce((closest, child) => {
             const box = child.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2;
             return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
@@ -244,6 +254,21 @@ export function makeTagsSortable(container) {
             after == null ? container.appendChild(drg) : container.insertBefore(drg, after);
         }
     });
+}
+
+export function removeTagByValue(val, containerId) {
+    const c = selectEl(containerId);
+    if (!c) return;
+    const tagTexts = Array.from(c.querySelectorAll('.tag-text'));
+    const targetText = tagTexts.find(s => (s.dataset.fulltext || s.innerText) === val);
+    
+    if (targetText) {
+        const tag = targetText.closest('.tag') || targetText.closest('.mini-saber-tag');
+        if (tag) {
+            const removeBtn = tag.querySelector('.remove-x, .remove-x-mini');
+            if (removeBtn) removeBtn.click();
+        }
+    }
 }
 
 export function assignColorClass(el, val, cId) {
@@ -288,6 +313,7 @@ export function toggleTransversals() {
                 const val = tag.querySelector('.tag-text').dataset.fulltext || tag.querySelector('.tag-text').innerText;
                 tag.remove();
                 toggleCustomOptionVisibility(val, true, 'select-sabers');
+                desvincularConexionesSaber(val, removeTagByValue);
             });
             wrapper.remove();
         }
