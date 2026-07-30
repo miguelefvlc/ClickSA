@@ -8,7 +8,9 @@ ClickSA és una aplicació web estàtica i interactiva dissenyada per ajudar els
 L'idioma principal de la interfície és el **català/valencià**.
 
 ## Estructura Tècnica
-- **HTML**: `index.html` conté tota l'estructura visual, dividida en diferents seccions (identificació, currículum, seqüència, etc.).
+- **HTML**: 
+  - `index.html`: Conté tota l'estructura visual del creador, dividida en diferents seccions (identificació, currículum, seqüència, etc.).
+  - `dashboard.html`: Tauler d'anàlisi global que permet carregar múltiples arxius JSON de Situacions d'Aprenentatge, visualitzar gràfiques (Chart.js) globals d'ús del currículum, comparar SA i editar-les usant l'emmagatzematge de sessió per redirigir cap a `index.html`.
 - **CSS**: Situat a la carpeta `css/` de forma modularitzada:
   - `variables.css` (Colors, mides, variables globals i temes clar/fosc).
   - `layout.css` (Disposició en grid, flexbox, marges i el contenidor principal).
@@ -43,3 +45,10 @@ L'aplicació es divideix en 6 blocs principals o "pestanyes":
 
 Tota la interacció queda automàticament desada al `localStorage` de manera transparent al navegador.
 Finalment, la SA es pot exportar en format **PDF** o com un **JSON** (per guardar una còpia de seguretat o moure-la d'ordinador).
+
+## Analítica i Tauler Global (Dashboard)
+S'ha introduït la pantalla `dashboard.html` que ofereix una visió agregada del contingut creat:
+- Permet carregar múltiples JSON generats per `index.html`.
+- Agrega i visualitza dades mitjançant **Chart.js** (Distribució de Cicles, Àrees, ODS, Competències Específiques, etc.).
+- Funciona de forma 100% local, guardant l'estat temporal de les SA carregades a `sessionStorage` (clau `dashboard_SAs`).
+- Permet l'**Edició ràpida completa**: Un clic en editar redirigeix l'usuari a `index.html` establint un flag d'edició. Un cop l'usuari finalitza i clica el botó de retorn, el dashboard recull el JSON modificat del `localStorage`, el fusiona amb les dades de `sessionStorage` i repinta les gràfiques, oferint una experiència connectada sense necessitat d'un backend.
