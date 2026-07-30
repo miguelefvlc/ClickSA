@@ -325,6 +325,18 @@
             localStorage.setItem('global_dark_mode', isDark ? 'true' : 'false');
             if (loadedSAs.length > 0) updateDashboard();
         });
+        
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'global_dark_mode') {
+                const shouldBeDark = e.newValue === 'true';
+                if (shouldBeDark !== document.body.classList.contains('dark-mode')) {
+                    if (shouldBeDark) document.body.classList.add('dark-mode');
+                    else document.body.classList.remove('dark-mode');
+                    document.getElementById('dark-icon').className = shouldBeDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                    if (loadedSAs.length > 0) updateDashboard();
+                }
+            }
+        });
 
         document.getElementById('upload-trigger').addEventListener('click', () => document.getElementById('file-upload').click());
         document.getElementById('file-upload').addEventListener('change', handleFileSelect);
@@ -551,7 +563,6 @@
         if (!files.length) return;
 
         Array.from(files).forEach(file => {
-            if (loadedSAs.some(sa => sa.filename === file.name)) return;
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {

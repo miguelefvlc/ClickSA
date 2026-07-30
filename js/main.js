@@ -24,6 +24,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Configurar listeners básicos
     selectEl('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); });
+    
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'global_dark_mode') {
+            const shouldBeDark = e.newValue === 'true';
+            const selectIco = selectEl('dark-icon');
+            if (shouldBeDark) {
+                document.body.classList.add('dark-mode');
+                if (selectIco) selectIco.className = 'fa-solid fa-sun';
+            } else {
+                document.body.classList.remove('dark-mode');
+                if (selectIco) selectIco.className = 'fa-solid fa-moon';
+            }
+        }
+    });
     selectEl('btn-toggle-t')?.addEventListener('click', toggleTransversals);
     queryAll('.toggle-section').forEach(btn => btn.addEventListener('click', e => { 
         if(e.target.closest('.btn-toggle-block')) return; 
