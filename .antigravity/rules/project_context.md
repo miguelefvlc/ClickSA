@@ -21,7 +21,7 @@ ClickSA es una aplicación web estática (front-end) para que los profesores dis
   - `state.js`: Guarda/recupera el estado de `localStorage`.
   - `api.js`: Descarga y parsea los archivos curriculares CSV.
   - `sequenceBuilder.js`: Lógica compleja del constructor de secuencias didácticas (fases, sesiones, actividades).
-  - `curriculum.js`: Calcula dependencias y mapeos curriculares.
+  - `curriculum.js`: Calcula dependencias y mapeos curriculares, incluyendo una desactivación en cascada inteligente para evitar dejar elementos huérfanos.
   - `export.js`: Lógica para exportar en JSON y PDF.
   - `ui.js`: Interacciones de UI puras (modo oscuro, toggles).
 

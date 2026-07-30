@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ClickSA - Dashboard d'Anàlisi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <style>
+        /* =========================================================
+           VARIABLES GLOBALS (ESTÈTICA DE LA WEB MARE)
+        ========================================================= */
+        :root {
+            --primary: #2B3A3B; --accent: #6B9596; --bg: #F2F5F5; 
+            --card-bg: #FFFFFF; --text-main: #3A4B4C; --text-muted: #788F90; 
+            --border: #D5E0E0; --radius: 10px; 
+            --shadow: 0 4px 6px -1px rgba(43, 58, 59, 0.08); 
+        }
+
+        body.dark-mode {
+            --primary: #F0F4F4; --accent: #9EC2C3; --bg: #1C2324; 
+            --card-bg: #263031; --text-main: #E8EEEE; --text-muted: #92A8A9; 
+            --border: #374849;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--bg); color: var(--text-main); 
+            padding: 15px; transition: background-color 0.3s ease; 
+        }
+        
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        /* HEADER COMPACTO */
+        header { 
+            position: relative; background: var(--card-bg); padding: 12px 20px; 
+            border-radius: var(--radius); text-align: center; margin-bottom: 15px; 
+            box-shadow: var(--shadow); border-top: 4px solid var(--accent); 
+        }
+        header h1 { color: var(--primary); font-size: 1.8rem; font-weight: 900; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; }
+        header h1 span { color: var(--accent); }
+        header h1 i { font-size: 1.2rem; color: var(--accent); margin-left: 8px; }
+        header h2 { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; font-weight: 600; }
+        
+        .header-icon-btn { 
+            position: absolute; width: 30px; height: 30px; background: transparent; 
+            border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem; 
+            cursor: pointer; transition: all 0.2s ease; top: 12px;
+        }
+        .header-icon-btn:hover { background: var(--bg); transform: scale(1.05); }
+        #btn-dark-mode { right: 15px; }
+        #btn-back { left: 15px; text-decoration: none; }
+
+        /* ZONA DE CARGA Y LISTA DE SA */
+        .upload-zone {
+            background: var(--card-bg); padding: 10px 15px; border-radius: var(--radius);
+            border: 1.5px dashed var(--accent); text-align: center; margin-bottom: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: background 0.2s ease;
+        }
+        .upload-zone:hover { background: rgba(107, 149, 150, 0.05); }
+        .upload-zone i { font-size: 1.1rem; color: var(--accent); }
+        .upload-zone span { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+
+        .file-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; min-height: 60px; }
+        
+        .file-square {
+            width: 65px; height: 65px; background: var(--card-bg); border: 1.5px solid var(--border);
+            border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: grab; position: relative; overflow: hidden; box-shadow: var(--shadow);
+            animation: fadeIn 0.2s ease;
+        }
+        .file-square:active { cursor: grabbing; }
+        .file-square.dragging { opacity: 0.4; transform: scale(1.05); }
+        
+        .file-square i.fa-file-lines { font-size: 1.2rem; color: var(--text-muted); opacity: 0.6; margin-bottom: 2px; }
+        .file-square-text { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; line-height: 1; }
+        .file-square-num { font-size: 1.1rem; font-weight: 900; color: var(--accent); line-height: 1; margin-top: 2px; }
+        
+        .file-square .hover-overlay {
+            position: absolute; inset: 0; background: rgba(43, 58, 59, 0.85); color: white;
+            display: flex; align-items: center; justify-content: space-evenly;
+            opacity: 0; transition: opacity 0.2s ease;
+        }
+        .file-square:hover .hover-overlay { opacity: 1; }
+        .hover-btn { cursor: pointer; font-size: 1.1rem; padding: 5px; transition: transform 0.2s, color 0.2s; }
+        .hover-btn:hover { transform: scale(1.1); }
+        .hover-btn-edit { color: #9EC2C3; }
+        .hover-btn-del { color: #C68B87; }
+
+        /* DASHBOARD Y GRÁFICAS COMPACTAS */
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 15px 0 10px 0; border-bottom: 2px solid var(--border); padding-bottom: 5px; }
+        .section-number { background: var(--accent); color: var(--card-bg); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: 800; font-size: 0.85rem; }
+        body.dark-mode .section-number { color: #1C2324; }
+        .section-title-text { font-size: 0.95rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .charts-grid-1 { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+        .charts-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+        
+        .chart-card { position: relative; background: var(--card-bg); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; }
+        .chart-title { font-weight: 800; font-size: 0.75rem; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 6px; padding-right: 25px; }
+        .chart-title i { color: var(--accent); }
+        
+        /* Sistema Lupa (Zoom) */
+        .zoom-btn { position: absolute; top: 10px; right: 12px; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; transition: color 0.2s, transform 0.2s; padding: 2px; }
+        .zoom-btn:hover { color: var(--accent); transform: scale(1.1); }
+
+        /* Contenedores de altura controlada */
+        .chart-container-pie { position: relative; height: 200px; width: 100%; display: flex; justify-content: center; }
+        .chart-container-pie-full { position: relative; height: 220px; width: 100%; display: flex; justify-content: center; }
+        .chart-container-bar { position: relative; height: 100%; min-height: 200px; width: 100%; flex-grow: 1; }
+        .chart-container-bar-eval { position: relative; height: 260px; width: 100%; }
+
+        /* Estilos Tarjeta Resumen Contexto */
+        .summary-content { display: flex; flex-direction: column; justify-content: center; gap: 12px; height: 100%; padding: 10px; }
+        .summary-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .summary-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .summary-label { font-weight: 700; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        .summary-value { font-weight: 800; color: var(--primary); font-size: 0.95rem; text-align: right; max-width: 60%; }
+        .summary-value.highlight { color: var(--accent); font-size: 1.2rem; }
+
+        /* Placeholders */
+        .placeholder-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; border: 2px dashed var(--border); border-radius: var(--radius); color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-align: center; padding: 20px; }
+        .placeholder-box i { font-size: 1.5rem; margin-bottom: 5px; opacity: 0.5; }
+
+        #empty-state { text-align: center; padding: 30px 20px; color: var(--text-muted); }
+        #empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: 10px; }
+        #empty-state h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
+
+        /* BOTONERA INFERIOR (Estil Web Mare) */
+        .bottom-actions-bar { margin-top: 30px; display: flex; justify-content: flex-end; align-items: flex-end; padding-bottom: 20px;}
+        .btn-container { display: flex; gap: 12px; }
+        .action-btn { background: var(--card-bg); border: 1.5px solid; width: 48px; height: 48px; font-size: 1.25rem; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: var(--shadow); }
+        .btn-download { border-color: var(--accent); color: var(--accent); }
+        .btn-download:hover { background: var(--accent); color: var(--card-bg); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(107, 149, 150, 0.25); }
+        .btn-clear { border-color: #C68B87; color: #C68B87; }
+        .btn-clear:hover { background: #C68B87; color: #FFF; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(198, 139, 135, 0.25); }
+
+        /* MODAL DE DETALLE (LUPA) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 58, 59, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 650px; max-height: 85vh; border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); transition: transform 0.2s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+        .modal-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .close-modal { cursor: pointer; color: var(--text-muted); font-size: 1.3rem; transition: color 0.2s; }
+        .close-modal:hover { color: var(--accent); }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        
+        .zoom-item { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px dashed var(--border); align-items: flex-start; }
+        .zoom-item:last-child { border-bottom: none; }
+        .zoom-item-count { background: var(--accent); color: var(--card-bg); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; flex-shrink: 0; font-size: 1rem; }
+        .zoom-item-text { display: flex; flex-direction: column; padding-top: 4px; }
+        .zoom-item-title { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+        .zoom-item-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+        
+        /* EDICIÓ RÀPIDA (FORM) */
+        .edit-field { display: flex; flex-direction: column; gap: 4px; }
+        .edit-field label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .form-input { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text-main); font-family: inherit; font-size: 0.9rem; }
+        .form-input:focus { outline: none; border-color: var(--accent); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @media (max-width: 900px) { .charts-grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<main class="container">
+    <header>
+        <a href="index.html" class="header-icon-btn" id="btn-back" title="Tornar al Dissenyador"><i class="fa-solid fa-arrow-left"></i></a>
+        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        <h1>Click<span>SA</span><i class="fa-solid fa-chart-pie"></i></h1>
+        <h2>Panell d'Anàlisi Global</h2>
+    </header>
+
+    <input type="file" id="file-upload" accept=".json" multiple style="display: none;">
+    <div class="upload-zone" id="upload-trigger">
+        <i class="fa-solid fa-file-import"></i>
+        <span>Carregar fitxers de Situacions d'Aprenentatge (.json)</span>
+    </div>
+
+    <div class="file-grid" id="file-list"></div>
+
+    <div id="empty-state">
+        <i class="fa-solid fa-chart-simple"></i>
+        <h3>Tauler buit</h3>
+        <p style="font-size: 0.85rem;">Importa fitxers JSON per començar l'anàlisi.</p>
+    </div>
+
+    <div id="dashboard-content" style="display: none;">
+
+        <div class="section-header"><div class="section-number">1</div><div class="section-title-text">Identificació i Context</div></div>
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-circle-info"></i> Resum de Dades</h3>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="summary-label">Àrea</span> <span class="summary-value" id="sum-area">-</span></div>
+                    <div class="summary-item"><span class="summary-label">Cicle</span> <span class="summary-value" id="sum-cicle">-</span></div>
+                    <div class="summary-item"><span class="summary-label">Nivell</span> <span class="summary-value" id="sum-nivell">-</span></div>
+                    <div class="summary-item"><span class="summary-label">Total S.A.</span> <span class="summary-value highlight" id="sum-sa">0</span></div>
+                    <div class="summary-item"><span class="summary-label">Total Sessions</span> <span class="summary-value highlight" id="sum-sessions">0</span></div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-earth-europe"></i> Objectius de Desenvolupament Sostenible (ODS)</h3>
+                <div class="chart-container-pie"><canvas id="chart-ods"></canvas></div>
+            </div>
+        </div>
+
+        <div class="section-header"><div class="section-number">2</div><div class="section-title-text">Concreció Curricular</div></div>
+        
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-stairs"></i> Objectius Generals d'Etapa</h3>
+                <div class="chart-container-pie"><canvas id="chart-obj"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-key"></i> Perfil d'Eixida</h3>
+                <div class="chart-container-bar"><canvas id="chart-perfil"></canvas></div>
+            </div>
+        </div>
+
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-bullseye"></i> Competències Específiques (CE)</h3>
+                <div class="chart-container-pie"><canvas id="chart-ce"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-list-ol"></i> Criteris d'Avaluació (CA) per Competència</h3>
+                <div class="chart-container-bar"><canvas id="chart-ca"></canvas></div>
+            </div>
+        </div>
+
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-layer-group"></i> Blocs de Continguts</h3>
+                <div class="chart-container-pie"><canvas id="chart-blocs"></canvas></div>
+            </div>
+            <div class="placeholder-box">
+                <i class="fa-solid fa-lightbulb"></i><span>Anàlisi de Sabers<br>(Properament)</span>
+            </div>
+        </div>
+
+        <div class="section-header"><div class="section-number">3</div><div class="section-title-text">Metodologia i Organització</div></div>
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-person-running"></i> Metodologies</h3>
+                <div class="chart-container-pie"><canvas id="chart-metodologia"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-users"></i> Agrupaments</h3>
+                <div class="chart-container-pie"><canvas id="chart-agrupaments"></canvas></div>
+            </div>
+        </div>
+
+        <div class="section-header"><div class="section-number">4</div><div class="section-title-text">Avaluació</div></div>
+        <div class="charts-grid-2">
+            <div class="chart-card">
+                <i class="fa-solid fa-magnifying-glass-plus zoom-btn" title="Ampliar Detalls" onclick="openZoomModal('instruments', 'Instruments d\'Avaluació')"></i>
+                <h3 class="chart-title"><i class="fa-solid fa-clipboard-check"></i> Instruments d'Avaluació</h3>
+                <div class="chart-container-bar-eval"><canvas id="chart-instruments"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fa-solid fa-chart-pie"></i> Tipus d'Avaluació</h3>
+                <div class="chart-container-bar-eval"><canvas id="chart-tipus"></canvas></div>
+            </div>
+        </div>
+
+        <div class="bottom-actions-bar" id="bottom-actions" style="display: none;">
+            <div class="btn-container">
+                <button class="action-btn btn-clear" id="btn-clear" title="Esborrar totes les dades"><i class="fa-solid fa-trash-can"></i></button>
+                <button class="action-btn btn-download" id="btn-download" title="Descarregar Informe PDF"><i class="fa-solid fa-download"></i></button>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div id="zoom-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="zoom-title"><i class="fa-solid fa-magnifying-glass"></i> Detalls Ampliats</h3>
+            <i class="fa-solid fa-xmark close-modal" onclick="closeZoomModal()"></i>
+        </div>
+        <div class="modal-body" id="zoom-body"></div>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // ESTAT I CONFIGURACIÓ DE COLORS
+    // ==========================================
+    let loadedSAs = [];
+    let chartInstances = {};
+    let globalTooltips = {}; 
+
+    const ceColorsArray = ['#9D85C0', '#78B5B9', '#789AD1', '#89BA77', '#CCAA54', '#D27979'];
+    const generalBgColors = ['#6B9596', '#9D85C0', '#78B5B9', '#CCAA54', '#D27979', '#789AD1', '#89BA77'];
+
+    // ==========================================
+    // INICIALITZACIÓ I ESDEVENIMENTS
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Restaurar estado guardado en sesión
+        const savedSAs = sessionStorage.getItem('dashboard_SAs');
+        if (savedSAs) {
+            try { loadedSAs = JSON.parse(savedSAs); } catch(e) {}
+        }
+
+        // Comprobar si venimos de editar un archivo
+        const editingFilename = sessionStorage.getItem('editing_filename');
+        if (editingFilename) {
+            const updatedStateRaw = localStorage.getItem('clickSA_state');
+            if (updatedStateRaw) {
+                try {
+                    const updatedState = JSON.parse(updatedStateRaw);
+                    const idx = loadedSAs.findIndex(s => s.filename === editingFilename);
+                    if (idx !== -1) {
+                        updatedState.filename = editingFilename;
+                        updatedState.saNum = updatedState.inputs?.['input-sa-num'] || '?';
+                        loadedSAs[idx] = updatedState;
+                    }
+                } catch(e) { console.error("Error al restaurar SA editada", e); }
+            }
+            sessionStorage.removeItem('editing_filename');
+            sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs)); // Save immediate update
+        }
+
+        document.getElementById('btn-dark-mode').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('dark-icon').className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            if (loadedSAs.length > 0) updateDashboard();
+        });
+
+        document.getElementById('upload-trigger').addEventListener('click', () => document.getElementById('file-upload').click());
+        document.getElementById('file-upload').addEventListener('change', handleFileSelect);
+
+        // Botonera de neteja i PDF
+        document.getElementById('btn-clear').addEventListener('click', clearAllData);
+        document.getElementById('btn-download').addEventListener('click', generatePDF);
+
+        makeFilesSortable(document.getElementById('file-list'));
+        
+        document.getElementById('zoom-modal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('zoom-modal')) closeZoomModal();
+        });
+
+        if (loadedSAs.length > 0) {
+            renderFileList();
+            updateDashboard();
+        }
+    });
+
+    // ==========================================
+    // BOTONERA: NETEJAR I EXPORTAR PDF
+    // ==========================================
+    function clearAllData() {
+        if(confirm("Estàs segur que vols esborrar totes les dades i gràfiques analitzades?")) {
+            loadedSAs = [];
+            renderFileList();
+            updateDashboard();
+        }
+    }
+
+    async function generatePDF() {
+        if (loadedSAs.length === 0) return;
+        const btn = document.getElementById('btn-download');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        const isDark = document.body.classList.contains('dark-mode');
+        const prevAnim = Chart.defaults.animation;
+        
+        // Preparem per al PDF (Mode clar, sense animacions per fer fotos ràpides i estables)
+        if (isDark) document.body.classList.remove('dark-mode');
+        Chart.defaults.animation = false;
+        
+        updateDashboard(); 
+        
+        // Esperem un instant per assegurar que el canvas s'ha redibuixat
+        await new Promise(r => setTimeout(r, 200));
+
+        // Helper per crear les "targetes" de les seccions del PDF
+        const buildSectionHeader = (title) => {
+            return {
+                table: { widths: ['*'], body: [ [ { text: title, style: 'sectionTitle', fillColor: '#6B9596', border: [false, false, false, false] } ] ] },
+                margin: [0, 15, 0, 15]
+            };
+        };
+
+        // Helper per encapsular les imatges de les gràfiques dins de taules amb vores
+        const getChartBlock = (title, id) => {
+            const imgData = chartInstances[id] ? chartInstances[id].toBase64Image() : null;
+            if (!imgData) {
+                return {
+                    table: { 
+                        widths: ['*'], 
+                        body: [ 
+                            [ {text: title.toUpperCase(), style: 'cardTitle', fillColor: '#F2F5F5', borderColor: ['#D5E0E0', '#D5E0E0', '#D5E0E0', '#D5E0E0']} ], 
+                            [ {text: 'Sense dades', alignment: 'center', margin: [0, 30, 0, 30], color: '#788F90', borderColor: ['#D5E0E0', '#D5E0E0', '#D5E0E0', '#D5E0E0']} ] 
+                        ] 
+                    },
+                    layout: { defaultBorder: false, hLineWidth: ()=>1, vLineWidth: ()=>1, hLineColor: ()=>'#D5E0E0', vLineColor: ()=>'#D5E0E0' },
+                    margin: [0, 0, 0, 0]
+                };
+            }
+            return {
+                table: {
+                    widths: ['*'],
+                    body: [
+                        [ {text: title.toUpperCase(), style: 'cardTitle', fillColor: '#F2F5F5', borderColor: ['#D5E0E0', '#D5E0E0', '#D5E0E0', '#D5E0E0']} ],
+                        [ {image: imgData, width: 345, alignment: 'center', margin: [0, 10, 0, 10], borderColor: ['#D5E0E0', '#D5E0E0', '#D5E0E0', '#D5E0E0']} ]
+                    ]
+                },
+                layout: { defaultBorder: false, hLineWidth: ()=>1, vLineWidth: ()=>1, hLineColor: ()=>'#D5E0E0', vLineColor: ()=>'#D5E0E0' },
+                margin: [0, 0, 0, 0]
+            };
+        };
+
+        // Helper per posar dos gràfiques en una fila "unbreakable" (Que no es trenquen entre pàgines)
+        const buildChartRow = (block1, block2) => {
+            return {
+                unbreakable: true,
+                columns: [ block1, block2 ],
+                columnGap: 15,
+                margin: [0, 0, 0, 15]
+            };
+        };
+
+        const docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'landscape',
+            pageMargins: [40, 40, 40, 40],
+            styles: {
+                header: { fontSize: 22, bold: true, color: '#2B3A3B', alignment: 'center' },
+                subheader: { fontSize: 10, bold: true, color: '#6B9596', alignment: 'center', margin: [0, 5, 0, 25] },
+                sectionTitle: { fontSize: 11, bold: true, color: '#FFFFFF', margin: [10, 6, 10, 6] },
+                cardTitle: { fontSize: 9, bold: true, color: '#2B3A3B', margin: [5, 6, 5, 6], alignment: 'center' },
+                tableLabel: { fontSize: 8, bold: true, color: '#788F90', alignment: 'center', margin: [2, 4, 2, 4] },
+                tableValue: { fontSize: 10, bold: true, color: '#2B3A3B', alignment: 'center', margin: [2, 6, 2, 6] }
+            },
+            content: [
+                { text: "PANELL D'ANÀLISI GLOBAL", style: 'header' },
+                { text: "RESUM DE LES SITUACIONS D'APRENENTATGE IMPORTADES", style: 'subheader' },
+                
+                // Taula resum global
+                {
+                    table: {
+                        widths: ['*', '*', '*', 'auto', 'auto'],
+                        body: [
+                            [ {text: 'ÀREA', style: 'tableLabel', fillColor: '#E6EDED'}, {text: 'CICLE', style: 'tableLabel', fillColor: '#E6EDED'}, {text: 'NIVELL', style: 'tableLabel', fillColor: '#E6EDED'}, {text: 'TOTAL S.A.', style: 'tableLabel', fillColor: '#E6EDED'}, {text: 'SESSIONS', style: 'tableLabel', fillColor: '#E6EDED'} ],
+                            [
+                                {text: document.getElementById('sum-area').innerText, style: 'tableValue'},
+                                {text: document.getElementById('sum-cicle').innerText, style: 'tableValue'},
+                                {text: document.getElementById('sum-nivell').innerText, style: 'tableValue'},
+                                {text: document.getElementById('sum-sa').innerText, style: 'tableValue', color: '#6B9596'},
+                                {text: document.getElementById('sum-sessions').innerText, style: 'tableValue', color: '#6B9596'}
+                            ]
+                        ]
+                    },
+                    layout: { hLineWidth: ()=>1, vLineWidth: ()=>1, hLineColor: ()=>'#D5E0E0', vLineColor: ()=>'#D5E0E0' },
+                    margin: [0, 0, 0, 20]
+                },
+
+                // Generació dels blocs utilitzant les funcions ajudades
+                buildSectionHeader('1. IDENTIFICACIÓ I CONTEXT'),
+                buildChartRow(
+                    getChartBlock('Objectius de Desenvolupament Sostenible (ODS)', 'chart-ods'),
+                    { text: '', width: '*' } // Manté l'ODS al mig sense expandir-se del tot (mig ample)
+                ),
+
+                buildSectionHeader('2. CONCRECIÓ CURRICULAR'),
+                buildChartRow(getChartBlock('Objectius Generals d\'Etapa', 'chart-obj'), getChartBlock('Perfil d\'Eixida', 'chart-perfil')),
+                buildChartRow(getChartBlock('Competències Específiques (CE)', 'chart-ce'), getChartBlock('Criteris d\'Avaluació (CA)', 'chart-ca')),
+                buildChartRow(getChartBlock('Blocs de Continguts', 'chart-blocs'), { text: '', width: '*' }),
+
+                buildSectionHeader('3. METODOLOGIA I ORGANITZACIÓ'),
+                buildChartRow(getChartBlock('Metodologies', 'chart-metodologia'), getChartBlock('Agrupaments', 'chart-agrupaments')),
+
+                buildSectionHeader('4. AVALUACIÓ'),
+                buildChartRow(getChartBlock('Instruments d\'Avaluació', 'chart-instruments'), getChartBlock('Tipus d\'Avaluació', 'chart-tipus'))
+            ]
+        };
+
+        pdfMake.createPdf(docDefinition).download("Analisi_Global_SA.pdf");
+
+        // Restaurar l'estat original (Tema i animacions)
+        if (isDark) document.body.classList.add('dark-mode');
+        Chart.defaults.animation = prevAnim;
+        updateDashboard();
+
+        btn.innerHTML = '<i class="fa-solid fa-download"></i>';
+    }
+
+    // ==========================================
+    // GESTIÓ DEL MODAL DE ZOOM
+    // ==========================================
+    function openZoomModal(chartId, title) {
+        document.getElementById('zoom-title').innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> ${title}`;
+        const modal = document.getElementById('zoom-modal');
+        const body = document.getElementById('zoom-body');
+        
+        const chart = chartInstances['chart-' + chartId];
+        if (!chart) return;
+
+        const labels = chart.data.labels;
+        const vals = chart.data.datasets[0].data;
+        
+        let items = labels.map((l, i) => ({ label: l, count: vals[i], tooltip: globalTooltips[l] }));
+        items.sort((a, b) => b.count - a.count);
+
+        let html = '';
+        items.forEach(item => {
+            let extraDesc = (item.tooltip && item.tooltip !== item.label) ? `<div class="zoom-item-desc">${item.tooltip}</div>` : '';
+            html += `
+                <div class="zoom-item">
+                    <div class="zoom-item-count">${item.count}</div>
+                    <div class="zoom-item-text">
+                        <div class="zoom-item-title">${item.label}</div>
+                        ${extraDesc}
+                    </div>
+                </div>`;
+        });
+
+        body.innerHTML = html || '<p style="color:var(--text-muted); text-align:center;">No hi ha dades disponibles.</p>';
+        modal.classList.add('show');
+    }
+
+    function closeZoomModal() {
+        document.getElementById('zoom-modal').classList.remove('show');
+    }
+
+    // ==========================================
+    // GESTIÓ DEL MODAL D'EDICIÓ
+    // ==========================================
+    // ==========================================
+    // GESTIÓ DE L'EDICIÓ
+    // ==========================================
+    function openEditModal(filename) {
+        const sa = loadedSAs.find(s => s.filename === filename);
+        if (!sa) return;
+        
+        try {
+            localStorage.setItem('clickSA_state', JSON.stringify(sa));
+            sessionStorage.setItem('editing_filename', filename);
+            window.location.href = 'index.html';
+        } catch(e) {
+            alert("No s'ha pogut obrir l'editor per restriccions de privacitat del navegador. Comprova si has bloquejat l'emmagatzematge local.");
+            console.error(e);
+        }
+    }
+
+    // ==========================================
+    // GESTIÓ DE FITXERS
+    // ==========================================
+    function handleFileSelect(event) {
+        const files = event.target.files;
+        if (!files.length) return;
+
+        Array.from(files).forEach(file => {
+            if (loadedSAs.some(sa => sa.filename === file.name)) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    if (jsonData.inputs && jsonData.tags) {
+                        jsonData.filename = file.name;
+                        jsonData.saNum = jsonData.inputs['input-sa-num'] || '?';
+                        loadedSAs.push(jsonData);
+                        renderFileList();
+                        updateDashboard();
+                    }
+                } catch (err) { console.error("Error llegint JSON", err); }
+            };
+            reader.readAsText(file);
+        });
+        event.target.value = '';
+    }
+
+    function removeSA(filename) {
+        loadedSAs = loadedSAs.filter(sa => sa.filename !== filename);
+        renderFileList();
+        updateDashboard();
+    }
+
+    function renderFileList() {
+        const container = document.getElementById('file-list');
+        container.innerHTML = '';
+        loadedSAs.forEach(sa => {
+            const el = document.createElement('div');
+            el.className = 'file-square'; 
+            el.dataset.filename = sa.filename;
+            el.draggable = true;
+            el.innerHTML = `
+                <i class="fa-regular fa-file-lines"></i>
+                <span class="file-square-text">SA</span>
+                <span class="file-square-num">${sa.saNum}</span>
+                <div class="hover-overlay">
+                    <i class="fa-solid fa-pen hover-btn hover-btn-edit" onclick="openEditModal('${sa.filename}')" title="Editar SA"></i>
+                    <i class="fa-solid fa-trash-can hover-btn hover-btn-del" onclick="removeSA('${sa.filename}')" title="Eliminar SA"></i>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+    }
+
+    // DRAG & DROP PER ORDENAR SA
+    function makeFilesSortable(container) {
+        let drg = null;
+        container.addEventListener('dragstart', e => { 
+            const target = e.target.closest('.file-square');
+            if(target) { drg = target; target.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; } 
+        });
+        container.addEventListener('dragend', e => { 
+            const target = e.target.closest('.file-square');
+            if(target) { target.classList.remove('dragging'); drg = null; syncArrayOrder(); } 
+        });
+        container.addEventListener('dragover', e => {
+            e.preventDefault(); if(!drg) return;
+            const after = [...container.querySelectorAll('.file-square:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect(), offset = e.clientX - box.left - box.width / 2;
+                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            if (drg.nextElementSibling !== after) {
+                after == null ? container.appendChild(drg) : container.insertBefore(drg, after);
+            }
+        });
+    }
+
+    function syncArrayOrder() {
+        const newOrder = [];
+        document.querySelectorAll('.file-square').forEach(el => {
+            const sa = loadedSAs.find(s => s.filename === el.dataset.filename);
+            if (sa) newOrder.push(sa);
+        });
+        loadedSAs = newOrder;
+        updateDashboard();
+    }
+
+    // ==========================================
+    // LÒGICA DE DADES I GRÀFIQUES 
+    // ==========================================
+    function sortDataDict(dict) {
+        const sortedKeys = Object.keys(dict).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+        const newDict = {};
+        sortedKeys.forEach(k => newDict[k] = dict[k]);
+        return newDict;
+    }
+
+    function updateDashboard() {
+        sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs));
+        const bottomActions = document.getElementById('bottom-actions');
+
+        if (loadedSAs.length === 0) {
+            document.getElementById('dashboard-content').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'block';
+            bottomActions.style.display = 'none';
+            return;
+        }
+        document.getElementById('dashboard-content').style.display = 'block';
+        document.getElementById('empty-state').style.display = 'none';
+        bottomActions.style.display = 'flex'; 
+
+        const isDark = document.body.classList.contains('dark-mode');
+        Chart.defaults.color = isDark ? '#E8EEEE' : '#3A4B4C';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        const gridColor = isDark ? '#374849' : '#D5E0E0';
+
+        let data = { ods: {}, obj: {}, perfil: {}, ce: {}, ca: {}, blocs: {}, met: {}, agr: {}, inst: {}, tipus: {} };
+        globalTooltips = {};
+
+        let setAreas = new Set();
+        let setCicles = new Set();
+        let setNivells = new Set();
+        let countSessions = 0;
+
+        const parseTags = (tagArray, regex, dict, limitStr = false) => {
+            if(!tagArray) return;
+            tagArray.forEach(text => {
+                let match = regex ? text.match(regex) : null;
+                let rawLabel = match ? match[0].trim() : text.split(' - ')[0].trim();
+                let label = (limitStr && rawLabel.length > 25) ? rawLabel.substring(0, 25) + '...' : rawLabel;
+                
+                if(label.toUpperCase().startsWith('ODS')) label = label.toUpperCase();
+
+                dict[label] = (dict[label] || 0) + 1;
+                globalTooltips[label] = text; 
+            });
+        };
+
+        loadedSAs.forEach(sa => {
+            if (sa.selects['input-area'] && sa.selects['input-area'] !== '-') setAreas.add(sa.selects['input-area']);
+            if (sa.selects['input-cicle'] && sa.selects['input-cicle'] !== '-') setCicles.add(sa.selects['input-cicle']);
+            if (sa.selects['input-curs'] && sa.selects['input-curs'] !== '-') setNivells.add(sa.selects['input-curs']);
+            
+            if (sa.sequence && Array.isArray(sa.sequence)) {
+                sa.sequence.forEach(step => countSessions += (step.sessions || 0));
+            }
+
+            sa.perfilEixida?.forEach(desc => {
+                data.perfil[desc] = (data.perfil[desc] || 0) + 1;
+                globalTooltips[desc] = `Descriptor Operatiu: ${desc}`;
+            });
+
+            parseTags(sa.tags['tags-ods'], /ODS\s*\d+/i, data.ods);
+            parseTags(sa.tags['tags-obj-gen'], /^[a-z]\)/i, data.obj);
+            parseTags(sa.tags['tags-comp-espec'], /CE\s*\d+/i, data.ce);
+            parseTags(sa.tags['tags-criteris'], /CA\s*\d+(?:\.\d+)?/i, data.ca);
+            parseTags(sa.tags['tags-blocs'], /BL\s*\d+/i, data.blocs);
+            
+            parseTags(sa.tags['tags-metodologia'], null, data.met, true);
+            parseTags(sa.tags['tags-agrupaments'], null, data.agr, true);
+            parseTags(sa.tags['tags-instruments'], null, data.inst, true);
+            parseTags(sa.tags['tags-tipus-avaluacio'], null, data.tipus, true);
+        });
+
+        document.getElementById('sum-area').innerText = setAreas.size > 0 ? Array.from(setAreas).join(', ') : '-';
+        document.getElementById('sum-cicle').innerText = setCicles.size > 0 ? Array.from(setCicles).join(', ') : '-';
+        document.getElementById('sum-nivell').innerText = setNivells.size > 0 ? Array.from(setNivells).join(', ') : '-';
+        document.getElementById('sum-sa').innerText = loadedSAs.length;
+        document.getElementById('sum-sessions').innerText = countSessions;
+
+        data.ods = sortDataDict(data.ods);
+        data.obj = sortDataDict(data.obj);
+        data.perfil = sortDataDict(data.perfil);
+        data.ce = sortDataDict(data.ce);
+        data.ca = sortDataDict(data.ca);
+        data.blocs = sortDataDict(data.blocs);
+
+        const buildChart = (id, type, dataDict, extraOpts = {}) => {
+            if (chartInstances[id]) chartInstances[id].destroy();
+            
+            const labels = Object.keys(dataDict);
+            const vals = Object.values(dataDict);
+            let dataset = { data: vals, borderWidth: 1 };
+            
+            if (id === 'chart-ce' || id === 'chart-ca') {
+                dataset.backgroundColor = labels.map(label => {
+                    let m = label.match(/(?:CE|CA)\s*(\d+)/i);
+                    if (m) {
+                        let idx = (parseInt(m[1]) - 1) % ceColorsArray.length;
+                        return type === 'polarArea' ? ceColorsArray[idx] + 'CC' : ceColorsArray[idx];
+                    }
+                    return '#9CA3AF';
+                });
+            } else {
+                dataset.backgroundColor = labels.map((_, i) => generalBgColors[i % generalBgColors.length]);
+            }
+
+            if (type === 'doughnut' || type === 'polarArea') {
+                dataset.borderColor = isDark ? '#263031' : '#FFFFFF';
+                dataset.borderWidth = 2;
+            } else if (type === 'bar') {
+                dataset.borderRadius = 4;
+            }
+
+            const config = {
+                type: type,
+                data: { labels: labels, datasets: [dataset] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            display: (type === 'doughnut' || type === 'polarArea'), 
+                            position: 'right',
+                            labels: { boxWidth: 10, font: { size: 10 }, padding: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (ctx) => globalTooltips[ctx[0].label] || ctx[0].label,
+                                label: (ctx) => ` Freqüència d'ús: ${ctx.raw}`
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (type === 'polarArea') {
+                config.options.scales = { r: { ticks: { stepSize: 1, display: false }, grid: { color: gridColor } } };
+            } else if (type === 'bar') {
+                if (extraOpts.indexAxis === 'y') {
+                    config.options.scales = { 
+                        x: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { color: gridColor } },
+                        y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                    };
+                } else {
+                    config.options.scales = { 
+                        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { color: gridColor } },
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                    };
+                }
+            }
+            
+            Object.assign(config.options, extraOpts);
+            chartInstances[id] = new Chart(document.getElementById(id), config);
+        };
+
+        buildChart('chart-ods', 'doughnut', data.ods);
+        buildChart('chart-obj', 'doughnut', data.obj);
+        buildChart('chart-perfil', 'bar', data.perfil); 
+        buildChart('chart-ce', 'doughnut', data.ce); 
+        buildChart('chart-ca', 'bar', data.ca);       
+        buildChart('chart-blocs', 'doughnut', data.blocs);
+        buildChart('chart-metodologia', 'doughnut', data.met);
+        buildChart('chart-agrupaments', 'doughnut', data.agr);
+        buildChart('chart-instruments', 'bar', data.inst, { indexAxis: 'y' });
+        buildChart('chart-tipus', 'bar', data.tipus, { indexAxis: 'y' });
+    }
+</script>
+</body>
+</html>

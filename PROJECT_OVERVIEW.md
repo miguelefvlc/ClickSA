@@ -35,7 +35,7 @@ L'idioma principal de la interfície és el **català/valencià**.
 ## Funcionalitats i Lògica de Negoci
 L'aplicació es divideix en 6 blocs principals o "pestanyes":
 1. **Identificació i Context**: Permet escollir Àrea, Cicle, Nivell, establir la temporalització en un calendari anual, posar títol, ODS, repte i producte final.
-2. **Concreció Curricular**: Permet escollir objectius, perfil d'eixida, competències específiques, criteris d'avaluació, blocs de continguts i sabers bàsics. Aquesta secció interactua amb `api.js` per carregar contingut i amb `curriculum.js` per fer mapatges o enllaços de sabers (colors depenent de l'element). Permet definir Indicadors d'Assoliment.
+2. **Concreció Curricular**: Permet escollir objectius, perfil d'eixida, competències específiques, criteris d'avaluació, blocs de continguts i sabers bàsics. Aquesta secció interactua amb `api.js` per carregar contingut i amb `curriculum.js` per fer mapatges o enllaços de sabers (colors depenent de l'element), comptant amb una desactivació en cascada intel·ligent. Permet definir Indicadors d'Assoliment.
 3. **Metodologia i Organització**: Agrupaments, espais, i models metodològics.
 4. **Avaluació**: Instruments i tipus d'avaluació.
 5. **Mesures per a l'atenció educativa**: Inclou el DUA (Disseny Universal per a l'Aprenentatge) en Representació, Acció i Motivació, a més de permetre afegir destinataris particulars (alumnes NESE).
