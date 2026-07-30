@@ -239,3 +239,37 @@ body.dark-mode .btn-eval-a.active { box-shadow: 0 0 5px rgba(158, 194, 195, 0.4)
     color: var(--accent);
     transform: scale(1.15) rotate(90deg);
 }
+/* =========================================================
+   ZONA DE CARGA Y LISTA DE SA (Compartido Dashboard e Index)
+========================================================= */
+.upload-zone {
+    background: var(--card-bg); padding: 10px 15px; border-radius: var(--radius);
+    border: 1.5px dashed var(--accent); text-align: center; margin-bottom: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s ease;
+}
+.upload-zone:hover { background: rgba(107, 149, 150, 0.05); }
+.upload-zone i { font-size: 1.1rem; color: var(--accent); }
+.upload-zone span { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+
+.file-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; min-height: 60px; }
+
+.file-square {
+    width: 65px; height: 65px; background: var(--card-bg); border: 1.5px solid var(--border);
+    border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; position: relative; overflow: hidden; box-shadow: var(--shadow);
+    animation: fadeIn 0.2s ease;
+}
+
+.file-square i.fa-file-lines { font-size: 1.2rem; color: var(--text-muted); opacity: 0.6; margin-bottom: 2px; }
+.file-square-text { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; line-height: 1; }
+.file-square-num { font-size: 1.1rem; font-weight: 900; color: var(--accent); line-height: 1; margin-top: 2px; }
+
+.file-square-del {
+    position: absolute; top: 4px; right: 4px;
+    width: 18px; height: 18px; background: rgba(198, 139, 135, 0.2); color: #C68B87;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; cursor: pointer; transition: all 0.2s ease; opacity: 0;
+}
+.file-square:hover .file-square-del { opacity: 1; }
+.file-square-del:hover { background: #C68B87; color: #FFF; transform: scale(1.1); }

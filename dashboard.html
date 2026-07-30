@@ -64,39 +64,7 @@
         /* ZONA DE CARGA Y LISTA DE SA */
         .upload-zone {
             background: var(--card-bg); padding: 10px 15px; border-radius: var(--radius);
-            border: 1.5px dashed var(--accent); text-align: center; margin-bottom: 12px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: background 0.2s ease;
-        }
-        .upload-zone:hover { background: rgba(107, 149, 150, 0.05); }
-        .upload-zone i { font-size: 1.1rem; color: var(--accent); }
-        .upload-zone span { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
-
-        .file-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; min-height: 60px; }
-        
-        .file-square {
-            width: 65px; height: 65px; background: var(--card-bg); border: 1.5px solid var(--border);
-            border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: grab; position: relative; overflow: hidden; box-shadow: var(--shadow);
-            animation: fadeIn 0.2s ease;
-        }
-        .file-square:active { cursor: grabbing; }
-        .file-square.dragging { opacity: 0.4; transform: scale(1.05); }
-        
-        .file-square i.fa-file-lines { font-size: 1.2rem; color: var(--text-muted); opacity: 0.6; margin-bottom: 2px; }
-        .file-square-text { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; line-height: 1; }
-        .file-square-num { font-size: 1.1rem; font-weight: 900; color: var(--accent); line-height: 1; margin-top: 2px; }
-        
-        .file-square .hover-overlay {
-            position: absolute; inset: 0; background: rgba(43, 58, 59, 0.85); color: white;
-            display: flex; align-items: center; justify-content: space-evenly;
-            opacity: 0; transition: opacity 0.2s ease;
-        }
-        .file-square:hover .hover-overlay { opacity: 1; }
-        .hover-btn { cursor: pointer; font-size: 1.1rem; padding: 5px; transition: transform 0.2s, color 0.2s; }
-        .hover-btn:hover { transform: scale(1.1); }
-        .hover-btn-edit { color: #9EC2C3; }
-        .hover-btn-del { color: #C68B87; }
+            border: 1.5px dashed var(--accent); text-align: center }
 
         /* DASHBOARD Y GRÁFICAS COMPACTAS */
         .section-header { display: flex; align-items: center; gap: 10px; margin: 15px 0 10px 0; border-bottom: 2px solid var(--border); padding-bottom: 5px; }
@@ -187,7 +155,7 @@
     <input type="file" id="file-upload" accept=".json" multiple style="display: none;">
     <div class="upload-zone" id="upload-trigger">
         <i class="fa-solid fa-file-import"></i>
-        <span>Carregar fitxers de Situacions d'Aprenentatge (.json)</span>
+        <span>Importar Situacions d'Aprenentatge</span>
     </div>
 
     <div class="file-grid" id="file-list"></div>
@@ -600,16 +568,21 @@
             const el = document.createElement('div');
             el.className = 'file-square'; 
             el.dataset.filename = sa.filename;
-            el.draggable = true;
             el.innerHTML = `
-                <i class="fa-regular fa-file-lines"></i>
-                <span class="file-square-text">SA</span>
-                <span class="file-square-num">${sa.saNum}</span>
-                <div class="hover-overlay">
-                    <i class="fa-solid fa-pen hover-btn hover-btn-edit" onclick="openEditModal('${sa.filename}')" title="Editar SA"></i>
-                    <i class="fa-solid fa-trash-can hover-btn hover-btn-del" onclick="removeSA('${sa.filename}')" title="Eliminar SA"></i>
-                </div>
+                <div class="file-square-del" title="Eliminar SA"><i class="fa-solid fa-xmark"></i></div>
+                <i class="fa-solid fa-file-lines"></i>
+                <div class="file-square-text">SA</div>
+                <div class="file-square-num">${sa.saNum}</div>
             `;
+            
+            el.addEventListener('click', () => {
+                openEditModal(sa.filename);
+            });
+            
+            el.querySelector('.file-square-del').addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeSA(sa.filename);
+            });
             container.appendChild(el);
         });
     }

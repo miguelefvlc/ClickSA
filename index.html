@@ -21,12 +21,19 @@
 <main class="container">
     <header>
         <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
-        <button class="header-icon-btn" id="btn-import-trigger" title="Importar fitxer JSON previ"><i class="fa-solid fa-file-import"></i></button>
         <a href="dashboard.html" class="header-icon-btn" id="btn-dashboard" title="Panell d'Anàlisi Global"><i class="fa-solid fa-chart-pie"></i></a>
         <h1>Click<span>SA</span><i class="fa-solid fa-arrow-pointer"></i></h1>
         <h2>Dissenyador de situacions d'aprenentatge</h2>
-        <div id="loading-msg" style="color:var(--accent); font-weight:bold; margin-top:10px;"></div>
     </header>
+
+    <div id="loading-msg" style="color:var(--accent); font-weight:bold; margin-bottom:15px; text-align:center;"></div>
+
+    <input type="file" id="file-upload" accept=".json" multiple style="display: none;">
+    <div class="upload-zone" id="upload-trigger">
+        <i class="fa-solid fa-file-import"></i>
+        <span>Importar Situacions d'Aprenentatge</span>
+    </div>
+    <div class="file-grid" id="file-list"></div>
 
     <section class="section-container" id="container-block-1">
         <div class="section-header toggle-section" data-target="block-1">

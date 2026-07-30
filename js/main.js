@@ -111,8 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectEl('btn-export-pdf')?.addEventListener('click', generatePDF);
     selectEl('btn-export-json')?.addEventListener('click', generateJSON);
     selectEl('btn-clear')?.addEventListener('click', clearState);
-    selectEl('btn-import-trigger')?.addEventListener('click', () => selectEl('file-import').click());
-    selectEl('file-import')?.addEventListener('change', importJSON);
+    setupFileManager();
     
     // Modal controls
     selectEl('btn-close-export')?.addEventListener('click', () => selectEl('export-modal').classList.remove('show'));
@@ -155,4 +154,97 @@ function setupTooltipListeners() {
             saveState();
         }
     });
+}
+
+
+function setupFileManager() {
+    const uploadTrigger = document.getElementById('upload-trigger');
+    const fileUpload = document.getElementById('file-upload');
+    const fileList = document.getElementById('file-list');
+    if (!uploadTrigger || !fileUpload || !fileList) return;
+
+    uploadTrigger.addEventListener('click', () => fileUpload.click());
+    fileUpload.addEventListener('change', handleFiles);
+
+    renderSAs();
+
+    function handleFiles(event) {
+        const files = event.target.files;
+        if (!files.length) return;
+        
+        let SAs = getSessionSAs();
+
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = evt => {
+                try {
+                    const content = JSON.parse(evt.target.result);
+                    if (content) {
+                        content.filename = file.name;
+                        content.saNum = content.inputs?.['input-sa-num'] || '?';
+                        const existingIdx = SAs.findIndex(s => s.filename === file.name);
+                        if (existingIdx >= 0) SAs[existingIdx] = content;
+                        else SAs.push(content);
+                        
+                        saveSessionSAs(SAs);
+                        renderSAs();
+                    }
+                } catch(e) {}
+            };
+            reader.readAsText(file);
+        });
+        event.target.value = '';
+    }
+
+    function renderSAs() {
+        const SAs = getSessionSAs();
+        fileList.innerHTML = '';
+        if(SAs.length === 0) return;
+        
+        SAs.forEach(sa => {
+            const square = document.createElement('div');
+            square.className = 'file-square';
+            square.innerHTML = `
+                <div class="file-square-del" title="Eliminar SA"><i class="fa-solid fa-xmark"></i></div>
+                <i class="fa-solid fa-file-lines"></i>
+                <div class="file-square-text">SA</div>
+                <div class="file-square-num">${sa.saNum}</div>
+            `;
+            
+            square.addEventListener('click', (e) => {
+                e.stopPropagation();
+                loadSAIntoEditor(sa);
+            });
+            
+            square.querySelector('.file-square-del').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const currentSAs = getSessionSAs();
+                saveSessionSAs(currentSAs.filter(s => s.filename !== sa.filename));
+                renderSAs();
+            });
+            
+            fileList.appendChild(square);
+        });
+    }
+
+    function getSessionSAs() {
+        const str = sessionStorage.getItem('dashboard_SAs');
+        return str ? JSON.parse(str) : [];
+    }
+    function saveSessionSAs(sas) {
+        sessionStorage.setItem('dashboard_SAs', JSON.stringify(sas));
+    }
+    
+    function loadSAIntoEditor(sa) {
+        sa.inputs = sa.inputs || {};
+        sa.selects = sa.selects || {};
+        sa.tags = sa.tags || {};
+        sa.destinataris = sa.destinataris || [];
+        sa.sequence = sa.sequence || [];
+        sa.temporalitzacio = sa.temporalitzacio || [];
+        
+        localStorage.setItem('clickSA_state', JSON.stringify(sa));
+        sessionStorage.setItem('editing_filename', sa.filename);
+        window.location.reload();
+    }
 }
