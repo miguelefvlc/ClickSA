@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<script>
+    if (localStorage.getItem('global_dark_mode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 <main class="container">
     <header>

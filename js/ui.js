@@ -6,7 +6,9 @@ import { getAreaActiva, getCicleActiu, establecerConexionesSaber, establecerCone
 
 export function toggleDarkMode() {
     document.body.classList.toggle('dark-mode'); 
-    selectEl('dark-icon').className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    const isDark = document.body.classList.contains('dark-mode');
+    selectEl('dark-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    localStorage.setItem('global_dark_mode', isDark ? 'true' : 'false');
 }
 
 export function toggleBlock(id) { 

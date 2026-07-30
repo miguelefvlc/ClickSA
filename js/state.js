@@ -14,7 +14,7 @@ export const AppState = {
 };
 
 export function getStateObject() {
-    const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [], darkMode: document.body.classList.contains('dark-mode'), disabledBlocks: [] };
+    const state = { inputs: {}, selects: {}, tags: {}, destinataris: [], sequence: [], disabledBlocks: [] };
     
     ['input-sa-num', 'input-sa-title', 'input-repte', 'input-tasca', 'input-materials'].forEach(id => state.inputs[id] = selectEl(id)?.value || "");
     ['input-area', 'input-cicle', 'input-curs', 'input-trimestre'].forEach(id => {
@@ -92,7 +92,6 @@ export async function restoreState() {
     try {
         AppState.isRestoring = true;
         const state = JSON.parse(savedStr) || {};
-        if (state.darkMode && !document.body.classList.contains('dark-mode')) toggleDarkMode();
         
         Object.keys(state.inputs || {}).forEach(id => { if (selectEl(id)) selectEl(id).value = state.inputs[id]; });
         

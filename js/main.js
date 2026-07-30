@@ -7,6 +7,12 @@ import { generatePDF, generateJSON, importJSON } from './export.js';
 import { recalcularTotaLaCadena, updateCellVisual } from './curriculum.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    if (document.body.classList.contains('dark-mode')) {
+        selectEl('dark-icon').className = 'fa-solid fa-sun';
+    } else {
+        selectEl('dark-icon').className = 'fa-solid fa-moon';
+    }
+
     fetchDiversitat();
     inicialitzarDesplegablesIncials();
     setupTooltipListeners();
@@ -17,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     addSaveListener('input, textarea', 'input');
     
     // Configurar listeners básicos
-    selectEl('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); saveState(); });
+    selectEl('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); });
     selectEl('btn-toggle-t')?.addEventListener('click', toggleTransversals);
     queryAll('.toggle-section').forEach(btn => btn.addEventListener('click', e => { 
         if(e.target.closest('.btn-toggle-block')) return; 
