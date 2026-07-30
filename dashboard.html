@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/components.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
@@ -544,7 +545,20 @@
                     if (jsonData.inputs && jsonData.tags) {
                         jsonData.filename = file.name;
                         jsonData.saNum = jsonData.inputs['input-sa-num'] || '?';
-                        loadedSAs.push(jsonData);
+                        
+                        const existingIdx = loadedSAs.findIndex(s => s.filename === file.name);
+                        if (existingIdx >= 0) loadedSAs[existingIdx] = jsonData;
+                        else loadedSAs.push(jsonData);
+                        
+                        loadedSAs.sort((a, b) => {
+                            let numA = parseInt(a.saNum, 10);
+                            let numB = parseInt(b.saNum, 10);
+                            if (isNaN(numA)) numA = 9999;
+                            if (isNaN(numB)) numB = 9999;
+                            return numA - numB;
+                        });
+                        
+                        saveSAsToStorage();
                         renderFileList();
                         updateDashboard();
                     }

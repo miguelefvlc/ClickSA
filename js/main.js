@@ -186,6 +186,14 @@ function setupFileManager() {
                         if (existingIdx >= 0) SAs[existingIdx] = content;
                         else SAs.push(content);
                         
+                        SAs.sort((a, b) => {
+                            let numA = parseInt(a.saNum, 10);
+                            let numB = parseInt(b.saNum, 10);
+                            if (isNaN(numA)) numA = 9999;
+                            if (isNaN(numB)) numB = 9999;
+                            return numA - numB;
+                        });
+                        
                         saveSessionSAs(SAs);
                         renderSAs();
                     }
