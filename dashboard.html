@@ -145,9 +145,11 @@
 </head>
 <body>
 <script>
-    if (localStorage.getItem('global_dark_mode') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
+    try {
+        if (localStorage.getItem('global_dark_mode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    } catch(e) {}
 </script>
 
 <main class="container">
@@ -292,37 +294,49 @@
             document.getElementById('dark-icon').className = 'fa-solid fa-moon';
         }
         
-        loadSAsFromStorage();
-        // Restaurar estado guardado en sesión
-        const savedSAs = sessionStorage.getItem('dashboard_SAs');
+        let savedSAs = null;
+        try { savedSAs = sessionStorage.getItem('dashboard_SAs'); } catch(e) {}
+        
         if (savedSAs) {
-            try { loadedSAs = JSON.parse(savedSAs); } catch(e) {}
+            try { 
+                const parsed = JSON.parse(savedSAs); 
+                if (Array.isArray(parsed)) {
+                    loadedSAs = parsed.filter(s => s && typeof s === 'object');
+                }
+            } catch(e) {}
         }
+        if (!Array.isArray(loadedSAs)) loadedSAs = [];
 
         // Comprobar si venimos de editar un archivo
-        const editingFilename = sessionStorage.getItem('editing_filename');
+        let editingFilename = null;
+        try { editingFilename = sessionStorage.getItem('editing_filename'); } catch(e) {}
+        
         if (editingFilename) {
-            const updatedStateRaw = localStorage.getItem('clickSA_state');
+            let updatedStateRaw = null;
+            try { updatedStateRaw = localStorage.getItem('clickSA_state'); } catch(e) {}
+            
             if (updatedStateRaw) {
                 try {
                     const updatedState = JSON.parse(updatedStateRaw);
-                    const idx = loadedSAs.findIndex(s => s.filename === editingFilename);
-                    if (idx !== -1) {
-                        updatedState.filename = editingFilename;
-                        updatedState.saNum = updatedState.inputs?.['input-sa-num'] || '?';
-                        loadedSAs[idx] = updatedState;
+                    if (updatedState && typeof updatedState === 'object') {
+                        const idx = loadedSAs.findIndex(s => s && s.filename === editingFilename);
+                        if (idx >= 0) {
+                            loadedSAs[idx] = updatedState;
+                        }
                     }
-                } catch(e) { console.error("Error al restaurar SA editada", e); }
+                } catch(e) { console.error("Error aplicant actualització del dashboard", e); }
             }
-            sessionStorage.removeItem('editing_filename');
-            sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs)); // Save immediate update
+            try {
+                sessionStorage.removeItem('editing_filename');
+                sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs)); // Save immediate update
+            } catch(e) {}
         }
 
         document.getElementById('btn-dark-mode').addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             document.getElementById('dark-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-            localStorage.setItem('global_dark_mode', isDark ? 'true' : 'false');
+            try { localStorage.setItem('global_dark_mode', isDark ? 'true' : 'false'); } catch(e) {}
             if (loadedSAs.length > 0) updateDashboard();
         });
         
@@ -363,6 +377,7 @@
     function clearAllData() {
         if(confirm("Estàs segur que vols esborrar totes les dades i gràfiques analitzades?")) {
             loadedSAs = [];
+            saveSAsToStorage();
             renderFileList();
             updateDashboard();
         }
@@ -536,9 +551,6 @@
     }
 
     // ==========================================
-    // GESTIÓ DEL MODAL D'EDICIÓ
-    // ==========================================
-    // ==========================================
     // GESTIÓ DE L'EDICIÓ
     // ==========================================
     function openEditModal(filename) {
@@ -546,8 +558,17 @@
         if (!sa) return;
         
         try {
-            localStorage.setItem('clickSA_state', JSON.stringify(sa));
-            sessionStorage.setItem('editing_filename', filename);
+            sa.inputs = sa.inputs || {};
+            sa.selects = sa.selects || {};
+            sa.tags = sa.tags || {};
+            sa.destinataris = sa.destinataris || [];
+            sa.sequence = sa.sequence || [];
+            sa.temporalitzacio = sa.temporalitzacio || [];
+            
+            try {
+                localStorage.setItem('clickSA_state', JSON.stringify(sa));
+                sessionStorage.setItem('editing_filename', filename);
+            } catch(e) {}
             window.location.href = 'index.html';
         } catch(e) {
             alert("No s'ha pogut obrir l'editor per restriccions de privacitat del navegador. Comprova si has bloquejat l'emmagatzematge local.");
@@ -567,17 +588,17 @@
             reader.onload = (e) => {
                 try {
                     const jsonData = JSON.parse(e.target.result);
-                    if (jsonData.inputs && jsonData.tags) {
+                    if (jsonData) {
                         jsonData.filename = file.name;
-                        jsonData.saNum = jsonData.inputs['input-sa-num'] || '?';
+                        jsonData.saNum = (jsonData.inputs && jsonData.inputs['input-sa-num']) ? jsonData.inputs['input-sa-num'] : '?';
                         
-                        const existingIdx = loadedSAs.findIndex(s => s.filename === file.name);
+                        const existingIdx = loadedSAs.findIndex(s => s && s.filename === file.name);
                         if (existingIdx >= 0) loadedSAs[existingIdx] = jsonData;
                         else loadedSAs.push(jsonData);
                         
                         loadedSAs.sort((a, b) => {
-                            let numA = parseInt(a.saNum, 10);
-                            let numB = parseInt(b.saNum, 10);
+                            let numA = parseInt(a && a.saNum, 10);
+                            let numB = parseInt(b && b.saNum, 10);
                             if (isNaN(numA)) numA = 9999;
                             if (isNaN(numB)) numB = 9999;
                             return numA - numB;
@@ -595,7 +616,8 @@
     }
 
     function removeSA(filename) {
-        loadedSAs = loadedSAs.filter(sa => sa.filename !== filename);
+        loadedSAs = loadedSAs.filter(sa => sa && sa.filename !== filename);
+        saveSAsToStorage();
         renderFileList();
         updateDashboard();
     }
@@ -656,6 +678,7 @@
             if (sa) newOrder.push(sa);
         });
         loadedSAs = newOrder;
+        saveSAsToStorage();
         updateDashboard();
     }
 
@@ -669,8 +692,11 @@
         return newDict;
     }
 
+    function saveSAsToStorage() {
+        try { sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs)); } catch(e) {}
+    }
+
     function updateDashboard() {
-        sessionStorage.setItem('dashboard_SAs', JSON.stringify(loadedSAs));
         const bottomActions = document.getElementById('bottom-actions');
 
         if (loadedSAs.length === 0) {
@@ -711,29 +737,31 @@
         };
 
         loadedSAs.forEach(sa => {
-            if (sa.selects['input-area'] && sa.selects['input-area'] !== '-') setAreas.add(sa.selects['input-area']);
-            if (sa.selects['input-cicle'] && sa.selects['input-cicle'] !== '-') setCicles.add(sa.selects['input-cicle']);
-            if (sa.selects['input-curs'] && sa.selects['input-curs'] !== '-') setNivells.add(sa.selects['input-curs']);
+            if (sa.selects && sa.selects['input-area'] && sa.selects['input-area'] !== '-') setAreas.add(sa.selects['input-area']);
+            if (sa.selects && sa.selects['input-cicle'] && sa.selects['input-cicle'] !== '-') setCicles.add(sa.selects['input-cicle']);
+            if (sa.selects && sa.selects['input-curs'] && sa.selects['input-curs'] !== '-') setNivells.add(sa.selects['input-curs']);
             
             if (sa.sequence && Array.isArray(sa.sequence)) {
                 sa.sequence.forEach(step => countSessions += (step.sessions || 0));
             }
 
-            sa.perfilEixida?.forEach(desc => {
-                data.perfil[desc] = (data.perfil[desc] || 0) + 1;
-                globalTooltips[desc] = `Descriptor Operatiu: ${desc}`;
-            });
+            if (sa.perfilEixida) {
+                sa.perfilEixida.forEach(desc => {
+                    data.perfil[desc] = (data.perfil[desc] || 0) + 1;
+                    globalTooltips[desc] = `Descriptor Operatiu: ${desc}`;
+                });
+            }
 
-            parseTags(sa.tags['tags-ods'], /ODS\s*\d+/i, data.ods);
-            parseTags(sa.tags['tags-obj-gen'], /^[a-z]\)/i, data.obj);
-            parseTags(sa.tags['tags-comp-espec'], /CE\s*\d+/i, data.ce);
-            parseTags(sa.tags['tags-criteris'], /CA\s*\d+(?:\.\d+)?/i, data.ca);
-            parseTags(sa.tags['tags-blocs'], /BL\s*\d+/i, data.blocs);
+            parseTags(sa.tags ? sa.tags['tags-ods'] : null, /ODS\s*\d+/i, data.ods);
+            parseTags(sa.tags ? sa.tags['tags-obj-gen'] : null, /^[a-z]\)/i, data.obj);
+            parseTags(sa.tags ? sa.tags['tags-comp-espec'] : null, /CE\s*\d+/i, data.ce);
+            parseTags(sa.tags ? sa.tags['tags-criteris'] : null, /CA\s*\d+(?:\.\d+)?/i, data.ca);
+            parseTags(sa.tags ? sa.tags['tags-blocs'] : null, /BL\s*\d+/i, data.blocs);
             
-            parseTags(sa.tags['tags-metodologia'], null, data.met, true);
-            parseTags(sa.tags['tags-agrupaments'], null, data.agr, true);
-            parseTags(sa.tags['tags-instruments'], null, data.inst, true);
-            parseTags(sa.tags['tags-tipus-avaluacio'], null, data.tipus, true);
+            parseTags(sa.tags ? sa.tags['tags-metodologia'] : null, null, data.met, true);
+            parseTags(sa.tags ? sa.tags['tags-agrupaments'] : null, null, data.agr, true);
+            parseTags(sa.tags ? sa.tags['tags-instruments'] : null, null, data.inst, true);
+            parseTags(sa.tags ? sa.tags['tags-tipus-avaluacio'] : null, null, data.tipus, true);
         });
 
         document.getElementById('sum-area').innerText = setAreas.size > 0 ? Array.from(setAreas).join(', ') : '-';

@@ -215,19 +215,82 @@ export function addTag(val, containerId) {
     } else {
         tag.className = 'tag'; tag.draggable = true;
         assignColorClass(tag, val, containerId);
-        tag.innerHTML = `<span class="tag-text" data-fulltext="${val.replace(/"/g, '&quot;')}">${displayText}</span><div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
         
-        tag.querySelector('.remove-x').onclick = () => {
-            tag.remove();
-            toggleCustomOptionVisibility(val, true, selectId);
-            
-            if (containerId === 'tags-sabers') {
-                desvincularConexionesSaber(val, removeTagByValue);
+        let actionsHtml = `<div class="remove-x" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>`;
+        if (containerId === 'tags-od') {
+            actionsHtml = `<div class="tag-actions" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px; align-items: center; z-index: 5;">
+                <div class="edit-x remove-x" style="position: relative; transform: none; right: auto; top: auto;" title="Editar"><i class="fa-solid fa-pen"></i></div>
+                <div class="remove-x" style="position: relative; transform: none; right: auto; top: auto;" title="Eliminar"><i class="fa-solid fa-xmark"></i></div>
+            </div>`;
+            tag.style.paddingRight = '64px';
+        }
+
+        tag.innerHTML = `<span class="tag-text" data-fulltext="${val.replace(/"/g, '&quot;')}">${displayText}</span>${actionsHtml}`;
+        
+        if (containerId === 'tags-od') {
+            const editBtn = tag.querySelector('.edit-x');
+            if (editBtn) {
+                editBtn.onclick = () => {
+                    let code = '', desc = '', criteriaStr = '';
+                    const dashIdx = val.indexOf(' - ');
+                    if (dashIdx !== -1) {
+                        code = val.substring(0, dashIdx).trim();
+                        let rest = val.substring(dashIdx + 3).trim();
+                        if (rest.endsWith(')')) {
+                            const parenIdx = rest.lastIndexOf('(');
+                            if (parenIdx !== -1) {
+                                desc = rest.substring(0, parenIdx).trim();
+                                criteriaStr = rest.substring(parenIdx + 1, rest.length - 1).trim();
+                            } else { desc = rest; }
+                        } else { desc = rest; }
+                    } else { code = val; }
+
+                    const codeInput = document.getElementById('input-od-code');
+                    const descInput = document.getElementById('input-od-desc');
+                    if (codeInput) codeInput.value = code;
+                    if (descInput) descInput.value = desc;
+
+                    const criteriaContainer = document.getElementById('od-criteria-container');
+                    if (criteriaContainer) {
+                        criteriaContainer.querySelectorAll('.mini-criteria-tag').forEach(t => t.remove());
+                        if (criteriaStr) {
+                            const criteriaList = criteriaStr.split(',').map(s => s.trim());
+                            const btnAddCrit = criteriaContainer.querySelector('.btn-add-crit-od');
+                            criteriaList.forEach(crit => {
+                                const critTag = document.createElement('div');
+                                critTag.className = 'mini-criteria-tag';
+                                const cMatch = crit.match(/CA\s*(\d+)/i);
+                                if(cMatch) critTag.classList.add(`mini-tag-ce${cMatch[1]}`);
+                                critTag.title = crit;
+                                critTag.innerHTML = `<span>${crit}</span> <i class="fa-solid fa-xmark"></i>`;
+                                critTag.onclick = (e) => { e.stopPropagation(); critTag.remove(); };
+                                if (btnAddCrit) criteriaContainer.insertBefore(critTag, btnAddCrit);
+                                else criteriaContainer.appendChild(critTag);
+                            });
+                        }
+                    }
+                    tag.remove();
+                    if (codeInput) codeInput.focus();
+                    saveState();
+                };
             }
-            
-            if (['tags-sabers', 'tags-comp-espec', 'tags-criteris'].includes(containerId)) recalcularTotaLaCadena();
-            saveState();
-        };
+            tag.querySelector('.remove-x:not(.edit-x)').onclick = () => {
+                tag.remove();
+                saveState();
+            };
+        } else {
+            tag.querySelector('.remove-x').onclick = () => {
+                tag.remove();
+                toggleCustomOptionVisibility(val, true, selectId);
+                
+                if (containerId === 'tags-sabers') {
+                    desvincularConexionesSaber(val, removeTagByValue);
+                }
+                
+                if (['tags-sabers', 'tags-comp-espec', 'tags-criteris'].includes(containerId)) recalcularTotaLaCadena();
+                saveState();
+            };
+        }
         
         c.appendChild(tag); makeTagsSortable(c);
     }
@@ -237,6 +300,25 @@ export function addTag(val, containerId) {
     if (containerId === 'tags-sabers') establecerConexionesSaber(val); 
     if (containerId === 'tags-criteris') establecerConexionesCA(val);
     if (containerId === 'tags-comp-espec') establecerConexionesCE();
+    if (['tags-sabers', 'tags-criteris', 'tags-comp-espec', 'tags-blocs', 'tags-od', 'tags-pe', 'tags-obj'].includes(containerId)) {
+        const tags = Array.from(c.querySelectorAll(':scope > .tag'));
+        tags.sort((a, b) => {
+            const textA = a.querySelector('.tag-text').dataset.fulltext || a.querySelector('.tag-text').innerText;
+            const textB = b.querySelector('.tag-text').dataset.fulltext || b.querySelector('.tag-text').innerText;
+            
+            if (containerId === 'tags-sabers') {
+                const matchA = textA.match(/SB\s*(\d+)/i);
+                const matchB = textB.match(/SB\s*(\d+)/i);
+                if (matchA && matchB) {
+                    const numA = parseInt(matchA[1], 10);
+                    const numB = parseInt(matchB[1], 10);
+                    if (numA !== numB) return numA - numB;
+                }
+            }
+            return textA.localeCompare(textB, undefined, { numeric: true, sensitivity: 'base' });
+        });
+        tags.forEach(t => c.appendChild(t));
+    }
     
     saveState();
 }

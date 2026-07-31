@@ -22,8 +22,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const addSaveListener = (selector, eventType) => queryAll(selector).forEach(el => el.addEventListener(eventType, saveState));
     addSaveListener('input, textarea', 'input');
     
-    // Configurar listeners básicos
-    selectEl('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); });
+    // Configurar listeners básicos    
+    const btnDarkMode = selectEl('btn-dark-mode');
+    if (btnDarkMode) btnDarkMode.addEventListener('click', () => { toggleDarkMode(); });
     
     window.addEventListener('storage', (e) => {
         if (e.key === 'global_dark_mode') {
@@ -38,7 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
-    selectEl('btn-toggle-t')?.addEventListener('click', toggleTransversals);
+
+    const btnToggleT = selectEl('btn-toggle-t');
+    if (btnToggleT) btnToggleT.addEventListener('click', toggleTransversals);
     queryAll('.toggle-section').forEach(btn => btn.addEventListener('click', e => { 
         if(e.target.closest('.btn-toggle-block')) return; 
         toggleBlock(btn.dataset.target); 
@@ -65,14 +68,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveState();
     }));
 
-    selectEl('btn-mesures-si')?.addEventListener('click', () => setMesures(true));
-    selectEl('btn-mesures-no')?.addEventListener('click', () => setMesures(false));
-    selectEl('btn-add-destinatari')?.addEventListener('click', addDestinatari);
+    const btnMesuresSi = selectEl('btn-mesures-si');
+    if (btnMesuresSi) btnMesuresSi.addEventListener('click', () => setMesures(true));
+    const btnMesuresNo = selectEl('btn-mesures-no');
+    if (btnMesuresNo) btnMesuresNo.addEventListener('click', () => setMesures(false));
+    const btnAddDestinatari = selectEl('btn-add-destinatari');
+    if (btnAddDestinatari) btnAddDestinatari.addEventListener('click', addDestinatari);
     
-    selectEl('btn-add-step')?.addEventListener('click', addSequenceStep);
+    const btnAddStep = selectEl('btn-add-step');
+    if (btnAddStep) btnAddStep.addEventListener('click', addSequenceStep);
     
-    selectEl('btn-add-od')?.addEventListener('click', addObjectiveDidactic);
-    selectEl('od-criteria-container')?.addEventListener('click', e => {
+    const btnAddOd = selectEl('btn-add-od');
+    if (btnAddOd) btnAddOd.addEventListener('click', addObjectiveDidactic);
+    
+    const odCriteriaContainer = selectEl('od-criteria-container');
+    if (odCriteriaContainer) odCriteriaContainer.addEventListener('click', e => {
         const btnAddCritOD = e.target.closest('.btn-add-crit-od');
         if (btnAddCritOD) {
             showCriteriaDropdown(btnAddCritOD, 'od-criteria-container', 'CA');
@@ -80,14 +90,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     
     // Event delegation
-    selectEl('temporalitzacio-container')?.addEventListener('click', e => {
+    const temporalitzacioContainer = selectEl('temporalitzacio-container');
+    if (temporalitzacioContainer) temporalitzacioContainer.addEventListener('click', e => {
         if (e.target.classList.contains('week-box')) {
             e.target.classList.toggle('active');
             saveState();
         }
     });
 
-    selectEl('sequence-container')?.addEventListener('click', e => {
+    const sequenceContainer = selectEl('sequence-container');
+    if (sequenceContainer) sequenceContainer.addEventListener('click', e => {
         if (e.target.closest('.criteria-dropdown')) return; 
 
         const btnRemoveStep = e.target.closest('.btn-remove-step');
@@ -128,14 +140,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Export/Import
-    selectEl('btn-export-pdf')?.addEventListener('click', generatePDF);
-    selectEl('btn-export-json')?.addEventListener('click', generateJSON);
-    selectEl('btn-clear')?.addEventListener('click', clearState);
+    const btnExportPdf = selectEl('btn-export-pdf');
+    if (btnExportPdf) btnExportPdf.addEventListener('click', generatePDF);
+    const btnExportJson = selectEl('btn-export-json');
+    if (btnExportJson) btnExportJson.addEventListener('click', generateJSON);
+    const btnClear = selectEl('btn-clear');
+    if (btnClear) btnClear.addEventListener('click', clearState);
     setupFileManager();
     
     // Modal controls
-    selectEl('btn-close-export')?.addEventListener('click', () => selectEl('export-modal').classList.remove('show'));
-    selectEl('btn-open-export')?.addEventListener('click', () => selectEl('export-modal').classList.add('show'));
+    const btnCloseExport = selectEl('btn-close-export');
+    if (btnCloseExport) btnCloseExport.addEventListener('click', () => selectEl('export-modal').classList.remove('show'));
+    const btnOpenExport = selectEl('btn-open-export');
+    if (btnOpenExport) btnOpenExport.addEventListener('click', () => selectEl('export-modal').classList.add('show'));
 });
 
 function setupTooltipListeners() {
@@ -201,7 +218,7 @@ function setupFileManager() {
                     const content = JSON.parse(evt.target.result);
                     if (content) {
                         content.filename = file.name;
-                        content.saNum = content.inputs?.['input-sa-num'] || '?';
+                        content.saNum = (content.inputs && content.inputs['input-sa-num']) ? content.inputs['input-sa-num'] : '?';
                         const existingIdx = SAs.findIndex(s => s.filename === file.name);
                         if (existingIdx >= 0) SAs[existingIdx] = content;
                         else SAs.push(content);
@@ -256,11 +273,16 @@ function setupFileManager() {
     }
 
     function getSessionSAs() {
-        const str = sessionStorage.getItem('dashboard_SAs');
-        return str ? JSON.parse(str) : [];
+        try {
+            const str = sessionStorage.getItem('dashboard_SAs');
+            const parsed = str ? JSON.parse(str) : [];
+            return Array.isArray(parsed) ? parsed.filter(s => s && typeof s === 'object') : [];
+        } catch(e) {
+            return [];
+        }
     }
     function saveSessionSAs(sas) {
-        sessionStorage.setItem('dashboard_SAs', JSON.stringify(sas));
+        try { sessionStorage.setItem('dashboard_SAs', JSON.stringify(sas)); } catch(e) {}
     }
     
     function loadSAIntoEditor(sa) {
@@ -271,8 +293,10 @@ function setupFileManager() {
         sa.sequence = sa.sequence || [];
         sa.temporalitzacio = sa.temporalitzacio || [];
         
-        localStorage.setItem('clickSA_state', JSON.stringify(sa));
-        sessionStorage.setItem('editing_filename', sa.filename);
+        try {
+            localStorage.setItem('clickSA_state', JSON.stringify(sa));
+            sessionStorage.setItem('editing_filename', sa.filename);
+        } catch(e) {}
         window.location.reload();
     }
 }
