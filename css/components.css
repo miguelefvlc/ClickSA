@@ -302,17 +302,6 @@ body.dark-mode .btn-eval-a.active { box-shadow: 0 0 5px rgba(158, 194, 195, 0.4)
 }
 .auth-btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(107, 149, 150, 0.3); }
 
-.auth-divider { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; margin: 2px 0; text-transform: uppercase; letter-spacing: 0.05em; }
-.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-.auth-google-btn {
-    width: 100%; padding: 11px; border-radius: 8px; border: 1.5px solid var(--border);
-    background: var(--card-bg); color: var(--text-main); font-weight: 600; font-size: 0.9rem;
-    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-}
-.auth-google-btn:hover { background: var(--bg); border-color: var(--accent); transform: translateY(-1px); }
-
 .auth-alert {
     padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; display: none;
 }

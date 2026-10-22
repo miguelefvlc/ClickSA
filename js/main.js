@@ -7,7 +7,7 @@ import { generatePDF, generateJSON, importJSON } from './export.js';
 import { recalcularTotaLaCadena, updateCellVisual } from './curriculum.js';
 import { 
     initSupabase, getCurrentUser, onAuthStateChange, signInWithEmail, signUpWithEmail, 
-    signInWithGoogle, resetPassword, signOutUser, saveSAToCloud, fetchUserSAs, 
+    resetPassword, signOutUser, saveSAToCloud, fetchUserSAs, 
     fetchSAById, deleteSAFromCloud, getActiveCloudSAId, setActiveCloudSAId, isCloudConfigured 
 } from './cloud.js';
 
@@ -348,7 +348,6 @@ function setupCloudIntegration() {
     const authAlert = selectEl('auth-alert');
     const authForm = selectEl('auth-form');
     const btnAuthSubmit = selectEl('btn-auth-submit');
-    const btnAuthGoogle = selectEl('btn-auth-google');
     const btnAuthSignout = selectEl('btn-auth-signout');
     const btnAuthOpenLib = selectEl('btn-auth-open-lib');
     const authHeaderTitle = selectEl('auth-header-title');
@@ -541,16 +540,6 @@ function setupCloudIntegration() {
         });
     }
 
-    if (btnAuthGoogle) {
-        btnAuthGoogle.addEventListener('click', async () => {
-            try {
-                await signInWithGoogle();
-            } catch (err) {
-                console.error("Google Auth error", err);
-                setAuthAlert(err.message || "No s'ha pogut connectar amb Google.", "error");
-            }
-        });
-    }
 
     if (btnAuthSignout) {
         btnAuthSignout.addEventListener('click', async () => {
