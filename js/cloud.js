@@ -39,7 +39,8 @@ export function initSupabase() {
                 auth: {
                     persistSession: true,
                     autoRefreshToken: true,
-                    detectSessionInUrl: true
+                    detectSessionInUrl: true,
+                    storageKey: 'clicksa_auth_token'
                 }
             });
         }
@@ -110,10 +111,17 @@ export async function signInWithEmail(email, password) {
     return data;
 }
 
+function getAuthRedirectUrl() {
+    if (window.location.protocol === 'file:') {
+        return 'http://127.0.0.1:5566/index.html';
+    }
+    return window.location.origin + window.location.pathname;
+}
+
 export async function signUpWithEmail(email, password) {
     const sb = getClient();
     if (!sb || !sb.auth) throw new Error("Supabase no està configurat o no s'ha pogut carregar.");
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = getAuthRedirectUrl();
     const { data, error } = await sb.auth.signUp({
         email,
         password,
@@ -126,7 +134,7 @@ export async function signUpWithEmail(email, password) {
 export async function signInWithGoogle() {
     const sb = getClient();
     if (!sb || !sb.auth) throw new Error("Supabase no està configurat o no s'ha pogut carregar.");
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = getAuthRedirectUrl();
     const { data, error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo }
@@ -138,7 +146,7 @@ export async function signInWithGoogle() {
 export async function resetPassword(email) {
     const sb = getClient();
     if (!sb || !sb.auth) throw new Error("Supabase no està configurat o no s'ha pogut carregar.");
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = getAuthRedirectUrl();
     const { data, error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
     if (error) throw error;
     return data;
