@@ -14,6 +14,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js" defer></script>
 
+    <!-- Supabase Client & Configuració -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="./config.js" defer></script>
+
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -25,8 +29,15 @@
 
 <main class="container">
     <header>
-        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
-        <a href="dashboard.html" class="header-icon-btn" id="btn-dashboard" title="Panell d'Anàlisi Global"><i class="fa-solid fa-chart-pie"></i></a>
+        <div class="header-actions-left">
+            <a href="dashboard.html" class="header-icon-btn" id="btn-dashboard" title="Panell d'Anàlisi Global"><i class="fa-solid fa-chart-pie"></i></a>
+        </div>
+        <div class="header-actions-right">
+            <button class="header-icon-btn" id="btn-cloud" title="Les meues Situacions d'Aprenentatge al Núvol"><i class="fa-solid fa-cloud"></i></button>
+            <button class="header-icon-btn" id="btn-auth" title="El meu Compte / Iniciar Sessió"><i class="fa-solid fa-user" id="auth-icon"></i></button>
+            <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode Fosc/Clar"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        </div>
+
         <h1>Click<span>SA</span><i class="fa-solid fa-arrow-pointer"></i></h1>
         <h2>Dissenyador de situacions d'aprenentatge</h2>
     </header>
@@ -252,6 +263,7 @@
             <i class="fa-solid fa-floppy-disk" id="save-icon"></i><span id="save-text"></span>
         </div>
         <div class="btn-container">
+            <button class="action-btn btn-cloud-save" id="btn-cloud-save" title="Guardar la SA al Núvol (Supabase)"><i class="fa-solid fa-cloud-arrow-up"></i></button>
             <button class="action-btn btn-clear" id="btn-clear" title="Esborrar dades i començar una nova SA"><i class="fa-solid fa-trash-can"></i></button>
             <button class="action-btn btn-download" id="btn-open-export" title="Exportar Situació d'Aprenentatge"><i class="fa-solid fa-download"></i></button>
             <input type="file" id="file-import" accept=".json" style="display: none;">
@@ -293,6 +305,92 @@
             <i class="fa-solid fa-xmark close-construction-modal" id="btn-close-construction" title="Tancar"></i>
         </div>
     </div>
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-content modal-auth">
+            <div class="modal-header">
+                <h3 id="auth-modal-title"><i class="fa-solid fa-cloud"></i> <span id="auth-header-title">Iniciar Sessió al Núvol</span></h3>
+                <i class="fa-solid fa-xmark close-modal" id="btn-close-auth"></i>
+            </div>
+            
+            <div id="auth-guest-view" class="auth-body">
+                <div id="auth-alert" class="auth-alert"></div>
+
+                <button type="button" id="btn-auth-google" class="auth-google-btn">
+                    <i class="fa-brands fa-google" style="color: #EA4335;"></i> Continuar amb Google
+                </button>
+
+                <div class="auth-divider">o amb correu electrònic</div>
+
+                <form id="auth-form" onsubmit="return false;">
+                    <div class="auth-form-group">
+                        <label class="auth-label" for="auth-email">Correu electrònic</label>
+                        <input type="email" id="auth-email" class="auth-input" placeholder="nom@escola.cat" required autocomplete="email">
+                    </div>
+                    <div class="auth-form-group" id="auth-pass-group">
+                        <label class="auth-label" for="auth-password">Contrasenya</label>
+                        <input type="password" id="auth-password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" id="btn-auth-submit" class="auth-btn-primary" style="margin-top: 10px;">
+                        <i class="fa-solid fa-right-to-bracket"></i> <span id="auth-submit-text">Iniciar Sessió</span>
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 12px; font-size: 0.85rem;">
+                    <span id="auth-switch-prompt" style="color: var(--text-muted);">No tens compte?</span>
+                    <a href="#" id="auth-switch-link" style="color: var(--accent); font-weight: 700; text-decoration: none; margin-left: 4px;">Crear compte</a>
+                </div>
+                <div style="text-align: center; margin-top: 6px;">
+                    <a href="#" id="auth-forgot-link" style="color: var(--text-muted); font-size: 0.75rem; text-decoration: underline;">Has oblidat la contrasenya?</a>
+                </div>
+            </div>
+
+            <div id="auth-user-view" style="display: none;" class="auth-body">
+                <div class="auth-user-profile">
+                    <div class="auth-user-avatar"><i class="fa-solid fa-user-check"></i></div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: 0.75rem; color: #529B72; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;"><i class="fa-solid fa-circle" style="font-size: 0.5rem; vertical-align: middle;"></i> Connectat al Núvol</span>
+                        <span class="auth-user-email" id="auth-user-email-display">-</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 12px;">
+                        <button type="button" class="auth-btn-primary" id="btn-auth-open-lib">
+                            <i class="fa-solid fa-cloud"></i> Obrir les meues Situacions d'Aprenentatge
+                        </button>
+                        <button type="button" class="auth-btn-danger" id="btn-auth-signout" title="Tancar Sessió">
+                            <i class="fa-solid fa-right-from-bracket"></i> Tancar Sessió
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cloud-library-modal" class="modal-overlay">
+        <div class="modal-content modal-cloud-lib">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-cloud"></i> Les meues Situacions d'Aprenentatge al Núvol</h3>
+                <i class="fa-solid fa-xmark close-modal" id="btn-close-cloud-lib"></i>
+            </div>
+            <div class="cloud-search-bar">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+                <input type="text" id="cloud-search-input" placeholder="Cerca per títol, número o àrea..." autocomplete="off">
+                <button class="btn-toggle active" id="btn-refresh-cloud-lib" title="Actualitzar llista"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+            <div class="cloud-list-scroll" id="cloud-sa-list">
+                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                    <p style="margin-top: 10px;">Connectant amb el núvol...</p>
+                </div>
+            </div>
+            <div style="padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg);">
+                <span id="cloud-sa-count" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">0 Situacions d'Aprenentatge</span>
+                <button class="btn-toggle active" id="btn-save-as-new-cloud" style="height: 36px; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Desar l'actual com a nova
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
 </main>
 
 <script type="module" src="js/main.js"></script>

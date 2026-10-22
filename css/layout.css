@@ -14,15 +14,39 @@ header h1:hover i { transform: rotate(0deg) translateY(0) scale(1.1); }
 header h2 { color: var(--text-muted); font-size: 1rem; margin: 5px 0 0 0; font-weight: 600; }
 
 .header-icon-btn { 
-    position: absolute; width: 32px; height: 32px; background: transparent; 
+    width: 36px; height: 36px; background: var(--card-bg); 
     border: 1.5px solid var(--border); color: var(--accent); border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; font-size: 0.9rem; 
-    cursor: pointer; transition: all 0.2s ease; z-index: 10; opacity: 0.7;
+    display: flex; align-items: center; justify-content: center; font-size: 0.95rem; 
+    cursor: pointer; transition: all 0.2s ease; opacity: 0.85; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); text-decoration: none;
 }
-.header-icon-btn:hover { opacity: 1; transform: scale(1.1); background: var(--bg); border-color: var(--accent); }
-#btn-dark-mode { top: 15px; right: 15px; }
-#btn-import-trigger { bottom: 15px; right: 15px; }
-#btn-dashboard { top: 15px; left: 15px; color: var(--accent); text-decoration: none; }
+.header-icon-btn:hover { opacity: 1; transform: scale(1.08); background: var(--bg); border-color: var(--accent); color: var(--accent); }
+.header-icon-btn.active-cloud { color: #5B8FB9; border-color: #5B8FB9; opacity: 1; }
+.header-icon-btn.logged-in { color: #529B72; border-color: #529B72; opacity: 1; }
+.header-icon-btn.logged-in::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 9px; height: 9px; background: #529B72; border-radius: 50%;
+    border: 1.5px solid var(--card-bg);
+}
+
+.header-actions-left, .header-actions-right {
+    position: absolute;
+    top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+.header-actions-left { left: 15px; }
+.header-actions-right { right: 15px; }
+
+#btn-dark-mode, #btn-dashboard, #btn-cloud, #btn-auth, #btn-back {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+}
 
 /* =========================================================
    ESTRUCTURA DE SECCIONES Y GRIDS

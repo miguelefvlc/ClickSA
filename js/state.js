@@ -197,6 +197,7 @@ export async function restoreState() {
 export function clearState() {
     if(confirm("Estàs segur que vols esborrar totes les dades y començar una nova Situació d'Aprenentatge? Aquesta acció no es pot desfer.")) {
         localStorage.removeItem('clickSA_state');
+        try { sessionStorage.removeItem('clicksa_active_cloud_id'); } catch(e) {}
         location.reload();
     }
 }

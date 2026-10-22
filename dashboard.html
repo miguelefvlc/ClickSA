@@ -14,6 +14,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- Supabase Client & Configuració -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="./config.js" defer></script>
 
     <style>
         /* =========================================================
@@ -154,16 +157,26 @@
 
 <main class="container">
     <header>
-        <a href="index.html" class="header-icon-btn" id="btn-back" title="Tornar al Dissenyador"><i class="fa-solid fa-arrow-left"></i></a>
-        <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        <div class="header-actions-left">
+            <a href="index.html" class="header-icon-btn" id="btn-back" title="Tornar al Dissenyador"><i class="fa-solid fa-arrow-left"></i></a>
+        </div>
+        <div class="header-actions-right">
+            <button class="header-icon-btn" id="btn-dark-mode" title="Canviar Mode"><i class="fa-solid fa-sun" id="dark-icon"></i></button>
+        </div>
         <h1>Click<span>SA</span><i class="fa-solid fa-chart-pie"></i></h1>
         <h2>Panell d'Anàlisi Global</h2>
     </header>
 
     <input type="file" id="file-upload" accept=".json" multiple style="display: none;">
-    <div class="upload-zone" id="upload-trigger">
-        <i class="fa-solid fa-file-import"></i>
-        <span>Importar Situacions d'Aprenentatge</span>
+    <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+        <div class="upload-zone" id="upload-trigger" style="flex: 1; margin-bottom: 0;">
+            <i class="fa-solid fa-file-import"></i>
+            <span>Importar Fitxers JSON Locals</span>
+        </div>
+        <div class="upload-zone" id="btn-cloud-import-dashboard" style="flex: 1; margin-bottom: 0; border-color: #5B8FB9; color: #5B8FB9; cursor: pointer;">
+            <i class="fa-solid fa-cloud-arrow-down" style="color: #5B8FB9;"></i>
+            <span style="color: #5B8FB9;">Carregar del Núvol (Supabase)</span>
+        </div>
     </div>
 
     <div class="file-grid" id="file-list"></div>
@@ -354,6 +367,11 @@
 
         document.getElementById('upload-trigger').addEventListener('click', () => document.getElementById('file-upload').click());
         document.getElementById('file-upload').addEventListener('change', handleFileSelect);
+
+        const btnCloudDash = document.getElementById('btn-cloud-import-dashboard');
+        if (btnCloudDash) {
+            btnCloudDash.addEventListener('click', handleCloudImportDashboard);
+        }
 
         // Botonera de neteja i PDF
         document.getElementById('btn-clear').addEventListener('click', clearAllData);
@@ -613,6 +631,75 @@
             reader.readAsText(file);
         });
         event.target.value = '';
+    }
+
+    async function handleCloudImportDashboard() {
+        const cfg = window.APP_CONFIG || {};
+        if (!window.supabase || !cfg.supabaseUrl || !cfg.supabaseAnonKey) {
+            alert("No s'ha trobat la configuració de Supabase.");
+            return;
+        }
+
+        const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session?.user) {
+            alert("Has d'iniciar sessió primer per carregar les teues SA des del núvol. Pots iniciar sessió des del Dissenyador (index.html).");
+            return;
+        }
+
+        const btn = document.getElementById('btn-cloud-import-dashboard');
+        const origHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color: #5B8FB9;"></i> <span style="color: #5B8FB9;">Carregant del núvol...</span>';
+
+        try {
+            const { data: rows, error } = await sb
+                .from('situacions_aprenentatge')
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            if (error) throw error;
+
+            if (!rows || rows.length === 0) {
+                alert("No tens cap Situació d'Aprenentatge guardada al teu compte de Supabase.");
+                return;
+            }
+
+            let addedCount = 0;
+            rows.forEach(row => {
+                if (row.data) {
+                    const saItem = row.data;
+                    saItem.filename = row.id;
+                    saItem.saNum = row.sa_num || (saItem.inputs && saItem.inputs['input-sa-num']) || '?';
+
+                    const existingIdx = loadedSAs.findIndex(s => s && (s.filename === row.id || (s.inputs && s.inputs['input-sa-num'] === saItem.saNum && s.inputs['input-sa-title'] === saItem.inputs?.['input-sa-title'])));
+                    if (existingIdx >= 0) {
+                        loadedSAs[existingIdx] = saItem;
+                    } else {
+                        loadedSAs.push(saItem);
+                        addedCount++;
+                    }
+                }
+            });
+
+            loadedSAs.sort((a, b) => {
+                let numA = parseInt(a && a.saNum, 10);
+                let numB = parseInt(b && b.saNum, 10);
+                if (isNaN(numA)) numA = 9999;
+                if (isNaN(numB)) numB = 9999;
+                return numA - numB;
+            });
+
+            saveSAsToStorage();
+            renderFileList();
+            updateDashboard();
+
+            alert(`S'han sincronitzat ${rows.length} Situacions d'Aprenentatge des del núvol (${addedCount} noves).`);
+        } catch (err) {
+            console.error("Error carregant del núvol al dashboard", err);
+            alert("Error carregant del núvol: " + err.message);
+        } finally {
+            btn.innerHTML = origHtml;
+        }
     }
 
     function removeSA(filename) {

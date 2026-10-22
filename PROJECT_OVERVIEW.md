@@ -25,11 +25,13 @@ L'idioma principal de la interfície és el **català/valencià**.
   - `curriculum.js`: Calcula quins elements del currículum (Descriptors operatius, Criteris, etc.) es relacionen i pinta o filtra en conseqüència.
   - `sequenceBuilder.js`: Gestiona la secció de "Seqüència Didàctica" on s'afegeixen fases, sessions i activitats avaluables dinàmicament.
   - `export.js`: Implementa l'exportació a JSON, l'exportació a PDF (amb *pdfMake*) i la importació d'arxius JSON.
+  - `cloud.js`: Connexió amb Supabase, autenticació (Login, Registre, Google) i sincronització CRUD de Situacions d'Aprenentatge al núvol.
   - `constants.js`: URL dels CSV i selectores a netejar.
   - `utils.js`: Funcions auxiliars genèriques.
 
 ## Llibreries de tercers usades (Carregades via CDN)
 - **PapaParse**: Per convertir els fitxers CSV amb els currículums oficials en dades que el codi pot entendre.
+- **Supabase JS (v2)**: Per a l'autenticació d'usuaris (Email/Password, Google OAuth) i persistència de Situacions d'Aprenentatge al núvol en PostgreSQL amb Row Level Security (RLS).
 - **pdfMake**: Per generar en client l'arxiu PDF d'exportació amb el resultat de la Situació d'Aprenentatge.
 - **FontAwesome**: Pels icones.
 - **Google Fonts (Inter)**: Per a la tipografia.

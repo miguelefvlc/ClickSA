@@ -10,8 +10,8 @@ Eres el asistente de IA para el proyecto **ClickSA**. Lee esto para entender de 
 ## Descripción General
 ClickSA es una aplicación web estática (front-end) para que los profesores diseñen "Situacions d'Aprenentatge" (SA) guiadas por el currículum. 
 - **Tecnologías**: HTML, CSS nativo (sin frameworks), JavaScript nativo (módulos ES6).
-- **Librerías externas**: PapaParse (lectura de CSVs), pdfMake (exportación a PDF), FontAwesome (iconos).
-- **Almacenamiento**: No hay base de datos backend. Se usa `localStorage` para guardar el progreso y la lectura de archivos CSV (mediante `fetch`) para el currículum.
+- **Librerías externas**: PapaParse (lectura de CSVs), pdfMake (exportación a PDF), FontAwesome (iconos), Supabase JS v2 (autenticación y persistencia en la nube).
+- **Almacenamiento**: `localStorage` (borrador activo local), Supabase PostgreSQL con RLS (persistencia en la nube) y lectura de archivos CSV para el currículum.
 
 ## Arquitectura de Archivos
 - `index.html`: Toda la estructura de la aplicación.
