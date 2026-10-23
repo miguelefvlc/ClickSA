@@ -1,5 +1,5 @@
 import { selectEl, queryAll, getSelectedText } from './utils.js';
-import { toggleDarkMode, setCustomSelectValue, addTag, actualitzarDesplegablesCurriculars } from './ui.js';
+import { setCustomSelectValue, addTag, actualitzarDesplegablesCurriculars } from './ui.js';
 import { fetchCsvData } from './api.js';
 import { CONSTANTES_GLOBALES, SELECTS_TO_RESET } from './constants.js';
 import { setMesures, addDestinatari, addSequenceStep, addSession, addActivity, toggleEval, addMiniCriteriaTag } from './sequenceBuilder.js';

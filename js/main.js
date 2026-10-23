@@ -3,12 +3,12 @@ import { fetchDiversitat } from './api.js';
 import { inicialitzarDesplegablesIncials, toggleDarkMode, toggleBlock, toggleTransversals } from './ui.js';
 import { saveState, restoreState, clearState, getStateObject } from './state.js';
 import { setMesures, addDestinatari, makeSequenceSortable, addSequenceStep, addSession, addActivity, toggleEval, showCriteriaDropdown, updateStepNumbers, updateGlobalSessionNumbers, addObjectiveDidactic } from './sequenceBuilder.js';
-import { generatePDF, generateJSON, importJSON } from './export.js';
+import { generatePDF, generateJSON } from './export.js';
 import { recalcularTotaLaCadena, updateCellVisual } from './curriculum.js';
 import { 
     initSupabase, getCurrentUser, onAuthStateChange, signInWithEmail, signUpWithEmail, 
     resetPassword, signOutUser, saveSAToCloud, fetchUserSAs, 
-    fetchSAById, deleteSAFromCloud, getActiveCloudSAId, setActiveCloudSAId, isCloudConfigured 
+    fetchSAById, deleteSAFromCloud, getActiveCloudSAId, setActiveCloudSAId 
 } from './cloud.js';
 
 document.addEventListener('DOMContentLoaded', async () => {

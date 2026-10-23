@@ -3,29 +3,13 @@
 // =========================================================================
 
 const ACTIVE_CLOUD_SA_KEY = 'clicksa_active_cloud_id';
-const RUNTIME_CONFIG_KEY = 'clicksa_supabase_config_override';
 
 export function getSupabaseConfig() {
-    let override = null;
-    try {
-        override = JSON.parse(localStorage.getItem(RUNTIME_CONFIG_KEY) || 'null');
-    } catch (e) {}
-
     const winCfg = window.APP_CONFIG || {};
     return {
-        supabaseUrl: override?.supabaseUrl || winCfg.supabaseUrl || '',
-        supabaseAnonKey: override?.supabaseAnonKey || winCfg.supabaseAnonKey || ''
+        supabaseUrl: winCfg.supabaseUrl || '',
+        supabaseAnonKey: winCfg.supabaseAnonKey || ''
     };
-}
-
-export function saveSupabaseConfigOverride(url, anonKey) {
-    try {
-        if (!url && !anonKey) {
-            localStorage.removeItem(RUNTIME_CONFIG_KEY);
-        } else {
-            localStorage.setItem(RUNTIME_CONFIG_KEY, JSON.stringify({ supabaseUrl: url, supabaseAnonKey: anonKey }));
-        }
-    } catch (e) {}
 }
 
 let supabaseClient = null;
@@ -54,11 +38,6 @@ export function initSupabase() {
 export function getClient() {
     if (!supabaseClient) initSupabase();
     return supabaseClient;
-}
-
-export function isCloudConfigured() {
-    const cfg = getSupabaseConfig();
-    return !!(cfg.supabaseUrl && cfg.supabaseAnonKey && window.supabase);
 }
 
 // -------------------------------------------------------------------------
@@ -126,18 +105,6 @@ export async function signUpWithEmail(email, password) {
         email,
         password,
         options: { emailRedirectTo: redirectTo }
-    });
-    if (error) throw error;
-    return data;
-}
-
-export async function signInWithGoogle() {
-    const sb = getClient();
-    if (!sb || !sb.auth) throw new Error("Supabase no està configurat o no s'ha pogut carregar.");
-    const redirectTo = getAuthRedirectUrl();
-    const { data, error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo }
     });
     if (error) throw error;
     return data;

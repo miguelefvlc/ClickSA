@@ -211,28 +211,3 @@ export function generateJSON() {
     const link = Object.assign(document.createElement('a'), { href: "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2)), download: `SA_${saNum}_${saTitle.replace(/[\\/:*?"<>|]/g, '')}.json` });
     document.body.appendChild(link); link.click(); link.remove();
 }
-
-export function importJSON(e) {
-    if (!e.target.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = evt => {
-        try {
-            const content = JSON.parse(evt.target.result);
-            if (!content || typeof content !== 'object') throw new Error();
-            
-            // Retrocompatibilidad: Asegurar que existan las claves mínimas esperadas
-            content.inputs = content.inputs || {};
-            content.selects = content.selects || {};
-            content.tags = content.tags || {};
-            content.destinataris = content.destinataris || [];
-            content.sequence = content.sequence || [];
-            content.temporalitzacio = content.temporalitzacio || [];
-            
-            localStorage.setItem('clickSA_state', JSON.stringify(content));
-            location.reload();
-        } catch (err) { 
-            alert("❌ El fitxer seleccionat no és un document vàlid de ClickSA."); 
-        }
-    };
-    reader.readAsText(e.target.files[0]); e.target.value = '';
-}
